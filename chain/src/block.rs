@@ -125,16 +125,33 @@ pub trait Block {
         &self,
         operation_id: OperationId,
     ) -> Result<Option<crate::operation::OperationFrame<&[u8]>>, Error> {
-        // TODO: Implement binary search in operations, since they are sorted: https://github.com/appaquet/exocore/issues/43
-        let operation = self.operations_iter()?.find(|operation| {
-            if let Ok(operation_reader) = operation.get_reader() {
-                operation_reader.get_operation_id() == operation_id
-            } else {
-                false
-            }
-        });
+        let block_header = self.header().get_reader()?;
+        let operations_header: Vec<BlockOperationHeader> = block_header
+            .get_operations_header()?
+            .iter()
+            .map(|reader| BlockOperationHeader::from_reader(&reader))
+            .collect();
 
-        Ok(operation)
+        let operation_index =
+            operations_header.binary_search_by_key(&operation_id, |header| header.operation_id);
+
+        if let Ok(operation_index) = operation_index {
+            if operation_index > operations_header.len() {
+                return Err(Error::OutOfBound(format!(
+                    "Operation id={} of block={} had an invalid index {} out of {} operations",
+                    operation_id,
+                    self.offset(),
+                    operation_index,
+                    operations_header.len()
+                )));
+            }
+
+            let frame = operations_header[operation_index].read_frame(self.operations_data())?;
+
+            Ok(Some(frame))
+        } else {
+            Ok(None)
+        }
     }
 
     fn validate(&self) -> Result<(), Error> {
@@ -220,15 +237,11 @@ impl<'a> Iterator for BlockOperationsIterator<'a> {
         let header = &self.operations_header[self.index];
         self.index += 1;
 
-        let offset_from = header.data_offset as usize;
-        let offset_to = header.data_offset as usize + header.data_size as usize;
-
-        let frame_res =
-            crate::operation::read_operation_frame(&self.operations_data[offset_from..offset_to]);
+        let frame_res = header.read_frame(self.operations_data);
         match frame_res {
             Ok(frame) => Some(frame),
             Err(err) => {
-                self.last_error = Some(Error::Operation(err));
+                self.last_error = Some(err);
                 None
             }
         }
@@ -595,6 +608,19 @@ impl BlockOperationHeader {
         builder.set_data_size(self.data_size);
         builder.set_data_offset(self.data_offset);
     }
+
+    fn read_frame<'a>(
+        &self,
+        operations_data: &'a [u8],
+    ) -> Result<crate::operation::OperationFrame<&'a [u8]>, Error> {
+        let offset_from = self.data_offset as usize;
+        let offset_to = self.data_offset as usize + self.data_size as usize;
+
+        let frame =
+            crate::operation::read_operation_frame(&operations_data[offset_from..offset_to])?;
+
+        Ok(frame)
+    }
 }
 
 /// Represents signatures stored in a block. Since a node writes a block as soon
@@ -737,39 +763,33 @@ impl BlockSignature {
 }
 
 /// Block related errors
-#[derive(Clone, Debug, Fail)]
+#[derive(Clone, Debug, thiserror::Error)]
 pub enum Error {
-    #[fail(display = "Block integrity error: {}", _0)]
+    #[error("Block integrity error: {0}")]
     Integrity(String),
-    #[fail(display = "An offset is out of the block data: {}", _0)]
-    OutOfBound(String),
-    #[fail(display = "Operations related error: {}", _0)]
-    Operation(#[fail(cause)] crate::operation::Error),
-    #[fail(display = "Framing error: {}", _0)]
-    Framing(#[fail(cause)] exocore_core::framing::Error),
-    #[fail(display = "Error in capnp serialization: kind={:?} msg={}", _0, _1)]
-    Serialization(capnp::ErrorKind, String),
-    #[fail(display = "Field is not in capnp schema: code={}", _0)]
-    SerializationNotInSchema(u16),
-    #[fail(display = "Other operation error: {}", _0)]
-    Other(String),
-}
 
-impl From<capnp::Error> for Error {
-    fn from(err: capnp::Error) -> Self {
-        Error::Serialization(err.kind, err.description)
-    }
+    #[error("An offset is out of the block data: {0}")]
+    OutOfBound(String),
+
+    #[error("Operations related error: {0}")]
+    Operation(#[from] crate::operation::Error),
+
+    #[error("Framing error: {0}")]
+    Framing(#[from] exocore_core::framing::Error),
+
+    #[error("Error in capnp serialization: {0}")]
+    Serialization(#[from] capnp::Error),
+
+    #[error("Field is not in capnp schema: code={0}")]
+    SerializationNotInSchema(u16),
+
+    #[error("Other operation error: {0}")]
+    Other(String),
 }
 
 impl From<capnp::NotInSchema> for Error {
     fn from(err: capnp::NotInSchema) -> Self {
         Error::SerializationNotInSchema(err.0)
-    }
-}
-
-impl From<exocore_core::framing::Error> for Error {
-    fn from(err: exocore_core::framing::Error) -> Self {
-        Error::Framing(err)
     }
 }
 
@@ -783,7 +803,7 @@ mod tests {
     use exocore_core::framing::FrameReader;
 
     #[test]
-    fn block_create_and_read() -> Result<(), failure::Error> {
+    fn block_create_and_read() -> anyhow::Result<()> {
         let local_node = LocalNode::generate();
         let cell = FullCell::generate(local_node.clone());
 
@@ -850,7 +870,7 @@ mod tests {
     }
 
     #[test]
-    fn block_operations() -> Result<(), failure::Error> {
+    fn block_operations() -> anyhow::Result<()> {
         let local_node = LocalNode::generate();
         let cell = FullCell::generate(local_node.clone());
         let genesis = BlockOwned::new_genesis(&cell)?;
@@ -877,7 +897,7 @@ mod tests {
     }
 
     #[test]
-    fn should_allocate_signatures_space_for_nodes() -> Result<(), failure::Error> {
+    fn should_allocate_signatures_space_for_nodes() -> anyhow::Result<()> {
         let local_node = LocalNode::generate();
         let full_cell = FullCell::generate(local_node.clone());
         let cell = full_cell.cell();
@@ -916,7 +936,7 @@ mod tests {
     }
 
     #[test]
-    fn should_pad_signatures_from_block_signature_size() -> Result<(), failure::Error> {
+    fn should_pad_signatures_from_block_signature_size() -> anyhow::Result<()> {
         let local_node = LocalNode::generate();
         let full_cell = FullCell::generate(local_node);
         let cell = full_cell.cell();

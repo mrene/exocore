@@ -12,7 +12,7 @@ use crate::query::{QueryBuilder as Q, TraitQueryBuilder as TQ};
 use super::*;
 
 #[test]
-fn fetch_entity_mutations() -> Result<(), failure::Error> {
+fn fetch_entity_mutations() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -94,7 +94,7 @@ fn fetch_entity_mutations() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn search_query_matches() -> Result<(), failure::Error> {
+fn search_query_matches() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -189,7 +189,7 @@ fn search_query_matches() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn search_query_matches_paging() -> Result<(), failure::Error> {
+fn search_query_matches_paging() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -268,7 +268,7 @@ fn search_query_matches_paging() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn search_query_by_trait_type() -> Result<(), failure::Error> {
+fn search_query_by_trait_type() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -278,7 +278,7 @@ fn search_query_by_trait_type() -> Result<(), failure::Error> {
         operation_id: 1,
         entity_id: "entity_id1".to_string(),
         trt: Trait {
-            id: "trt1".to_string(),
+            id: "trait1".to_string(),
             message: Some(
                 TestMessage {
                     string1: "Foo Bar".to_string(),
@@ -346,12 +346,29 @@ fn search_query_by_trait_type() -> Result<(), failure::Error> {
     let query = Q::with_trait::<TestMessage>().build();
     let res = index.search(query)?;
     assert_eq!(res.mutations.len(), 1);
-    assert!(find_put_trait(&res, "trt1").is_some());
+    let trait1 = find_put_trait(&res, "trait1").unwrap();
+    match &trait1.mutation_type {
+        MutationType::TraitPut(pt) => {
+            assert_eq!(pt.trait_type.as_deref(), Some("exocore.test.TestMessage"))
+        }
+        other => {
+            panic!("Expected trait put mutation, got {:?}", other);
+        }
+    }
 
     // ordering of multiple traits is operation id
     let query = Q::with_trait::<TestMessage2>().build();
     let res = index.search(query)?;
     assert_eq!(extract_traits_id(&res), vec!["trait4", "trait3", "trait2"]);
+    let trait4 = find_put_trait(&res, "trait4").unwrap();
+    match &trait4.mutation_type {
+        MutationType::TraitPut(pt) => {
+            assert_eq!(pt.trait_type.as_deref(), Some("exocore.test.TestMessage2"))
+        }
+        other => {
+            panic!("Expected trait put mutation, got {:?}", other);
+        }
+    }
 
     // with limit
     let query = Q::with_trait::<TestMessage2>().with_count(1).build();
@@ -382,7 +399,7 @@ fn search_query_by_trait_type() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn search_query_by_trait_type_paging() -> Result<(), failure::Error> {
+fn search_query_by_trait_type_paging() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -447,7 +464,7 @@ fn search_query_by_trait_type_paging() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn sort_by_field() -> Result<(), failure::Error> {
+fn sort_by_field() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -498,7 +515,7 @@ fn sort_by_field() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn search_by_reference() -> Result<(), failure::Error> {
+fn search_by_reference() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -637,7 +654,7 @@ fn search_by_reference() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn search_by_operations() -> Result<(), failure::Error> {
+fn search_by_operations() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -718,7 +735,7 @@ fn search_by_operations() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn search_by_ids() -> Result<(), failure::Error> {
+fn search_by_ids() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -795,7 +812,7 @@ fn search_by_ids() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn search_by_trait_field() -> Result<(), failure::Error> {
+fn search_by_trait_field() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -854,7 +871,7 @@ fn search_by_trait_field() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn search_all() -> Result<(), failure::Error> {
+fn search_all() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -898,7 +915,7 @@ fn search_all() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn highest_indexed_block() -> Result<(), failure::Error> {
+fn highest_indexed_block() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -963,7 +980,7 @@ fn highest_indexed_block() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn put_unregistered_trait() -> Result<(), failure::Error> {
+fn put_unregistered_trait() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -992,7 +1009,7 @@ fn put_unregistered_trait() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn delete_operation_id_mutation() -> Result<(), failure::Error> {
+fn delete_operation_id_mutation() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -1029,7 +1046,7 @@ fn delete_operation_id_mutation() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn put_trait_tombstone() -> Result<(), failure::Error> {
+fn put_trait_tombstone() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -1072,7 +1089,7 @@ fn put_trait_tombstone() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn put_entity_tombstone() -> Result<(), failure::Error> {
+fn put_entity_tombstone() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;
@@ -1092,7 +1109,7 @@ fn put_entity_tombstone() -> Result<(), failure::Error> {
 }
 
 #[test]
-fn trait_dates() -> Result<(), failure::Error> {
+fn trait_dates() -> anyhow::Result<()> {
     let registry = Arc::new(Registry::new_with_exocore_types());
     let config = test_config();
     let mut index = MutationIndex::create_in_memory(config, registry)?;

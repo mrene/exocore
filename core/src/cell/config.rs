@@ -95,7 +95,11 @@ pub fn cell_config_from_node_cell(
     node_config: &LocalNodeConfig,
 ) -> Result<CellConfig, Error> {
     match &config.location {
-        Some(node_cell_config::Location::Instance(cell_config)) => Ok(cell_config.clone()),
+        Some(node_cell_config::Location::Instance(cell_config)) => {
+            let mut cell_config = cell_config.clone();
+            cell_config.path = node_config.path.clone();
+            Ok(cell_config)
+        }
         Some(node_cell_config::Location::Directory(directory)) => {
             let mut config_path = to_absolute_from_parent_path(&node_config.path, directory);
             config_path.push("cell.yaml");
@@ -228,14 +232,18 @@ pub(crate) fn to_absolute_from_parent_path(parent_path: &str, child_path: &str) 
 mod tests {
     use super::super::{Cell, CellNodeRole, CellNodes};
     use super::*;
-    use crate::protos::generated::exocore_core::{
-        cell_node_config, node_cell_config, CellConfig, CellNodeConfig, LocalNodeConfig,
-        NodeCellConfig, NodeConfig,
+    use crate::protos::{
+        apps::manifest_schema,
+        core::cell_application_config,
+        generated::exocore_core::{
+            cell_node_config, node_cell_config, CellConfig, CellNodeConfig, LocalNodeConfig,
+            NodeCellConfig, NodeConfig,
+        },
     };
     use crate::tests_utils::root_test_fixtures_path;
 
     #[test]
-    fn parse_node_config_yaml_ser_deser() -> Result<(), failure::Error> {
+    fn parse_node_config_yaml_ser_deser() -> anyhow::Result<()> {
         let conf_ser = LocalNodeConfig {
             keypair: "keypair".to_string(),
             public_key: "pk".to_string(),
@@ -275,7 +283,7 @@ mod tests {
     }
 
     #[test]
-    fn parse_node_config_example_yaml_file() -> Result<(), failure::Error> {
+    fn parse_node_config_example_yaml_file() -> anyhow::Result<()> {
         let config_path = root_test_fixtures_path("examples/config.yaml");
         let config = node_config_from_yaml_file(config_path)?;
 
@@ -308,7 +316,56 @@ mod tests {
     }
 
     #[test]
-    pub fn parse_node_config_from_yaml() -> Result<(), failure::Error> {
+    fn test_node_config_to_standalone() -> anyhow::Result<()> {
+        let config_path = root_test_fixtures_path("examples/config.yaml");
+        let config = node_config_from_yaml_file(config_path)?;
+
+        let standalone_config = node_config_to_standalone(config).unwrap();
+
+        fn validate_node_cell_config(node_cell_config: &NodeCellConfig) {
+            match node_cell_config.location.as_ref() {
+                Some(node_cell_config::Location::Instance(cell_config)) => {
+                    validate_cell(cell_config);
+                }
+                other => panic!("Expected cell to be an instance location, got: {:?}", other),
+            }
+        }
+
+        fn validate_cell(cell_config: &CellConfig) {
+            for cell_app_config in &cell_config.apps {
+                match cell_app_config.location.as_ref() {
+                    Some(cell_application_config::Location::Instance(app_manifest)) => {
+                        validate_app(app_manifest);
+                    }
+                    other => panic!("Expected app to be an instance location, got: {:?}", other),
+                }
+            }
+        }
+
+        fn validate_app(app_manifest: &Manifest) {
+            for schema in &app_manifest.schemas {
+                match schema.source.as_ref() {
+                    Some(manifest_schema::Source::Bytes(_)) => {}
+                    other => panic!(
+                        "Expected app schema to be in bytes format, got: {:?}",
+                        other
+                    ),
+                }
+            }
+        }
+
+        for cell in &standalone_config.cells {
+            validate_node_cell_config(cell);
+        }
+
+        // should be able to load cell standalone
+        assert!(Cell::new_from_local_node_config(standalone_config).is_ok());
+
+        Ok(())
+    }
+
+    #[test]
+    pub fn parse_node_config_from_yaml() -> anyhow::Result<()> {
         let yaml = r#"
 name: node name
 keypair: ae2oiM2PYznyfqEMPraKbpAuA8LWVhPUiUTgdwjvnwbDjnz9W9FAiE9431NtVjfBaX44nPPoNR8Mv6iYcJdqSfp8eZ
@@ -378,7 +435,7 @@ cells:
     }
 
     #[test]
-    pub fn parse_node_optional_fields_yaml() -> Result<(), failure::Error> {
+    pub fn parse_node_optional_fields_yaml() -> anyhow::Result<()> {
         let yaml = r#"
 keypair: ae2oiM2PYznyfqEMPraKbpAuA8LWVhPUiUTgdwjvnwbDjnz9W9FAiE9431NtVjfBaX44nPPoNR8Mv6iYcJdqSfp8eZ
 public_key: peFdPsQsdqzT2H6cPd3WdU1fGdATDmavh4C17VWWacZTMP
