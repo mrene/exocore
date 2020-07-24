@@ -3112,11 +3112,11 @@ export const exocore = $root.exocore = (() => {
              * @property {exocore.index.IOperationsPredicate|null} [operations] EntityQuery operations
              * @property {exocore.index.IAllPredicate|null} [all] EntityQuery all
              * @property {exocore.index.ITestPredicate|null} [test] EntityQuery test
-             * @property {exocore.index.IPaging|null} [paging] Query paging requested
-             * @property {exocore.index.IOrdering|null} [ordering] Query ordering
-             * @property {boolean|null} [summary] If true, only return summary
+             * @property {Array.<exocore.index.IProjection>|null} [projections] Optional projections on traits and fields to be returned.
+             * @property {exocore.index.IPaging|null} [paging] Query paging requested.
+             * @property {exocore.index.IOrdering|null} [ordering] Query ordering.
              * @property {number|Long|null} [watchToken] Optional watch token if this query is to be used for watching.
-             * @property {number|Long|null} [resultHash] If specified, if results from server matches this hash, only a summary will be returned.
+             * @property {number|Long|null} [resultHash] `skipped_hash` field set to `true`.
              * @property {boolean|null} [includeDeleted] also include deletions.
              */
 
@@ -3129,6 +3129,7 @@ export const exocore = $root.exocore = (() => {
              * @param {exocore.index.IEntityQuery=} [properties] Properties to set
              */
             function EntityQuery(properties) {
+                this.projections = [];
                 if (properties)
                     for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -3192,7 +3193,15 @@ export const exocore = $root.exocore = (() => {
             EntityQuery.prototype.test = null;
 
             /**
-             * Query paging requested
+             * Optional projections on traits and fields to be returned.
+             * @member {Array.<exocore.index.IProjection>} projections
+             * @memberof exocore.index.EntityQuery
+             * @instance
+             */
+            EntityQuery.prototype.projections = $util.emptyArray;
+
+            /**
+             * Query paging requested.
              * @member {exocore.index.IPaging|null|undefined} paging
              * @memberof exocore.index.EntityQuery
              * @instance
@@ -3200,20 +3209,12 @@ export const exocore = $root.exocore = (() => {
             EntityQuery.prototype.paging = null;
 
             /**
-             * Query ordering
+             * Query ordering.
              * @member {exocore.index.IOrdering|null|undefined} ordering
              * @memberof exocore.index.EntityQuery
              * @instance
              */
             EntityQuery.prototype.ordering = null;
-
-            /**
-             * If true, only return summary
-             * @member {boolean} summary
-             * @memberof exocore.index.EntityQuery
-             * @instance
-             */
-            EntityQuery.prototype.summary = false;
 
             /**
              * Optional watch token if this query is to be used for watching.
@@ -3224,7 +3225,7 @@ export const exocore = $root.exocore = (() => {
             EntityQuery.prototype.watchToken = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
-             * If specified, if results from server matches this hash, only a summary will be returned.
+             * `skipped_hash` field set to `true`.
              * @member {number|Long} resultHash
              * @memberof exocore.index.EntityQuery
              * @instance
@@ -3289,8 +3290,9 @@ export const exocore = $root.exocore = (() => {
                     $root.exocore.index.Paging.encode(message.paging, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                 if (message.ordering != null && Object.hasOwnProperty.call(message, "ordering"))
                     $root.exocore.index.Ordering.encode(message.ordering, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                if (message.summary != null && Object.hasOwnProperty.call(message, "summary"))
-                    writer.uint32(/* id 7, wireType 0 =*/56).bool(message.summary);
+                if (message.projections != null && message.projections.length)
+                    for (let i = 0; i < message.projections.length; ++i)
+                        $root.exocore.index.Projection.encode(message.projections[i], writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
                 if (message.watchToken != null && Object.hasOwnProperty.call(message, "watchToken"))
                     writer.uint32(/* id 8, wireType 0 =*/64).uint64(message.watchToken);
                 if (message.resultHash != null && Object.hasOwnProperty.call(message, "resultHash"))
@@ -3358,14 +3360,16 @@ export const exocore = $root.exocore = (() => {
                     case 99:
                         message.test = $root.exocore.index.TestPredicate.decode(reader, reader.uint32());
                         break;
+                    case 7:
+                        if (!(message.projections && message.projections.length))
+                            message.projections = [];
+                        message.projections.push($root.exocore.index.Projection.decode(reader, reader.uint32()));
+                        break;
                     case 5:
                         message.paging = $root.exocore.index.Paging.decode(reader, reader.uint32());
                         break;
                     case 6:
                         message.ordering = $root.exocore.index.Ordering.decode(reader, reader.uint32());
-                        break;
-                    case 7:
-                        message.summary = reader.bool();
                         break;
                     case 8:
                         message.watchToken = reader.uint64();
@@ -3480,6 +3484,15 @@ export const exocore = $root.exocore = (() => {
                             return "test." + error;
                     }
                 }
+                if (message.projections != null && message.hasOwnProperty("projections")) {
+                    if (!Array.isArray(message.projections))
+                        return "projections: array expected";
+                    for (let i = 0; i < message.projections.length; ++i) {
+                        let error = $root.exocore.index.Projection.verify(message.projections[i]);
+                        if (error)
+                            return "projections." + error;
+                    }
+                }
                 if (message.paging != null && message.hasOwnProperty("paging")) {
                     let error = $root.exocore.index.Paging.verify(message.paging);
                     if (error)
@@ -3490,9 +3503,6 @@ export const exocore = $root.exocore = (() => {
                     if (error)
                         return "ordering." + error;
                 }
-                if (message.summary != null && message.hasOwnProperty("summary"))
-                    if (typeof message.summary !== "boolean")
-                        return "summary: boolean expected";
                 if (message.watchToken != null && message.hasOwnProperty("watchToken"))
                     if (!$util.isInteger(message.watchToken) && !(message.watchToken && $util.isInteger(message.watchToken.low) && $util.isInteger(message.watchToken.high)))
                         return "watchToken: integer|Long expected";
@@ -3552,6 +3562,16 @@ export const exocore = $root.exocore = (() => {
                         throw TypeError(".exocore.index.EntityQuery.test: object expected");
                     message.test = $root.exocore.index.TestPredicate.fromObject(object.test);
                 }
+                if (object.projections) {
+                    if (!Array.isArray(object.projections))
+                        throw TypeError(".exocore.index.EntityQuery.projections: array expected");
+                    message.projections = [];
+                    for (let i = 0; i < object.projections.length; ++i) {
+                        if (typeof object.projections[i] !== "object")
+                            throw TypeError(".exocore.index.EntityQuery.projections: object expected");
+                        message.projections[i] = $root.exocore.index.Projection.fromObject(object.projections[i]);
+                    }
+                }
                 if (object.paging != null) {
                     if (typeof object.paging !== "object")
                         throw TypeError(".exocore.index.EntityQuery.paging: object expected");
@@ -3562,8 +3582,6 @@ export const exocore = $root.exocore = (() => {
                         throw TypeError(".exocore.index.EntityQuery.ordering: object expected");
                     message.ordering = $root.exocore.index.Ordering.fromObject(object.ordering);
                 }
-                if (object.summary != null)
-                    message.summary = Boolean(object.summary);
                 if (object.watchToken != null)
                     if ($util.Long)
                         (message.watchToken = $util.Long.fromValue(object.watchToken)).unsigned = true;
@@ -3600,10 +3618,11 @@ export const exocore = $root.exocore = (() => {
                 if (!options)
                     options = {};
                 let object = {};
+                if (options.arrays || options.defaults)
+                    object.projections = [];
                 if (options.defaults) {
                     object.paging = null;
                     object.ordering = null;
-                    object.summary = false;
                     if ($util.Long) {
                         let long = new $util.Long(0, 0, true);
                         object.watchToken = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
@@ -3640,8 +3659,11 @@ export const exocore = $root.exocore = (() => {
                     object.paging = $root.exocore.index.Paging.toObject(message.paging, options);
                 if (message.ordering != null && message.hasOwnProperty("ordering"))
                     object.ordering = $root.exocore.index.Ordering.toObject(message.ordering, options);
-                if (message.summary != null && message.hasOwnProperty("summary"))
-                    object.summary = message.summary;
+                if (message.projections && message.projections.length) {
+                    object.projections = [];
+                    for (let j = 0; j < message.projections.length; ++j)
+                        object.projections[j] = $root.exocore.index.Projection.toObject(message.projections[j], options);
+                }
                 if (message.watchToken != null && message.hasOwnProperty("watchToken"))
                     if (typeof message.watchToken === "number")
                         object.watchToken = options.longs === String ? String(message.watchToken) : message.watchToken;
@@ -3684,6 +3706,325 @@ export const exocore = $root.exocore = (() => {
             };
 
             return EntityQuery;
+        })();
+
+        index.Projection = (function() {
+
+            /**
+             * Properties of a Projection.
+             * @memberof exocore.index
+             * @interface IProjection
+             * @property {Array.<string>|null} ["package"] If ends with a dollar sign "$", an exact match is required (ex: `some.package.Name$` will only match this message)
+             * @property {boolean|null} [skip] Skips the trait if the projection matches.
+             * @property {Array.<number>|null} [fieldIds] If specified, only return these fields.
+             * @property {Array.<number>|null} [fieldGroupIds] If specified, only return fields annotated with `options.proto`.`field_group_id` matching ids.
+             */
+
+            /**
+             * Constructs a new Projection.
+             * @memberof exocore.index
+             * @classdesc Represents a Projection.
+             * @implements IProjection
+             * @constructor
+             * @param {exocore.index.IProjection=} [properties] Properties to set
+             */
+            function Projection(properties) {
+                this["package"] = [];
+                this.fieldIds = [];
+                this.fieldGroupIds = [];
+                if (properties)
+                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * If ends with a dollar sign "$", an exact match is required (ex: `some.package.Name$` will only match this message)
+             * @member {Array.<string>} package
+             * @memberof exocore.index.Projection
+             * @instance
+             */
+            Projection.prototype["package"] = $util.emptyArray;
+
+            /**
+             * Skips the trait if the projection matches.
+             * @member {boolean} skip
+             * @memberof exocore.index.Projection
+             * @instance
+             */
+            Projection.prototype.skip = false;
+
+            /**
+             * If specified, only return these fields.
+             * @member {Array.<number>} fieldIds
+             * @memberof exocore.index.Projection
+             * @instance
+             */
+            Projection.prototype.fieldIds = $util.emptyArray;
+
+            /**
+             * If specified, only return fields annotated with `options.proto`.`field_group_id` matching ids.
+             * @member {Array.<number>} fieldGroupIds
+             * @memberof exocore.index.Projection
+             * @instance
+             */
+            Projection.prototype.fieldGroupIds = $util.emptyArray;
+
+            /**
+             * Creates a new Projection instance using the specified properties.
+             * @function create
+             * @memberof exocore.index.Projection
+             * @static
+             * @param {exocore.index.IProjection=} [properties] Properties to set
+             * @returns {exocore.index.Projection} Projection instance
+             */
+            Projection.create = function create(properties) {
+                return new Projection(properties);
+            };
+
+            /**
+             * Encodes the specified Projection message. Does not implicitly {@link exocore.index.Projection.verify|verify} messages.
+             * @function encode
+             * @memberof exocore.index.Projection
+             * @static
+             * @param {exocore.index.IProjection} message Projection message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Projection.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message["package"] != null && message["package"].length)
+                    for (let i = 0; i < message["package"].length; ++i)
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message["package"][i]);
+                if (message.skip != null && Object.hasOwnProperty.call(message, "skip"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).bool(message.skip);
+                if (message.fieldIds != null && message.fieldIds.length) {
+                    writer.uint32(/* id 4, wireType 2 =*/34).fork();
+                    for (let i = 0; i < message.fieldIds.length; ++i)
+                        writer.uint32(message.fieldIds[i]);
+                    writer.ldelim();
+                }
+                if (message.fieldGroupIds != null && message.fieldGroupIds.length) {
+                    writer.uint32(/* id 5, wireType 2 =*/42).fork();
+                    for (let i = 0; i < message.fieldGroupIds.length; ++i)
+                        writer.uint32(message.fieldGroupIds[i]);
+                    writer.ldelim();
+                }
+                return writer;
+            };
+
+            /**
+             * Encodes the specified Projection message, length delimited. Does not implicitly {@link exocore.index.Projection.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof exocore.index.Projection
+             * @static
+             * @param {exocore.index.IProjection} message Projection message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Projection.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a Projection message from the specified reader or buffer.
+             * @function decode
+             * @memberof exocore.index.Projection
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {exocore.index.Projection} Projection
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Projection.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.exocore.index.Projection();
+                while (reader.pos < end) {
+                    let tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        if (!(message["package"] && message["package"].length))
+                            message["package"] = [];
+                        message["package"].push(reader.string());
+                        break;
+                    case 2:
+                        message.skip = reader.bool();
+                        break;
+                    case 4:
+                        if (!(message.fieldIds && message.fieldIds.length))
+                            message.fieldIds = [];
+                        if ((tag & 7) === 2) {
+                            let end2 = reader.uint32() + reader.pos;
+                            while (reader.pos < end2)
+                                message.fieldIds.push(reader.uint32());
+                        } else
+                            message.fieldIds.push(reader.uint32());
+                        break;
+                    case 5:
+                        if (!(message.fieldGroupIds && message.fieldGroupIds.length))
+                            message.fieldGroupIds = [];
+                        if ((tag & 7) === 2) {
+                            let end2 = reader.uint32() + reader.pos;
+                            while (reader.pos < end2)
+                                message.fieldGroupIds.push(reader.uint32());
+                        } else
+                            message.fieldGroupIds.push(reader.uint32());
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a Projection message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof exocore.index.Projection
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {exocore.index.Projection} Projection
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Projection.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a Projection message.
+             * @function verify
+             * @memberof exocore.index.Projection
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Projection.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message["package"] != null && message.hasOwnProperty("package")) {
+                    if (!Array.isArray(message["package"]))
+                        return "package: array expected";
+                    for (let i = 0; i < message["package"].length; ++i)
+                        if (!$util.isString(message["package"][i]))
+                            return "package: string[] expected";
+                }
+                if (message.skip != null && message.hasOwnProperty("skip"))
+                    if (typeof message.skip !== "boolean")
+                        return "skip: boolean expected";
+                if (message.fieldIds != null && message.hasOwnProperty("fieldIds")) {
+                    if (!Array.isArray(message.fieldIds))
+                        return "fieldIds: array expected";
+                    for (let i = 0; i < message.fieldIds.length; ++i)
+                        if (!$util.isInteger(message.fieldIds[i]))
+                            return "fieldIds: integer[] expected";
+                }
+                if (message.fieldGroupIds != null && message.hasOwnProperty("fieldGroupIds")) {
+                    if (!Array.isArray(message.fieldGroupIds))
+                        return "fieldGroupIds: array expected";
+                    for (let i = 0; i < message.fieldGroupIds.length; ++i)
+                        if (!$util.isInteger(message.fieldGroupIds[i]))
+                            return "fieldGroupIds: integer[] expected";
+                }
+                return null;
+            };
+
+            /**
+             * Creates a Projection message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof exocore.index.Projection
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {exocore.index.Projection} Projection
+             */
+            Projection.fromObject = function fromObject(object) {
+                if (object instanceof $root.exocore.index.Projection)
+                    return object;
+                let message = new $root.exocore.index.Projection();
+                if (object["package"]) {
+                    if (!Array.isArray(object["package"]))
+                        throw TypeError(".exocore.index.Projection.package: array expected");
+                    message["package"] = [];
+                    for (let i = 0; i < object["package"].length; ++i)
+                        message["package"][i] = String(object["package"][i]);
+                }
+                if (object.skip != null)
+                    message.skip = Boolean(object.skip);
+                if (object.fieldIds) {
+                    if (!Array.isArray(object.fieldIds))
+                        throw TypeError(".exocore.index.Projection.fieldIds: array expected");
+                    message.fieldIds = [];
+                    for (let i = 0; i < object.fieldIds.length; ++i)
+                        message.fieldIds[i] = object.fieldIds[i] >>> 0;
+                }
+                if (object.fieldGroupIds) {
+                    if (!Array.isArray(object.fieldGroupIds))
+                        throw TypeError(".exocore.index.Projection.fieldGroupIds: array expected");
+                    message.fieldGroupIds = [];
+                    for (let i = 0; i < object.fieldGroupIds.length; ++i)
+                        message.fieldGroupIds[i] = object.fieldGroupIds[i] >>> 0;
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a Projection message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof exocore.index.Projection
+             * @static
+             * @param {exocore.index.Projection} message Projection
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Projection.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                let object = {};
+                if (options.arrays || options.defaults) {
+                    object["package"] = [];
+                    object.fieldIds = [];
+                    object.fieldGroupIds = [];
+                }
+                if (options.defaults)
+                    object.skip = false;
+                if (message["package"] && message["package"].length) {
+                    object["package"] = [];
+                    for (let j = 0; j < message["package"].length; ++j)
+                        object["package"][j] = message["package"][j];
+                }
+                if (message.skip != null && message.hasOwnProperty("skip"))
+                    object.skip = message.skip;
+                if (message.fieldIds && message.fieldIds.length) {
+                    object.fieldIds = [];
+                    for (let j = 0; j < message.fieldIds.length; ++j)
+                        object.fieldIds[j] = message.fieldIds[j];
+                }
+                if (message.fieldGroupIds && message.fieldGroupIds.length) {
+                    object.fieldGroupIds = [];
+                    for (let j = 0; j < message.fieldGroupIds.length; ++j)
+                        object.fieldGroupIds[j] = message.fieldGroupIds[j];
+                }
+                return object;
+            };
+
+            /**
+             * Converts this Projection to JSON.
+             * @function toJSON
+             * @memberof exocore.index.Projection
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Projection.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return Projection;
         })();
 
         index.MatchPredicate = (function() {
@@ -6874,12 +7215,12 @@ export const exocore = $root.exocore = (() => {
              * Properties of an EntityResults.
              * @memberof exocore.index
              * @interface IEntityResults
-             * @property {Array.<exocore.index.IEntityResult>|null} [entities] EntityResults entities
-             * @property {boolean|null} [summary] EntityResults summary
-             * @property {number|null} [estimatedCount] EntityResults estimatedCount
-             * @property {exocore.index.IPaging|null} [currentPage] EntityResults currentPage
-             * @property {exocore.index.IPaging|null} [nextPage] EntityResults nextPage
-             * @property {number|Long|null} [hash] EntityResults hash
+             * @property {Array.<exocore.index.IEntityResult>|null} [entities] Entities matching query.
+             * @property {boolean|null} [skippedHash] had the same hash has the specified and that `entities` were set to empty.
+             * @property {number|null} [estimatedCount] Estimated number of entities matching, based on number of matching mutations.
+             * @property {exocore.index.IPaging|null} [currentPage] Paging token of the current results.
+             * @property {exocore.index.IPaging|null} [nextPage] Paging token of the next page of results.
+             * @property {number|Long|null} [hash] changed by using the `result_hash` field on the query.
              */
 
             /**
@@ -6899,7 +7240,7 @@ export const exocore = $root.exocore = (() => {
             }
 
             /**
-             * EntityResults entities.
+             * Entities matching query.
              * @member {Array.<exocore.index.IEntityResult>} entities
              * @memberof exocore.index.EntityResults
              * @instance
@@ -6907,15 +7248,15 @@ export const exocore = $root.exocore = (() => {
             EntityResults.prototype.entities = $util.emptyArray;
 
             /**
-             * EntityResults summary.
-             * @member {boolean} summary
+             * had the same hash has the specified and that `entities` were set to empty.
+             * @member {boolean} skippedHash
              * @memberof exocore.index.EntityResults
              * @instance
              */
-            EntityResults.prototype.summary = false;
+            EntityResults.prototype.skippedHash = false;
 
             /**
-             * EntityResults estimatedCount.
+             * Estimated number of entities matching, based on number of matching mutations.
              * @member {number} estimatedCount
              * @memberof exocore.index.EntityResults
              * @instance
@@ -6923,7 +7264,7 @@ export const exocore = $root.exocore = (() => {
             EntityResults.prototype.estimatedCount = 0;
 
             /**
-             * EntityResults currentPage.
+             * Paging token of the current results.
              * @member {exocore.index.IPaging|null|undefined} currentPage
              * @memberof exocore.index.EntityResults
              * @instance
@@ -6931,7 +7272,7 @@ export const exocore = $root.exocore = (() => {
             EntityResults.prototype.currentPage = null;
 
             /**
-             * EntityResults nextPage.
+             * Paging token of the next page of results.
              * @member {exocore.index.IPaging|null|undefined} nextPage
              * @memberof exocore.index.EntityResults
              * @instance
@@ -6939,7 +7280,7 @@ export const exocore = $root.exocore = (() => {
             EntityResults.prototype.nextPage = null;
 
             /**
-             * EntityResults hash.
+             * changed by using the `result_hash` field on the query.
              * @member {number|Long} hash
              * @memberof exocore.index.EntityResults
              * @instance
@@ -6973,8 +7314,8 @@ export const exocore = $root.exocore = (() => {
                 if (message.entities != null && message.entities.length)
                     for (let i = 0; i < message.entities.length; ++i)
                         $root.exocore.index.EntityResult.encode(message.entities[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                if (message.summary != null && Object.hasOwnProperty.call(message, "summary"))
-                    writer.uint32(/* id 2, wireType 0 =*/16).bool(message.summary);
+                if (message.skippedHash != null && Object.hasOwnProperty.call(message, "skippedHash"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).bool(message.skippedHash);
                 if (message.estimatedCount != null && Object.hasOwnProperty.call(message, "estimatedCount"))
                     writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.estimatedCount);
                 if (message.currentPage != null && Object.hasOwnProperty.call(message, "currentPage"))
@@ -7023,7 +7364,7 @@ export const exocore = $root.exocore = (() => {
                         message.entities.push($root.exocore.index.EntityResult.decode(reader, reader.uint32()));
                         break;
                     case 2:
-                        message.summary = reader.bool();
+                        message.skippedHash = reader.bool();
                         break;
                     case 3:
                         message.estimatedCount = reader.uint32();
@@ -7081,9 +7422,9 @@ export const exocore = $root.exocore = (() => {
                             return "entities." + error;
                     }
                 }
-                if (message.summary != null && message.hasOwnProperty("summary"))
-                    if (typeof message.summary !== "boolean")
-                        return "summary: boolean expected";
+                if (message.skippedHash != null && message.hasOwnProperty("skippedHash"))
+                    if (typeof message.skippedHash !== "boolean")
+                        return "skippedHash: boolean expected";
                 if (message.estimatedCount != null && message.hasOwnProperty("estimatedCount"))
                     if (!$util.isInteger(message.estimatedCount))
                         return "estimatedCount: integer expected";
@@ -7125,8 +7466,8 @@ export const exocore = $root.exocore = (() => {
                         message.entities[i] = $root.exocore.index.EntityResult.fromObject(object.entities[i]);
                     }
                 }
-                if (object.summary != null)
-                    message.summary = Boolean(object.summary);
+                if (object.skippedHash != null)
+                    message.skippedHash = Boolean(object.skippedHash);
                 if (object.estimatedCount != null)
                     message.estimatedCount = object.estimatedCount >>> 0;
                 if (object.currentPage != null) {
@@ -7167,7 +7508,7 @@ export const exocore = $root.exocore = (() => {
                 if (options.arrays || options.defaults)
                     object.entities = [];
                 if (options.defaults) {
-                    object.summary = false;
+                    object.skippedHash = false;
                     object.estimatedCount = 0;
                     object.currentPage = null;
                     object.nextPage = null;
@@ -7182,8 +7523,8 @@ export const exocore = $root.exocore = (() => {
                     for (let j = 0; j < message.entities.length; ++j)
                         object.entities[j] = $root.exocore.index.EntityResult.toObject(message.entities[j], options);
                 }
-                if (message.summary != null && message.hasOwnProperty("summary"))
-                    object.summary = message.summary;
+                if (message.skippedHash != null && message.hasOwnProperty("skippedHash"))
+                    object.skippedHash = message.skippedHash;
                 if (message.estimatedCount != null && message.hasOwnProperty("estimatedCount"))
                     object.estimatedCount = message.estimatedCount;
                 if (message.currentPage != null && message.hasOwnProperty("currentPage"))
@@ -7523,6 +7864,8 @@ export const exocore = $root.exocore = (() => {
              * @property {number|null} [int3] TestMessage int3
              * @property {exocore.index.IReference|null} [ref1] TestMessage ref1
              * @property {exocore.index.IReference|null} [ref2] TestMessage ref2
+             * @property {string|null} [grouped1] TestMessage grouped1
+             * @property {string|null} [grouped2] TestMessage grouped2
              */
 
             /**
@@ -7676,6 +8019,22 @@ export const exocore = $root.exocore = (() => {
              */
             TestMessage.prototype.ref2 = null;
 
+            /**
+             * TestMessage grouped1.
+             * @member {string} grouped1
+             * @memberof exocore.test.TestMessage
+             * @instance
+             */
+            TestMessage.prototype.grouped1 = "";
+
+            /**
+             * TestMessage grouped2.
+             * @member {string} grouped2
+             * @memberof exocore.test.TestMessage
+             * @instance
+             */
+            TestMessage.prototype.grouped2 = "";
+
             // OneOf field names bound to virtual getters and setters
             let $oneOfFields;
 
@@ -7748,6 +8107,10 @@ export const exocore = $root.exocore = (() => {
                     writer.uint32(/* id 18, wireType 0 =*/144).uint32(message.uint3);
                 if (message.int3 != null && Object.hasOwnProperty.call(message, "int3"))
                     writer.uint32(/* id 19, wireType 0 =*/152).int32(message.int3);
+                if (message.grouped1 != null && Object.hasOwnProperty.call(message, "grouped1"))
+                    writer.uint32(/* id 20, wireType 2 =*/162).string(message.grouped1);
+                if (message.grouped2 != null && Object.hasOwnProperty.call(message, "grouped2"))
+                    writer.uint32(/* id 21, wireType 2 =*/170).string(message.grouped2);
                 return writer;
             };
 
@@ -7832,6 +8195,12 @@ export const exocore = $root.exocore = (() => {
                         break;
                     case 14:
                         message.ref2 = $root.exocore.index.Reference.decode(reader, reader.uint32());
+                        break;
+                    case 20:
+                        message.grouped1 = reader.string();
+                        break;
+                    case 21:
+                        message.grouped2 = reader.string();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -7938,6 +8307,12 @@ export const exocore = $root.exocore = (() => {
                     if (error)
                         return "ref2." + error;
                 }
+                if (message.grouped1 != null && message.hasOwnProperty("grouped1"))
+                    if (!$util.isString(message.grouped1))
+                        return "grouped1: string expected";
+                if (message.grouped2 != null && message.hasOwnProperty("grouped2"))
+                    if (!$util.isString(message.grouped2))
+                        return "grouped2: string expected";
                 return null;
             };
 
@@ -8005,6 +8380,10 @@ export const exocore = $root.exocore = (() => {
                         throw TypeError(".exocore.test.TestMessage.ref2: object expected");
                     message.ref2 = $root.exocore.index.Reference.fromObject(object.ref2);
                 }
+                if (object.grouped1 != null)
+                    message.grouped1 = String(object.grouped1);
+                if (object.grouped2 != null)
+                    message.grouped2 = String(object.grouped2);
                 return message;
             };
 
@@ -8037,6 +8416,8 @@ export const exocore = $root.exocore = (() => {
                     object.date3 = null;
                     object.uint3 = 0;
                     object.int3 = 0;
+                    object.grouped1 = "";
+                    object.grouped2 = "";
                 }
                 if (message.string1 != null && message.hasOwnProperty("string1"))
                     object.string1 = message.string1;
@@ -8078,6 +8459,10 @@ export const exocore = $root.exocore = (() => {
                     object.uint3 = message.uint3;
                 if (message.int3 != null && message.hasOwnProperty("int3"))
                     object.int3 = message.int3;
+                if (message.grouped1 != null && message.hasOwnProperty("grouped1"))
+                    object.grouped1 = message.grouped1;
+                if (message.grouped2 != null && message.hasOwnProperty("grouped2"))
+                    object.grouped2 = message.grouped2;
                 return object;
             };
 
@@ -13633,6 +14018,7 @@ export const google = $root.google = (() => {
              * @property {boolean|null} [".exocore.indexed"] FieldOptions .exocore.indexed
              * @property {boolean|null} [".exocore.sorted"] FieldOptions .exocore.sorted
              * @property {boolean|null} [".exocore.text"] FieldOptions .exocore.text
+             * @property {Array.<number>|null} [".exocore.fieldGroup"] FieldOptions .exocore.fieldGroup
              */
 
             /**
@@ -13645,6 +14031,7 @@ export const google = $root.google = (() => {
              */
             function FieldOptions(properties) {
                 this.uninterpretedOption = [];
+                this[".exocore.fieldGroup"] = [];
                 if (properties)
                     for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -13732,6 +14119,14 @@ export const google = $root.google = (() => {
             FieldOptions.prototype[".exocore.text"] = false;
 
             /**
+             * FieldOptions .exocore.fieldGroup.
+             * @member {Array.<number>} .exocore.fieldGroup
+             * @memberof google.protobuf.FieldOptions
+             * @instance
+             */
+            FieldOptions.prototype[".exocore.fieldGroup"] = $util.emptyArray;
+
+            /**
              * Creates a new FieldOptions instance using the specified properties.
              * @function create
              * @memberof google.protobuf.FieldOptions
@@ -13776,6 +14171,12 @@ export const google = $root.google = (() => {
                     writer.uint32(/* id 1374, wireType 0 =*/10992).bool(message[".exocore.sorted"]);
                 if (message[".exocore.text"] != null && Object.hasOwnProperty.call(message, ".exocore.text"))
                     writer.uint32(/* id 1375, wireType 0 =*/11000).bool(message[".exocore.text"]);
+                if (message[".exocore.fieldGroup"] != null && message[".exocore.fieldGroup"].length) {
+                    writer.uint32(/* id 1376, wireType 2 =*/11010).fork();
+                    for (let i = 0; i < message[".exocore.fieldGroup"].length; ++i)
+                        writer.uint32(message[".exocore.fieldGroup"][i]);
+                    writer.ldelim();
+                }
                 return writer;
             };
 
@@ -13841,6 +14242,16 @@ export const google = $root.google = (() => {
                         break;
                     case 1375:
                         message[".exocore.text"] = reader.bool();
+                        break;
+                    case 1376:
+                        if (!(message[".exocore.fieldGroup"] && message[".exocore.fieldGroup"].length))
+                            message[".exocore.fieldGroup"] = [];
+                        if ((tag & 7) === 2) {
+                            let end2 = reader.uint32() + reader.pos;
+                            while (reader.pos < end2)
+                                message[".exocore.fieldGroup"].push(reader.uint32());
+                        } else
+                            message[".exocore.fieldGroup"].push(reader.uint32());
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -13925,6 +14336,13 @@ export const google = $root.google = (() => {
                 if (message[".exocore.text"] != null && message.hasOwnProperty(".exocore.text"))
                     if (typeof message[".exocore.text"] !== "boolean")
                         return ".exocore.text: boolean expected";
+                if (message[".exocore.fieldGroup"] != null && message.hasOwnProperty(".exocore.fieldGroup")) {
+                    if (!Array.isArray(message[".exocore.fieldGroup"]))
+                        return ".exocore.fieldGroup: array expected";
+                    for (let i = 0; i < message[".exocore.fieldGroup"].length; ++i)
+                        if (!$util.isInteger(message[".exocore.fieldGroup"][i]))
+                            return ".exocore.fieldGroup: integer[] expected";
+                }
                 return null;
             };
 
@@ -13992,6 +14410,13 @@ export const google = $root.google = (() => {
                     message[".exocore.sorted"] = Boolean(object[".exocore.sorted"]);
                 if (object[".exocore.text"] != null)
                     message[".exocore.text"] = Boolean(object[".exocore.text"]);
+                if (object[".exocore.fieldGroup"]) {
+                    if (!Array.isArray(object[".exocore.fieldGroup"]))
+                        throw TypeError(".google.protobuf.FieldOptions..exocore.fieldGroup: array expected");
+                    message[".exocore.fieldGroup"] = [];
+                    for (let i = 0; i < object[".exocore.fieldGroup"].length; ++i)
+                        message[".exocore.fieldGroup"][i] = object[".exocore.fieldGroup"][i] >>> 0;
+                }
                 return message;
             };
 
@@ -14008,8 +14433,10 @@ export const google = $root.google = (() => {
                 if (!options)
                     options = {};
                 let object = {};
-                if (options.arrays || options.defaults)
+                if (options.arrays || options.defaults) {
                     object.uninterpretedOption = [];
+                    object[".exocore.fieldGroup"] = [];
+                }
                 if (options.defaults) {
                     object.ctype = options.enums === String ? "STRING" : 0;
                     object.packed = false;
@@ -14044,6 +14471,11 @@ export const google = $root.google = (() => {
                     object[".exocore.sorted"] = message[".exocore.sorted"];
                 if (message[".exocore.text"] != null && message.hasOwnProperty(".exocore.text"))
                     object[".exocore.text"] = message[".exocore.text"];
+                if (message[".exocore.fieldGroup"] && message[".exocore.fieldGroup"].length) {
+                    object[".exocore.fieldGroup"] = [];
+                    for (let j = 0; j < message[".exocore.fieldGroup"].length; ++j)
+                        object[".exocore.fieldGroup"][j] = message[".exocore.fieldGroup"][j];
+                }
                 return object;
             };
 

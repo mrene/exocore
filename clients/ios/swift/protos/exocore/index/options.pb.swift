@@ -31,6 +31,8 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
 
 extension SwiftProtobuf.Google_Protobuf_FieldOptions {
 
+  //// Indicates that the value of this field is to be indexed and queriable.
+  //// For full-text indexation, see `text`.
   public var Exocore_indexed: Bool {
     get {return getExtensionValue(ext: Exocore_Extensions_indexed) ?? false}
     set {setExtensionValue(ext: Exocore_Extensions_indexed, value: newValue)}
@@ -46,6 +48,7 @@ extension SwiftProtobuf.Google_Protobuf_FieldOptions {
     clearExtensionValue(ext: Exocore_Extensions_indexed)
   }
 
+  //// Indicates that sorting by this field is possible.
   public var Exocore_sorted: Bool {
     get {return getExtensionValue(ext: Exocore_Extensions_sorted) ?? false}
     set {setExtensionValue(ext: Exocore_Extensions_sorted, value: newValue)}
@@ -61,6 +64,7 @@ extension SwiftProtobuf.Google_Protobuf_FieldOptions {
     clearExtensionValue(ext: Exocore_Extensions_sorted)
   }
 
+  //// Indicates that the text of this field is to be full-text searchable.
   public var Exocore_text: Bool {
     get {return getExtensionValue(ext: Exocore_Extensions_text) ?? false}
     set {setExtensionValue(ext: Exocore_Extensions_text, value: newValue)}
@@ -76,6 +80,23 @@ extension SwiftProtobuf.Google_Protobuf_FieldOptions {
     clearExtensionValue(ext: Exocore_Extensions_text)
   }
 
+  //// Value used by `Projection.field_group_ids` to select the fields to be returned
+  //// when projection on querying entities with `EntityQuery` is done.
+  public var Exocore_fieldGroup: [UInt32] {
+    get {return getExtensionValue(ext: Exocore_Extensions_field_group) ?? []}
+    set {setExtensionValue(ext: Exocore_Extensions_field_group, value: newValue)}
+  }
+  /// Returns true if extension `Exocore_Extensions_field_group`
+  /// has been explicitly set.
+  public var hasExocore_fieldGroup: Bool {
+    return hasExtensionValue(ext: Exocore_Extensions_field_group)
+  }
+  /// Clears the value of extension `Exocore_Extensions_field_group`.
+  /// Subsequent reads from it will return its default value.
+  public mutating func clearExocore_fieldGroup() {
+    clearExtensionValue(ext: Exocore_Extensions_field_group)
+  }
+
 }
 
 // MARK: - File's ExtensionMap: Exocore_Options_Extensions
@@ -87,24 +108,36 @@ extension SwiftProtobuf.Google_Protobuf_FieldOptions {
 public let Exocore_Options_Extensions: SwiftProtobuf.SimpleExtensionMap = [
   Exocore_Extensions_indexed,
   Exocore_Extensions_sorted,
-  Exocore_Extensions_text
+  Exocore_Extensions_text,
+  Exocore_Extensions_field_group
 ]
 
 // Extension Objects - The only reason these might be needed is when manually
 // constructing a `SimpleExtensionMap`, otherwise, use the above _Extension Properties_
 // accessors for the extension fields on the messages directly.
 
+//// Indicates that the value of this field is to be indexed and queriable.
+//// For full-text indexation, see `text`.
 public let Exocore_Extensions_indexed = SwiftProtobuf.MessageExtension<SwiftProtobuf.OptionalExtensionField<SwiftProtobuf.ProtobufBool>, SwiftProtobuf.Google_Protobuf_FieldOptions>(
   _protobuf_fieldNumber: 1373,
   fieldName: "exocore.indexed"
 )
 
+//// Indicates that sorting by this field is possible.
 public let Exocore_Extensions_sorted = SwiftProtobuf.MessageExtension<SwiftProtobuf.OptionalExtensionField<SwiftProtobuf.ProtobufBool>, SwiftProtobuf.Google_Protobuf_FieldOptions>(
   _protobuf_fieldNumber: 1374,
   fieldName: "exocore.sorted"
 )
 
+//// Indicates that the text of this field is to be full-text searchable.
 public let Exocore_Extensions_text = SwiftProtobuf.MessageExtension<SwiftProtobuf.OptionalExtensionField<SwiftProtobuf.ProtobufBool>, SwiftProtobuf.Google_Protobuf_FieldOptions>(
   _protobuf_fieldNumber: 1375,
   fieldName: "exocore.text"
+)
+
+//// Value used by `Projection.field_group_ids` to select the fields to be returned
+//// when projection on querying entities with `EntityQuery` is done.
+public let Exocore_Extensions_field_group = SwiftProtobuf.MessageExtension<SwiftProtobuf.PackedExtensionField<SwiftProtobuf.ProtobufUInt32>, SwiftProtobuf.Google_Protobuf_FieldOptions>(
+  _protobuf_fieldNumber: 1376,
+  fieldName: "exocore.field_group"
 )

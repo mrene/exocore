@@ -127,7 +127,10 @@ public struct Exocore_Index_EntityQuery {
     set {predicate = .test(newValue)}
   }
 
-  //// Query paging requested
+  //// Optional projections on traits and fields to be returned.
+  public var projections: [Exocore_Index_Projection] = []
+
+  //// Query paging requested.
   public var paging: Exocore_Index_Paging {
     get {return _paging ?? Exocore_Index_Paging()}
     set {_paging = newValue}
@@ -137,7 +140,7 @@ public struct Exocore_Index_EntityQuery {
   /// Clears the value of `paging`. Subsequent reads from it will return its default value.
   public mutating func clearPaging() {self._paging = nil}
 
-  //// Query ordering
+  //// Query ordering.
   public var ordering: Exocore_Index_Ordering {
     get {return _ordering ?? Exocore_Index_Ordering()}
     set {_ordering = newValue}
@@ -147,13 +150,11 @@ public struct Exocore_Index_EntityQuery {
   /// Clears the value of `ordering`. Subsequent reads from it will return its default value.
   public mutating func clearOrdering() {self._ordering = nil}
 
-  //// If true, only return summary
-  public var summary: Bool = false
-
   //// Optional watch token if this query is to be used for watching.
   public var watchToken: UInt64 = 0
 
-  //// If specified, if results from server matches this hash, only a summary will be returned.
+  //// If specified, if results from server matches this hash, results will be empty with the 
+  //// `skipped_hash` field set to `true`.
   public var resultHash: UInt64 = 0
 
   //// Include deleted mutations matches. Can be used to return recently modified entities that
@@ -191,6 +192,29 @@ public struct Exocore_Index_EntityQuery {
 
   fileprivate var _paging: Exocore_Index_Paging? = nil
   fileprivate var _ordering: Exocore_Index_Ordering? = nil
+}
+
+public struct Exocore_Index_Projection {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  //// If specified, a prefix match will be done against traits' Protobuf full name (`some.package.Name`).
+  //// If ends with a dollar sign "$", an exact match is required (ex: `some.package.Name$` will only match this message)
+  public var package: [String] = []
+
+  //// Skips the trait if the projection matches.
+  public var skip: Bool = false
+
+  //// If specified, only return these fields.
+  public var fieldIds: [UInt32] = []
+
+  //// If specified, only return fields annotated with `options.proto`.`field_group_id` matching ids.
+  public var fieldGroupIds: [UInt32] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
 }
 
 //// Query entities by text match on all indexed fields across all traits.
@@ -667,12 +691,17 @@ public struct Exocore_Index_EntityResults {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  //// Entities matching query.
   public var entities: [Exocore_Index_EntityResult] = []
 
-  public var summary: Bool = false
+  //// If query specified a `result_hash`, this is set to `true` if the results
+  //// had the same hash has the specified and that `entities` were set to empty.
+  public var skippedHash: Bool = false
 
+  //// Estimated number of entities matching, based on number of matching mutations.
   public var estimatedCount: UInt32 = 0
 
+  //// Paging token of the current results.
   public var currentPage: Exocore_Index_Paging {
     get {return _currentPage ?? Exocore_Index_Paging()}
     set {_currentPage = newValue}
@@ -682,6 +711,7 @@ public struct Exocore_Index_EntityResults {
   /// Clears the value of `currentPage`. Subsequent reads from it will return its default value.
   public mutating func clearCurrentPage() {self._currentPage = nil}
 
+  //// Paging token of the next page of results.
   public var nextPage: Exocore_Index_Paging {
     get {return _nextPage ?? Exocore_Index_Paging()}
     set {_nextPage = newValue}
@@ -691,6 +721,8 @@ public struct Exocore_Index_EntityResults {
   /// Clears the value of `nextPage`. Subsequent reads from it will return its default value.
   public mutating func clearNextPage() {self._nextPage = nil}
 
+  //// Hash of the results. Can be used to prevent receiving same results if they haven't
+  //// changed by using the `result_hash` field on the query.
   public var hash: UInt64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -756,9 +788,9 @@ extension Exocore_Index_EntityQuery: SwiftProtobuf.Message, SwiftProtobuf._Messa
     10: .same(proto: "operations"),
     11: .same(proto: "all"),
     99: .same(proto: "test"),
+    7: .same(proto: "projections"),
     5: .same(proto: "paging"),
     6: .same(proto: "ordering"),
-    7: .same(proto: "summary"),
     8: .standard(proto: "watch_token"),
     9: .standard(proto: "result_hash"),
     12: .standard(proto: "include_deleted"),
@@ -801,7 +833,7 @@ extension Exocore_Index_EntityQuery: SwiftProtobuf.Message, SwiftProtobuf._Messa
         if let v = v {self.predicate = .reference(v)}
       case 5: try decoder.decodeSingularMessageField(value: &self._paging)
       case 6: try decoder.decodeSingularMessageField(value: &self._ordering)
-      case 7: try decoder.decodeSingularBoolField(value: &self.summary)
+      case 7: try decoder.decodeRepeatedMessageField(value: &self.projections)
       case 8: try decoder.decodeSingularUInt64Field(value: &self.watchToken)
       case 9: try decoder.decodeSingularUInt64Field(value: &self.resultHash)
       case 10:
@@ -853,8 +885,8 @@ extension Exocore_Index_EntityQuery: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if let v = self._ordering {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
     }
-    if self.summary != false {
-      try visitor.visitSingularBoolField(value: self.summary, fieldNumber: 7)
+    if !self.projections.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.projections, fieldNumber: 7)
     }
     if self.watchToken != 0 {
       try visitor.visitSingularUInt64Field(value: self.watchToken, fieldNumber: 8)
@@ -881,12 +913,59 @@ extension Exocore_Index_EntityQuery: SwiftProtobuf.Message, SwiftProtobuf._Messa
 
   public static func ==(lhs: Exocore_Index_EntityQuery, rhs: Exocore_Index_EntityQuery) -> Bool {
     if lhs.predicate != rhs.predicate {return false}
+    if lhs.projections != rhs.projections {return false}
     if lhs._paging != rhs._paging {return false}
     if lhs._ordering != rhs._ordering {return false}
-    if lhs.summary != rhs.summary {return false}
     if lhs.watchToken != rhs.watchToken {return false}
     if lhs.resultHash != rhs.resultHash {return false}
     if lhs.includeDeleted != rhs.includeDeleted {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Exocore_Index_Projection: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".Projection"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "package"),
+    2: .same(proto: "skip"),
+    4: .standard(proto: "field_ids"),
+    5: .standard(proto: "field_group_ids"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeRepeatedStringField(value: &self.package)
+      case 2: try decoder.decodeSingularBoolField(value: &self.skip)
+      case 4: try decoder.decodeRepeatedUInt32Field(value: &self.fieldIds)
+      case 5: try decoder.decodeRepeatedUInt32Field(value: &self.fieldGroupIds)
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.package.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.package, fieldNumber: 1)
+    }
+    if self.skip != false {
+      try visitor.visitSingularBoolField(value: self.skip, fieldNumber: 2)
+    }
+    if !self.fieldIds.isEmpty {
+      try visitor.visitPackedUInt32Field(value: self.fieldIds, fieldNumber: 4)
+    }
+    if !self.fieldGroupIds.isEmpty {
+      try visitor.visitPackedUInt32Field(value: self.fieldGroupIds, fieldNumber: 5)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Exocore_Index_Projection, rhs: Exocore_Index_Projection) -> Bool {
+    if lhs.package != rhs.package {return false}
+    if lhs.skip != rhs.skip {return false}
+    if lhs.fieldIds != rhs.fieldIds {return false}
+    if lhs.fieldGroupIds != rhs.fieldGroupIds {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1454,7 +1533,7 @@ extension Exocore_Index_EntityResults: SwiftProtobuf.Message, SwiftProtobuf._Mes
   public static let protoMessageName: String = _protobuf_package + ".EntityResults"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "entities"),
-    2: .same(proto: "summary"),
+    2: .standard(proto: "skipped_hash"),
     3: .standard(proto: "estimated_count"),
     4: .standard(proto: "current_page"),
     5: .standard(proto: "next_page"),
@@ -1465,7 +1544,7 @@ extension Exocore_Index_EntityResults: SwiftProtobuf.Message, SwiftProtobuf._Mes
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeRepeatedMessageField(value: &self.entities)
-      case 2: try decoder.decodeSingularBoolField(value: &self.summary)
+      case 2: try decoder.decodeSingularBoolField(value: &self.skippedHash)
       case 3: try decoder.decodeSingularUInt32Field(value: &self.estimatedCount)
       case 4: try decoder.decodeSingularMessageField(value: &self._currentPage)
       case 5: try decoder.decodeSingularMessageField(value: &self._nextPage)
@@ -1479,8 +1558,8 @@ extension Exocore_Index_EntityResults: SwiftProtobuf.Message, SwiftProtobuf._Mes
     if !self.entities.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.entities, fieldNumber: 1)
     }
-    if self.summary != false {
-      try visitor.visitSingularBoolField(value: self.summary, fieldNumber: 2)
+    if self.skippedHash != false {
+      try visitor.visitSingularBoolField(value: self.skippedHash, fieldNumber: 2)
     }
     if self.estimatedCount != 0 {
       try visitor.visitSingularUInt32Field(value: self.estimatedCount, fieldNumber: 3)
@@ -1499,7 +1578,7 @@ extension Exocore_Index_EntityResults: SwiftProtobuf.Message, SwiftProtobuf._Mes
 
   public static func ==(lhs: Exocore_Index_EntityResults, rhs: Exocore_Index_EntityResults) -> Bool {
     if lhs.entities != rhs.entities {return false}
-    if lhs.summary != rhs.summary {return false}
+    if lhs.skippedHash != rhs.skippedHash {return false}
     if lhs.estimatedCount != rhs.estimatedCount {return false}
     if lhs._currentPage != rhs._currentPage {return false}
     if lhs._nextPage != rhs._nextPage {return false}

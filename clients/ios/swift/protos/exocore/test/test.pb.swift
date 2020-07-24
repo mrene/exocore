@@ -145,6 +145,16 @@ public struct Exocore_Test_TestMessage {
   /// Clears the value of `ref2`. Subsequent reads from it will return its default value.
   public mutating func clearRef2() {_uniqueStorage()._ref2 = nil}
 
+  public var grouped1: String {
+    get {return _storage._grouped1}
+    set {_uniqueStorage()._grouped1 = newValue}
+  }
+
+  public var grouped2: String {
+    get {return _storage._grouped2}
+    set {_uniqueStorage()._grouped2 = newValue}
+  }
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public enum OneOf_Fields: Equatable {
@@ -217,6 +227,8 @@ extension Exocore_Test_TestMessage: SwiftProtobuf.Message, SwiftProtobuf._Messag
     19: .same(proto: "int3"),
     13: .same(proto: "ref1"),
     14: .same(proto: "ref2"),
+    20: .same(proto: "grouped1"),
+    21: .same(proto: "grouped2"),
   ]
 
   fileprivate class _StorageClass {
@@ -236,6 +248,8 @@ extension Exocore_Test_TestMessage: SwiftProtobuf.Message, SwiftProtobuf._Messag
     var _int3: Int32 = 0
     var _ref1: Exocore_Index_Reference? = nil
     var _ref2: Exocore_Index_Reference? = nil
+    var _grouped1: String = String()
+    var _grouped2: String = String()
 
     static let defaultInstance = _StorageClass()
 
@@ -258,6 +272,8 @@ extension Exocore_Test_TestMessage: SwiftProtobuf.Message, SwiftProtobuf._Messag
       _int3 = source._int3
       _ref1 = source._ref1
       _ref2 = source._ref2
+      _grouped1 = source._grouped1
+      _grouped2 = source._grouped2
     }
   }
 
@@ -298,6 +314,8 @@ extension Exocore_Test_TestMessage: SwiftProtobuf.Message, SwiftProtobuf._Messag
         case 17: try decoder.decodeSingularMessageField(value: &_storage._date3)
         case 18: try decoder.decodeSingularUInt32Field(value: &_storage._uint3)
         case 19: try decoder.decodeSingularInt32Field(value: &_storage._int3)
+        case 20: try decoder.decodeSingularStringField(value: &_storage._grouped1)
+        case 21: try decoder.decodeSingularStringField(value: &_storage._grouped2)
         default: break
         }
       }
@@ -358,6 +376,12 @@ extension Exocore_Test_TestMessage: SwiftProtobuf.Message, SwiftProtobuf._Messag
       if _storage._int3 != 0 {
         try visitor.visitSingularInt32Field(value: _storage._int3, fieldNumber: 19)
       }
+      if !_storage._grouped1.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._grouped1, fieldNumber: 20)
+      }
+      if !_storage._grouped2.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._grouped2, fieldNumber: 21)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -383,6 +407,8 @@ extension Exocore_Test_TestMessage: SwiftProtobuf.Message, SwiftProtobuf._Messag
         if _storage._int3 != rhs_storage._int3 {return false}
         if _storage._ref1 != rhs_storage._ref1 {return false}
         if _storage._ref2 != rhs_storage._ref2 {return false}
+        if _storage._grouped1 != rhs_storage._grouped1 {return false}
+        if _storage._grouped2 != rhs_storage._grouped2 {return false}
         return true
       }
       if !storagesAreEqual {return false}

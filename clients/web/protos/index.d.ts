@@ -1307,19 +1307,19 @@ export namespace exocore {
             /** EntityQuery test */
             test?: (exocore.index.ITestPredicate|null);
 
-            /** Query paging requested */
+            /** Optional projections on traits and fields to be returned. */
+            projections?: (exocore.index.IProjection[]|null);
+
+            /** Query paging requested. */
             paging?: (exocore.index.IPaging|null);
 
-            /** Query ordering */
+            /** Query ordering. */
             ordering?: (exocore.index.IOrdering|null);
-
-            /** If true, only return summary */
-            summary?: (boolean|null);
 
             /** Optional watch token if this query is to be used for watching. */
             watchToken?: (number|Long|null);
 
-            /** If specified, if results from server matches this hash, only a summary will be returned. */
+            /** `skipped_hash` field set to `true`. */
             resultHash?: (number|Long|null);
 
             /** also include deletions. */
@@ -1356,19 +1356,19 @@ export namespace exocore {
             /** EntityQuery test. */
             public test?: (exocore.index.ITestPredicate|null);
 
-            /** Query paging requested */
+            /** Optional projections on traits and fields to be returned. */
+            public projections: exocore.index.IProjection[];
+
+            /** Query paging requested. */
             public paging?: (exocore.index.IPaging|null);
 
-            /** Query ordering */
+            /** Query ordering. */
             public ordering?: (exocore.index.IOrdering|null);
-
-            /** If true, only return summary */
-            public summary: boolean;
 
             /** Optional watch token if this query is to be used for watching. */
             public watchToken: (number|Long);
 
-            /** If specified, if results from server matches this hash, only a summary will be returned. */
+            /** `skipped_hash` field set to `true`. */
             public resultHash: (number|Long);
 
             /** also include deletions. */
@@ -1443,6 +1443,114 @@ export namespace exocore {
 
             /**
              * Converts this EntityQuery to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a Projection. */
+        interface IProjection {
+
+            /** If ends with a dollar sign "$", an exact match is required (ex: `some.package.Name$` will only match this message) */
+            "package"?: (string[]|null);
+
+            /** Skips the trait if the projection matches. */
+            skip?: (boolean|null);
+
+            /** If specified, only return these fields. */
+            fieldIds?: (number[]|null);
+
+            /** If specified, only return fields annotated with `options.proto`.`field_group_id` matching ids. */
+            fieldGroupIds?: (number[]|null);
+        }
+
+        /** Represents a Projection. */
+        class Projection implements IProjection {
+
+            /**
+             * Constructs a new Projection.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: exocore.index.IProjection);
+
+            /** If ends with a dollar sign "$", an exact match is required (ex: `some.package.Name$` will only match this message) */
+            public package: string[];
+
+            /** Skips the trait if the projection matches. */
+            public skip: boolean;
+
+            /** If specified, only return these fields. */
+            public fieldIds: number[];
+
+            /** If specified, only return fields annotated with `options.proto`.`field_group_id` matching ids. */
+            public fieldGroupIds: number[];
+
+            /**
+             * Creates a new Projection instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns Projection instance
+             */
+            public static create(properties?: exocore.index.IProjection): exocore.index.Projection;
+
+            /**
+             * Encodes the specified Projection message. Does not implicitly {@link exocore.index.Projection.verify|verify} messages.
+             * @param message Projection message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: exocore.index.IProjection, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified Projection message, length delimited. Does not implicitly {@link exocore.index.Projection.verify|verify} messages.
+             * @param message Projection message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: exocore.index.IProjection, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a Projection message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns Projection
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.Projection;
+
+            /**
+             * Decodes a Projection message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns Projection
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.Projection;
+
+            /**
+             * Verifies a Projection message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a Projection message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns Projection
+             */
+            public static fromObject(object: { [k: string]: any }): exocore.index.Projection;
+
+            /**
+             * Creates a plain object from a Projection message. Also converts values to other types if specified.
+             * @param message Projection
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: exocore.index.Projection, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this Projection to JSON.
              * @returns JSON object
              */
             public toJSON(): { [k: string]: any };
@@ -2759,22 +2867,22 @@ export namespace exocore {
         /** Properties of an EntityResults. */
         interface IEntityResults {
 
-            /** EntityResults entities */
+            /** Entities matching query. */
             entities?: (exocore.index.IEntityResult[]|null);
 
-            /** EntityResults summary */
-            summary?: (boolean|null);
+            /** had the same hash has the specified and that `entities` were set to empty. */
+            skippedHash?: (boolean|null);
 
-            /** EntityResults estimatedCount */
+            /** Estimated number of entities matching, based on number of matching mutations. */
             estimatedCount?: (number|null);
 
-            /** EntityResults currentPage */
+            /** Paging token of the current results. */
             currentPage?: (exocore.index.IPaging|null);
 
-            /** EntityResults nextPage */
+            /** Paging token of the next page of results. */
             nextPage?: (exocore.index.IPaging|null);
 
-            /** EntityResults hash */
+            /** changed by using the `result_hash` field on the query. */
             hash?: (number|Long|null);
         }
 
@@ -2787,22 +2895,22 @@ export namespace exocore {
              */
             constructor(properties?: exocore.index.IEntityResults);
 
-            /** EntityResults entities. */
+            /** Entities matching query. */
             public entities: exocore.index.IEntityResult[];
 
-            /** EntityResults summary. */
-            public summary: boolean;
+            /** had the same hash has the specified and that `entities` were set to empty. */
+            public skippedHash: boolean;
 
-            /** EntityResults estimatedCount. */
+            /** Estimated number of entities matching, based on number of matching mutations. */
             public estimatedCount: number;
 
-            /** EntityResults currentPage. */
+            /** Paging token of the current results. */
             public currentPage?: (exocore.index.IPaging|null);
 
-            /** EntityResults nextPage. */
+            /** Paging token of the next page of results. */
             public nextPage?: (exocore.index.IPaging|null);
 
-            /** EntityResults hash. */
+            /** changed by using the `result_hash` field on the query. */
             public hash: (number|Long);
 
             /**
@@ -3042,6 +3150,12 @@ export namespace exocore {
 
             /** TestMessage ref2 */
             ref2?: (exocore.index.IReference|null);
+
+            /** TestMessage grouped1 */
+            grouped1?: (string|null);
+
+            /** TestMessage grouped2 */
+            grouped2?: (string|null);
         }
 
         /** Represents a TestMessage. */
@@ -3103,6 +3217,12 @@ export namespace exocore {
 
             /** TestMessage ref2. */
             public ref2?: (exocore.index.IReference|null);
+
+            /** TestMessage grouped1. */
+            public grouped1: string;
+
+            /** TestMessage grouped2. */
+            public grouped2: string;
 
             /** TestMessage fields. */
             public fields?: ("oneofString1"|"oneofInt1");
@@ -5267,6 +5387,9 @@ export namespace google {
 
             /** FieldOptions .exocore.text */
             ".exocore.text"?: (boolean|null);
+
+            /** FieldOptions .exocore.fieldGroup */
+            ".exocore.fieldGroup"?: (number[]|null);
         }
 
         /** Represents a FieldOptions. */
