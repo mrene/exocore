@@ -58,7 +58,7 @@ export declare class QueryBuilder {
     query: exocore.index.EntityQuery;
     constructor();
     static withTrait(message: any, traitQuery?: exocore.index.ITraitQuery): QueryBuilder;
-    static matching(query: string): QueryBuilder;
+    static matches(query: string): QueryBuilder;
     static withIds(ids: string | string[]): QueryBuilder;
     static all(): QueryBuilder;
     count(count: number): QueryBuilder;
@@ -71,7 +71,7 @@ export declare class TraitQueryBuilder {
     query: exocore.index.TraitQuery;
     constructor();
     static refersTo(field: string, entityId: string, traitId?: string): TraitQueryBuilder;
-    static matching(query: string): TraitQueryBuilder;
+    static matches(query: string): TraitQueryBuilder;
     build(): exocore.index.ITraitQuery;
 }
 export declare function toProtoTimestamp(date: Date): protos.google.protobuf.ITimestamp;

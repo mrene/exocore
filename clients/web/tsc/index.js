@@ -168,7 +168,6 @@ export class MutationBuilder {
             putTrait: new exocore.index.PutTraitMutation({
                 trait: new exocore.index.Trait({
                     id: traitId,
-                    creationDate: toProtoTimestamp(new Date()),
                     message: Exocore.registry.packToAny(message),
                 })
             })
@@ -204,7 +203,7 @@ export class QueryBuilder {
         });
         return builder;
     }
-    static matching(query) {
+    static matches(query) {
         let builder = new QueryBuilder();
         builder.query.match = new exocore.index.MatchPredicate({
             query: query
@@ -269,7 +268,7 @@ export class TraitQueryBuilder {
         });
         return builder;
     }
-    static matching(query) {
+    static matches(query) {
         let builder = new TraitQueryBuilder();
         builder.query.match = new exocore.index.MatchPredicate({
             query: query,
