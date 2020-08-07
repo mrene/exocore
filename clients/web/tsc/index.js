@@ -231,6 +231,10 @@ export class QueryBuilder {
         });
         return this;
     }
+    project(...projection) {
+        this.query.projections = this.query.projections.concat(projection);
+        return this;
+    }
     orderByField(field, ascending) {
         this.query.ordering = new exocore.index.Ordering({
             ascending: ascending === true,
@@ -284,11 +288,11 @@ export function toProtoTimestamp(date) {
     const seconds = Math.floor(epoch / 1000);
     return new protos.google.protobuf.Timestamp({
         seconds: seconds,
-        nanos: (epoch - (seconds * 1000)) * 1000,
+        nanos: (epoch - (seconds * 1000)) * 1000000,
     });
 }
 export function fromProtoTimestamp(ts) {
-    return new Date(ts.seconds * 1000 + ts.nanos / 1000);
+    return new Date(ts.seconds * 1000 + ts.nanos / 1000000);
 }
 export function matchTrait(trait, matchMap) {
     const fullName = Exocore.registry.canonicalFullName(trait.message.type_url);

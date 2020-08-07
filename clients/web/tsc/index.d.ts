@@ -62,6 +62,7 @@ export declare class QueryBuilder {
     static withIds(ids: string | string[]): QueryBuilder;
     static all(): QueryBuilder;
     count(count: number): QueryBuilder;
+    project(...projection: exocore.index.IProjection[]): QueryBuilder;
     orderByField(field: string, ascending: boolean): QueryBuilder;
     orderByOperationIds(ascending: boolean): QueryBuilder;
     includeDeleted(): QueryBuilder;
