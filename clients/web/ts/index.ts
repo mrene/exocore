@@ -310,6 +310,11 @@ export class QueryBuilder {
         return this;
     }
 
+    project(...projection: exocore.index.IProjection[]): QueryBuilder {
+        this.query.projections = this.query.projections.concat(projection);
+        return this;
+    }
+
     orderByField(field: string, ascending: boolean): QueryBuilder {
         this.query.ordering = new exocore.index.Ordering({
             ascending: ascending === true,
@@ -376,12 +381,12 @@ export function toProtoTimestamp(date: Date): protos.google.protobuf.ITimestamp 
 
     return new protos.google.protobuf.Timestamp({
         seconds: seconds,
-        nanos: (epoch - (seconds * 1000)) * 1000,
+        nanos: (epoch - (seconds * 1000)) * 1000000,
     });
 }
 
 export function fromProtoTimestamp(ts: protos.google.protobuf.ITimestamp): Date {
-    return new Date((ts.seconds as number) * 1000 + ts.nanos / 1000);
+    return new Date((ts.seconds as number) * 1000 + ts.nanos / 1000000);
 }
 
 export function matchTrait<T>(trait: exocore.index.ITrait, matchMap: { [fullName: string]: (trait: exocore.index.ITrait, message: any)=>T}): T|null {
