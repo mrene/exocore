@@ -20,6 +20,46 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
+public enum Exocore_Index_TraitDetails: SwiftProtobuf.Enum {
+  public typealias RawValue = Int
+  case full // = 0
+  case partial // = 1
+  case UNRECOGNIZED(Int)
+
+  public init() {
+    self = .full
+  }
+
+  public init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .full
+    case 1: self = .partial
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  public var rawValue: Int {
+    switch self {
+    case .full: return 0
+    case .partial: return 1
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension Exocore_Index_TraitDetails: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  public static var allCases: [Exocore_Index_TraitDetails] = [
+    .full,
+    .partial,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 public struct Exocore_Index_Entity {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -29,9 +69,42 @@ public struct Exocore_Index_Entity {
 
   public var traits: [Exocore_Index_Trait] = []
 
+  public var creationDate: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _creationDate ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_creationDate = newValue}
+  }
+  /// Returns true if `creationDate` has been explicitly set.
+  public var hasCreationDate: Bool {return self._creationDate != nil}
+  /// Clears the value of `creationDate`. Subsequent reads from it will return its default value.
+  public mutating func clearCreationDate() {self._creationDate = nil}
+
+  public var modificationDate: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _modificationDate ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_modificationDate = newValue}
+  }
+  /// Returns true if `modificationDate` has been explicitly set.
+  public var hasModificationDate: Bool {return self._modificationDate != nil}
+  /// Clears the value of `modificationDate`. Subsequent reads from it will return its default value.
+  public mutating func clearModificationDate() {self._modificationDate = nil}
+
+  public var deletionDate: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _deletionDate ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_deletionDate = newValue}
+  }
+  /// Returns true if `deletionDate` has been explicitly set.
+  public var hasDeletionDate: Bool {return self._deletionDate != nil}
+  /// Clears the value of `deletionDate`. Subsequent reads from it will return its default value.
+  public mutating func clearDeletionDate() {self._deletionDate = nil}
+
+  public var lastOperationID: UInt64 = 0
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
+
+  fileprivate var _creationDate: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _modificationDate: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _deletionDate: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
 }
 
 public struct Exocore_Index_Trait {
@@ -68,6 +141,19 @@ public struct Exocore_Index_Trait {
   /// Clears the value of `modificationDate`. Subsequent reads from it will return its default value.
   public mutating func clearModificationDate() {self._modificationDate = nil}
 
+  public var deletionDate: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _deletionDate ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_deletionDate = newValue}
+  }
+  /// Returns true if `deletionDate` has been explicitly set.
+  public var hasDeletionDate: Bool {return self._deletionDate != nil}
+  /// Clears the value of `deletionDate`. Subsequent reads from it will return its default value.
+  public mutating func clearDeletionDate() {self._deletionDate = nil}
+
+  public var lastOperationID: UInt64 = 0
+
+  public var details: Exocore_Index_TraitDetails = .full
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -75,6 +161,7 @@ public struct Exocore_Index_Trait {
   fileprivate var _message: SwiftProtobuf.Google_Protobuf_Any? = nil
   fileprivate var _creationDate: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
   fileprivate var _modificationDate: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _deletionDate: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
 }
 
 public struct Exocore_Index_Reference {
@@ -95,11 +182,22 @@ public struct Exocore_Index_Reference {
 
 fileprivate let _protobuf_package = "exocore.index"
 
+extension Exocore_Index_TraitDetails: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "TRAIT_DETAILS_FULL"),
+    1: .same(proto: "TRAIT_DETAILS_PARTIAL"),
+  ]
+}
+
 extension Exocore_Index_Entity: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Entity"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "id"),
     4: .same(proto: "traits"),
+    5: .standard(proto: "creation_date"),
+    6: .standard(proto: "modification_date"),
+    7: .standard(proto: "deletion_date"),
+    8: .standard(proto: "last_operation_id"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -107,6 +205,10 @@ extension Exocore_Index_Entity: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       switch fieldNumber {
       case 1: try decoder.decodeSingularStringField(value: &self.id)
       case 4: try decoder.decodeRepeatedMessageField(value: &self.traits)
+      case 5: try decoder.decodeSingularMessageField(value: &self._creationDate)
+      case 6: try decoder.decodeSingularMessageField(value: &self._modificationDate)
+      case 7: try decoder.decodeSingularMessageField(value: &self._deletionDate)
+      case 8: try decoder.decodeSingularUInt64Field(value: &self.lastOperationID)
       default: break
       }
     }
@@ -119,12 +221,28 @@ extension Exocore_Index_Entity: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     if !self.traits.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.traits, fieldNumber: 4)
     }
+    if let v = self._creationDate {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+    }
+    if let v = self._modificationDate {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    }
+    if let v = self._deletionDate {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+    }
+    if self.lastOperationID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.lastOperationID, fieldNumber: 8)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Exocore_Index_Entity, rhs: Exocore_Index_Entity) -> Bool {
     if lhs.id != rhs.id {return false}
     if lhs.traits != rhs.traits {return false}
+    if lhs._creationDate != rhs._creationDate {return false}
+    if lhs._modificationDate != rhs._modificationDate {return false}
+    if lhs._deletionDate != rhs._deletionDate {return false}
+    if lhs.lastOperationID != rhs.lastOperationID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -137,6 +255,9 @@ extension Exocore_Index_Trait: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     2: .same(proto: "message"),
     3: .standard(proto: "creation_date"),
     4: .standard(proto: "modification_date"),
+    6: .standard(proto: "deletion_date"),
+    7: .standard(proto: "last_operation_id"),
+    5: .same(proto: "details"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -146,6 +267,9 @@ extension Exocore_Index_Trait: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
       case 2: try decoder.decodeSingularMessageField(value: &self._message)
       case 3: try decoder.decodeSingularMessageField(value: &self._creationDate)
       case 4: try decoder.decodeSingularMessageField(value: &self._modificationDate)
+      case 5: try decoder.decodeSingularEnumField(value: &self.details)
+      case 6: try decoder.decodeSingularMessageField(value: &self._deletionDate)
+      case 7: try decoder.decodeSingularUInt64Field(value: &self.lastOperationID)
       default: break
       }
     }
@@ -164,6 +288,15 @@ extension Exocore_Index_Trait: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     if let v = self._modificationDate {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
     }
+    if self.details != .full {
+      try visitor.visitSingularEnumField(value: self.details, fieldNumber: 5)
+    }
+    if let v = self._deletionDate {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    }
+    if self.lastOperationID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.lastOperationID, fieldNumber: 7)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -172,6 +305,9 @@ extension Exocore_Index_Trait: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     if lhs._message != rhs._message {return false}
     if lhs._creationDate != rhs._creationDate {return false}
     if lhs._modificationDate != rhs._modificationDate {return false}
+    if lhs._deletionDate != rhs._deletionDate {return false}
+    if lhs.lastOperationID != rhs.lastOperationID {return false}
+    if lhs.details != rhs.details {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

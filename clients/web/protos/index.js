@@ -33,6 +33,10 @@ export const exocore = $root.exocore = (() => {
              * @interface IEntity
              * @property {string|null} [id] Entity id
              * @property {Array.<exocore.index.ITrait>|null} [traits] Entity traits
+             * @property {google.protobuf.ITimestamp|null} [creationDate] Entity creationDate
+             * @property {google.protobuf.ITimestamp|null} [modificationDate] Entity modificationDate
+             * @property {google.protobuf.ITimestamp|null} [deletionDate] Entity deletionDate
+             * @property {number|Long|null} [lastOperationId] Entity lastOperationId
              */
 
             /**
@@ -68,6 +72,38 @@ export const exocore = $root.exocore = (() => {
             Entity.prototype.traits = $util.emptyArray;
 
             /**
+             * Entity creationDate.
+             * @member {google.protobuf.ITimestamp|null|undefined} creationDate
+             * @memberof exocore.index.Entity
+             * @instance
+             */
+            Entity.prototype.creationDate = null;
+
+            /**
+             * Entity modificationDate.
+             * @member {google.protobuf.ITimestamp|null|undefined} modificationDate
+             * @memberof exocore.index.Entity
+             * @instance
+             */
+            Entity.prototype.modificationDate = null;
+
+            /**
+             * Entity deletionDate.
+             * @member {google.protobuf.ITimestamp|null|undefined} deletionDate
+             * @memberof exocore.index.Entity
+             * @instance
+             */
+            Entity.prototype.deletionDate = null;
+
+            /**
+             * Entity lastOperationId.
+             * @member {number|Long} lastOperationId
+             * @memberof exocore.index.Entity
+             * @instance
+             */
+            Entity.prototype.lastOperationId = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
              * Creates a new Entity instance using the specified properties.
              * @function create
              * @memberof exocore.index.Entity
@@ -96,6 +132,14 @@ export const exocore = $root.exocore = (() => {
                 if (message.traits != null && message.traits.length)
                     for (let i = 0; i < message.traits.length; ++i)
                         $root.exocore.index.Trait.encode(message.traits[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                if (message.creationDate != null && Object.hasOwnProperty.call(message, "creationDate"))
+                    $root.google.protobuf.Timestamp.encode(message.creationDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                if (message.modificationDate != null && Object.hasOwnProperty.call(message, "modificationDate"))
+                    $root.google.protobuf.Timestamp.encode(message.modificationDate, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                if (message.deletionDate != null && Object.hasOwnProperty.call(message, "deletionDate"))
+                    $root.google.protobuf.Timestamp.encode(message.deletionDate, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+                if (message.lastOperationId != null && Object.hasOwnProperty.call(message, "lastOperationId"))
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint64(message.lastOperationId);
                 return writer;
             };
 
@@ -137,6 +181,18 @@ export const exocore = $root.exocore = (() => {
                         if (!(message.traits && message.traits.length))
                             message.traits = [];
                         message.traits.push($root.exocore.index.Trait.decode(reader, reader.uint32()));
+                        break;
+                    case 5:
+                        message.creationDate = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                        break;
+                    case 6:
+                        message.modificationDate = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                        break;
+                    case 7:
+                        message.deletionDate = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                        break;
+                    case 8:
+                        message.lastOperationId = reader.uint64();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -185,6 +241,24 @@ export const exocore = $root.exocore = (() => {
                             return "traits." + error;
                     }
                 }
+                if (message.creationDate != null && message.hasOwnProperty("creationDate")) {
+                    let error = $root.google.protobuf.Timestamp.verify(message.creationDate);
+                    if (error)
+                        return "creationDate." + error;
+                }
+                if (message.modificationDate != null && message.hasOwnProperty("modificationDate")) {
+                    let error = $root.google.protobuf.Timestamp.verify(message.modificationDate);
+                    if (error)
+                        return "modificationDate." + error;
+                }
+                if (message.deletionDate != null && message.hasOwnProperty("deletionDate")) {
+                    let error = $root.google.protobuf.Timestamp.verify(message.deletionDate);
+                    if (error)
+                        return "deletionDate." + error;
+                }
+                if (message.lastOperationId != null && message.hasOwnProperty("lastOperationId"))
+                    if (!$util.isInteger(message.lastOperationId) && !(message.lastOperationId && $util.isInteger(message.lastOperationId.low) && $util.isInteger(message.lastOperationId.high)))
+                        return "lastOperationId: integer|Long expected";
                 return null;
             };
 
@@ -212,6 +286,30 @@ export const exocore = $root.exocore = (() => {
                         message.traits[i] = $root.exocore.index.Trait.fromObject(object.traits[i]);
                     }
                 }
+                if (object.creationDate != null) {
+                    if (typeof object.creationDate !== "object")
+                        throw TypeError(".exocore.index.Entity.creationDate: object expected");
+                    message.creationDate = $root.google.protobuf.Timestamp.fromObject(object.creationDate);
+                }
+                if (object.modificationDate != null) {
+                    if (typeof object.modificationDate !== "object")
+                        throw TypeError(".exocore.index.Entity.modificationDate: object expected");
+                    message.modificationDate = $root.google.protobuf.Timestamp.fromObject(object.modificationDate);
+                }
+                if (object.deletionDate != null) {
+                    if (typeof object.deletionDate !== "object")
+                        throw TypeError(".exocore.index.Entity.deletionDate: object expected");
+                    message.deletionDate = $root.google.protobuf.Timestamp.fromObject(object.deletionDate);
+                }
+                if (object.lastOperationId != null)
+                    if ($util.Long)
+                        (message.lastOperationId = $util.Long.fromValue(object.lastOperationId)).unsigned = true;
+                    else if (typeof object.lastOperationId === "string")
+                        message.lastOperationId = parseInt(object.lastOperationId, 10);
+                    else if (typeof object.lastOperationId === "number")
+                        message.lastOperationId = object.lastOperationId;
+                    else if (typeof object.lastOperationId === "object")
+                        message.lastOperationId = new $util.LongBits(object.lastOperationId.low >>> 0, object.lastOperationId.high >>> 0).toNumber(true);
                 return message;
             };
 
@@ -230,8 +328,17 @@ export const exocore = $root.exocore = (() => {
                 let object = {};
                 if (options.arrays || options.defaults)
                     object.traits = [];
-                if (options.defaults)
+                if (options.defaults) {
                     object.id = "";
+                    object.creationDate = null;
+                    object.modificationDate = null;
+                    object.deletionDate = null;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, true);
+                        object.lastOperationId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.lastOperationId = options.longs === String ? "0" : 0;
+                }
                 if (message.id != null && message.hasOwnProperty("id"))
                     object.id = message.id;
                 if (message.traits && message.traits.length) {
@@ -239,6 +346,17 @@ export const exocore = $root.exocore = (() => {
                     for (let j = 0; j < message.traits.length; ++j)
                         object.traits[j] = $root.exocore.index.Trait.toObject(message.traits[j], options);
                 }
+                if (message.creationDate != null && message.hasOwnProperty("creationDate"))
+                    object.creationDate = $root.google.protobuf.Timestamp.toObject(message.creationDate, options);
+                if (message.modificationDate != null && message.hasOwnProperty("modificationDate"))
+                    object.modificationDate = $root.google.protobuf.Timestamp.toObject(message.modificationDate, options);
+                if (message.deletionDate != null && message.hasOwnProperty("deletionDate"))
+                    object.deletionDate = $root.google.protobuf.Timestamp.toObject(message.deletionDate, options);
+                if (message.lastOperationId != null && message.hasOwnProperty("lastOperationId"))
+                    if (typeof message.lastOperationId === "number")
+                        object.lastOperationId = options.longs === String ? String(message.lastOperationId) : message.lastOperationId;
+                    else
+                        object.lastOperationId = options.longs === String ? $util.Long.prototype.toString.call(message.lastOperationId) : options.longs === Number ? new $util.LongBits(message.lastOperationId.low >>> 0, message.lastOperationId.high >>> 0).toNumber(true) : message.lastOperationId;
                 return object;
             };
 
@@ -266,6 +384,9 @@ export const exocore = $root.exocore = (() => {
              * @property {google.protobuf.IAny|null} [message] Trait message
              * @property {google.protobuf.ITimestamp|null} [creationDate] Trait creationDate
              * @property {google.protobuf.ITimestamp|null} [modificationDate] Trait modificationDate
+             * @property {google.protobuf.ITimestamp|null} [deletionDate] Trait deletionDate
+             * @property {number|Long|null} [lastOperationId] Trait lastOperationId
+             * @property {exocore.index.TraitDetails|null} [details] Trait details
              */
 
             /**
@@ -316,6 +437,30 @@ export const exocore = $root.exocore = (() => {
             Trait.prototype.modificationDate = null;
 
             /**
+             * Trait deletionDate.
+             * @member {google.protobuf.ITimestamp|null|undefined} deletionDate
+             * @memberof exocore.index.Trait
+             * @instance
+             */
+            Trait.prototype.deletionDate = null;
+
+            /**
+             * Trait lastOperationId.
+             * @member {number|Long} lastOperationId
+             * @memberof exocore.index.Trait
+             * @instance
+             */
+            Trait.prototype.lastOperationId = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Trait details.
+             * @member {exocore.index.TraitDetails} details
+             * @memberof exocore.index.Trait
+             * @instance
+             */
+            Trait.prototype.details = 0;
+
+            /**
              * Creates a new Trait instance using the specified properties.
              * @function create
              * @memberof exocore.index.Trait
@@ -347,6 +492,12 @@ export const exocore = $root.exocore = (() => {
                     $root.google.protobuf.Timestamp.encode(message.creationDate, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                 if (message.modificationDate != null && Object.hasOwnProperty.call(message, "modificationDate"))
                     $root.google.protobuf.Timestamp.encode(message.modificationDate, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                if (message.details != null && Object.hasOwnProperty.call(message, "details"))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int32(message.details);
+                if (message.deletionDate != null && Object.hasOwnProperty.call(message, "deletionDate"))
+                    $root.google.protobuf.Timestamp.encode(message.deletionDate, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                if (message.lastOperationId != null && Object.hasOwnProperty.call(message, "lastOperationId"))
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint64(message.lastOperationId);
                 return writer;
             };
 
@@ -392,6 +543,15 @@ export const exocore = $root.exocore = (() => {
                         break;
                     case 4:
                         message.modificationDate = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                        break;
+                    case 6:
+                        message.deletionDate = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                        break;
+                    case 7:
+                        message.lastOperationId = reader.uint64();
+                        break;
+                    case 5:
+                        message.details = reader.int32();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -446,6 +606,22 @@ export const exocore = $root.exocore = (() => {
                     if (error)
                         return "modificationDate." + error;
                 }
+                if (message.deletionDate != null && message.hasOwnProperty("deletionDate")) {
+                    let error = $root.google.protobuf.Timestamp.verify(message.deletionDate);
+                    if (error)
+                        return "deletionDate." + error;
+                }
+                if (message.lastOperationId != null && message.hasOwnProperty("lastOperationId"))
+                    if (!$util.isInteger(message.lastOperationId) && !(message.lastOperationId && $util.isInteger(message.lastOperationId.low) && $util.isInteger(message.lastOperationId.high)))
+                        return "lastOperationId: integer|Long expected";
+                if (message.details != null && message.hasOwnProperty("details"))
+                    switch (message.details) {
+                    default:
+                        return "details: enum value expected";
+                    case 0:
+                    case 1:
+                        break;
+                    }
                 return null;
             };
 
@@ -478,6 +654,30 @@ export const exocore = $root.exocore = (() => {
                         throw TypeError(".exocore.index.Trait.modificationDate: object expected");
                     message.modificationDate = $root.google.protobuf.Timestamp.fromObject(object.modificationDate);
                 }
+                if (object.deletionDate != null) {
+                    if (typeof object.deletionDate !== "object")
+                        throw TypeError(".exocore.index.Trait.deletionDate: object expected");
+                    message.deletionDate = $root.google.protobuf.Timestamp.fromObject(object.deletionDate);
+                }
+                if (object.lastOperationId != null)
+                    if ($util.Long)
+                        (message.lastOperationId = $util.Long.fromValue(object.lastOperationId)).unsigned = true;
+                    else if (typeof object.lastOperationId === "string")
+                        message.lastOperationId = parseInt(object.lastOperationId, 10);
+                    else if (typeof object.lastOperationId === "number")
+                        message.lastOperationId = object.lastOperationId;
+                    else if (typeof object.lastOperationId === "object")
+                        message.lastOperationId = new $util.LongBits(object.lastOperationId.low >>> 0, object.lastOperationId.high >>> 0).toNumber(true);
+                switch (object.details) {
+                case "TRAIT_DETAILS_FULL":
+                case 0:
+                    message.details = 0;
+                    break;
+                case "TRAIT_DETAILS_PARTIAL":
+                case 1:
+                    message.details = 1;
+                    break;
+                }
                 return message;
             };
 
@@ -499,6 +699,13 @@ export const exocore = $root.exocore = (() => {
                     object.message = null;
                     object.creationDate = null;
                     object.modificationDate = null;
+                    object.details = options.enums === String ? "TRAIT_DETAILS_FULL" : 0;
+                    object.deletionDate = null;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, true);
+                        object.lastOperationId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.lastOperationId = options.longs === String ? "0" : 0;
                 }
                 if (message.id != null && message.hasOwnProperty("id"))
                     object.id = message.id;
@@ -508,6 +715,15 @@ export const exocore = $root.exocore = (() => {
                     object.creationDate = $root.google.protobuf.Timestamp.toObject(message.creationDate, options);
                 if (message.modificationDate != null && message.hasOwnProperty("modificationDate"))
                     object.modificationDate = $root.google.protobuf.Timestamp.toObject(message.modificationDate, options);
+                if (message.details != null && message.hasOwnProperty("details"))
+                    object.details = options.enums === String ? $root.exocore.index.TraitDetails[message.details] : message.details;
+                if (message.deletionDate != null && message.hasOwnProperty("deletionDate"))
+                    object.deletionDate = $root.google.protobuf.Timestamp.toObject(message.deletionDate, options);
+                if (message.lastOperationId != null && message.hasOwnProperty("lastOperationId"))
+                    if (typeof message.lastOperationId === "number")
+                        object.lastOperationId = options.longs === String ? String(message.lastOperationId) : message.lastOperationId;
+                    else
+                        object.lastOperationId = options.longs === String ? $util.Long.prototype.toString.call(message.lastOperationId) : options.longs === Number ? new $util.LongBits(message.lastOperationId.low >>> 0, message.lastOperationId.high >>> 0).toNumber(true) : message.lastOperationId;
                 return object;
             };
 
@@ -733,6 +949,20 @@ export const exocore = $root.exocore = (() => {
             };
 
             return Reference;
+        })();
+
+        /**
+         * TraitDetails enum.
+         * @name exocore.index.TraitDetails
+         * @enum {number}
+         * @property {number} TRAIT_DETAILS_FULL=0 TRAIT_DETAILS_FULL value
+         * @property {number} TRAIT_DETAILS_PARTIAL=1 TRAIT_DETAILS_PARTIAL value
+         */
+        index.TraitDetails = (function() {
+            const valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "TRAIT_DETAILS_FULL"] = 0;
+            values[valuesById[1] = "TRAIT_DETAILS_PARTIAL"] = 1;
+            return values;
         })();
 
         index.MutationRequest = (function() {
@@ -3117,7 +3347,7 @@ export const exocore = $root.exocore = (() => {
              * @property {exocore.index.IOrdering|null} [ordering] Query ordering.
              * @property {number|Long|null} [watchToken] Optional watch token if this query is to be used for watching.
              * @property {number|Long|null} [resultHash] `skipped_hash` field set to `true`.
-             * @property {boolean|null} [includeDeleted] also include deletions.
+             * @property {boolean|null} [includeDeleted] `deletion_date` field with the date of the deletion.
              */
 
             /**
@@ -3233,7 +3463,7 @@ export const exocore = $root.exocore = (() => {
             EntityQuery.prototype.resultHash = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
-             * also include deletions.
+             * `deletion_date` field with the date of the deletion.
              * @member {boolean} includeDeleted
              * @memberof exocore.index.EntityQuery
              * @instance
@@ -6850,7 +7080,7 @@ export const exocore = $root.exocore = (() => {
              * @property {google.protobuf.ITimestamp|null} [date] OrderingValue date
              * @property {boolean|null} [min] OrderingValue min
              * @property {boolean|null} [max] OrderingValue max
-             * @property {number|Long|null} [operationId] ID operation used to tie break equal results
+             * @property {number|Long|null} [operationId] the last operation id that mutated the entity is used.
              */
 
             /**
@@ -6909,7 +7139,7 @@ export const exocore = $root.exocore = (() => {
             OrderingValue.prototype.max = false;
 
             /**
-             * ID operation used to tie break equal results
+             * the last operation id that mutated the entity is used.
              * @member {number|Long} operationId
              * @memberof exocore.index.OrderingValue
              * @instance
@@ -6920,7 +7150,7 @@ export const exocore = $root.exocore = (() => {
             let $oneOfFields;
 
             /**
-             * OrderingValue value.
+             * Primary comparison
              * @member {"float"|"uint64"|"date"|"min"|"max"|undefined} value
              * @memberof exocore.index.OrderingValue
              * @instance
@@ -7559,9 +7789,10 @@ export const exocore = $root.exocore = (() => {
              * Properties of an EntityResult.
              * @memberof exocore.index
              * @interface IEntityResult
-             * @property {exocore.index.IEntity|null} [entity] EntityResult entity
-             * @property {exocore.index.EntityResultSource|null} [source] EntityResult source
-             * @property {exocore.index.IOrderingValue|null} [orderingValue] EntityResult orderingValue
+             * @property {exocore.index.IEntity|null} [entity] be indicated in its traits' details field.
+             * @property {exocore.index.EntityResultSource|null} [source] before the latest consistent timestamp.
+             * @property {exocore.index.IOrderingValue|null} [orderingValue] but it may be useful to compare ordering queries (ex.: to merge different pages)
+             * @property {number|Long|null} [hash] Hash of the tntiy result. Can be used to compare if the entity has changed since last results.
              */
 
             /**
@@ -7580,7 +7811,7 @@ export const exocore = $root.exocore = (() => {
             }
 
             /**
-             * EntityResult entity.
+             * be indicated in its traits' details field.
              * @member {exocore.index.IEntity|null|undefined} entity
              * @memberof exocore.index.EntityResult
              * @instance
@@ -7588,7 +7819,7 @@ export const exocore = $root.exocore = (() => {
             EntityResult.prototype.entity = null;
 
             /**
-             * EntityResult source.
+             * before the latest consistent timestamp.
              * @member {exocore.index.EntityResultSource} source
              * @memberof exocore.index.EntityResult
              * @instance
@@ -7596,12 +7827,20 @@ export const exocore = $root.exocore = (() => {
             EntityResult.prototype.source = 0;
 
             /**
-             * EntityResult orderingValue.
+             * but it may be useful to compare ordering queries (ex.: to merge different pages)
              * @member {exocore.index.IOrderingValue|null|undefined} orderingValue
              * @memberof exocore.index.EntityResult
              * @instance
              */
             EntityResult.prototype.orderingValue = null;
+
+            /**
+             * Hash of the tntiy result. Can be used to compare if the entity has changed since last results.
+             * @member {number|Long} hash
+             * @memberof exocore.index.EntityResult
+             * @instance
+             */
+            EntityResult.prototype.hash = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
              * Creates a new EntityResult instance using the specified properties.
@@ -7633,6 +7872,8 @@ export const exocore = $root.exocore = (() => {
                     writer.uint32(/* id 2, wireType 0 =*/16).int32(message.source);
                 if (message.orderingValue != null && Object.hasOwnProperty.call(message, "orderingValue"))
                     $root.exocore.index.OrderingValue.encode(message.orderingValue, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                if (message.hash != null && Object.hasOwnProperty.call(message, "hash"))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.hash);
                 return writer;
             };
 
@@ -7675,6 +7916,9 @@ export const exocore = $root.exocore = (() => {
                         break;
                     case 3:
                         message.orderingValue = $root.exocore.index.OrderingValue.decode(reader, reader.uint32());
+                        break;
+                    case 4:
+                        message.hash = reader.uint64();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -7730,6 +7974,9 @@ export const exocore = $root.exocore = (() => {
                     if (error)
                         return "orderingValue." + error;
                 }
+                if (message.hash != null && message.hasOwnProperty("hash"))
+                    if (!$util.isInteger(message.hash) && !(message.hash && $util.isInteger(message.hash.low) && $util.isInteger(message.hash.high)))
+                        return "hash: integer|Long expected";
                 return null;
             };
 
@@ -7769,6 +8016,15 @@ export const exocore = $root.exocore = (() => {
                         throw TypeError(".exocore.index.EntityResult.orderingValue: object expected");
                     message.orderingValue = $root.exocore.index.OrderingValue.fromObject(object.orderingValue);
                 }
+                if (object.hash != null)
+                    if ($util.Long)
+                        (message.hash = $util.Long.fromValue(object.hash)).unsigned = true;
+                    else if (typeof object.hash === "string")
+                        message.hash = parseInt(object.hash, 10);
+                    else if (typeof object.hash === "number")
+                        message.hash = object.hash;
+                    else if (typeof object.hash === "object")
+                        message.hash = new $util.LongBits(object.hash.low >>> 0, object.hash.high >>> 0).toNumber(true);
                 return message;
             };
 
@@ -7789,6 +8045,11 @@ export const exocore = $root.exocore = (() => {
                     object.entity = null;
                     object.source = options.enums === String ? "UNKNOWN" : 0;
                     object.orderingValue = null;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, true);
+                        object.hash = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.hash = options.longs === String ? "0" : 0;
                 }
                 if (message.entity != null && message.hasOwnProperty("entity"))
                     object.entity = $root.exocore.index.Entity.toObject(message.entity, options);
@@ -7796,6 +8057,11 @@ export const exocore = $root.exocore = (() => {
                     object.source = options.enums === String ? $root.exocore.index.EntityResultSource[message.source] : message.source;
                 if (message.orderingValue != null && message.hasOwnProperty("orderingValue"))
                     object.orderingValue = $root.exocore.index.OrderingValue.toObject(message.orderingValue, options);
+                if (message.hash != null && message.hasOwnProperty("hash"))
+                    if (typeof message.hash === "number")
+                        object.hash = options.longs === String ? String(message.hash) : message.hash;
+                    else
+                        object.hash = options.longs === String ? $util.Long.prototype.toString.call(message.hash) : options.longs === Number ? new $util.LongBits(message.hash.low >>> 0, message.hash.high >>> 0).toNumber(true) : message.hash;
                 return object;
             };
 

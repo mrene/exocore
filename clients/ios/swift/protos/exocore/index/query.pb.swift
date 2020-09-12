@@ -158,7 +158,8 @@ public struct Exocore_Index_EntityQuery {
   public var resultHash: UInt64 = 0
 
   //// Include deleted mutations matches. Can be used to return recently modified entities that
-  //// also include deletions.
+  //// also include deletions. Deleted traits will be included in the results, but will have a 
+  //// `deletion_date` field with the date of the deletion.
   public var includeDeleted: Bool = false
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -615,6 +616,7 @@ public struct Exocore_Index_OrderingValue {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  //// Primary comparison
   public var value: Exocore_Index_OrderingValue.OneOf_Value? = nil
 
   public var float: Float {
@@ -657,11 +659,13 @@ public struct Exocore_Index_OrderingValue {
     set {value = .max(newValue)}
   }
 
-  //// ID operation used to tie break equal results
+  //// Secondary comparison, in case values were equal. In this case,
+  //// the last operation id that mutated the entity is used.
   public var operationID: UInt64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
+  //// Primary comparison
   public enum OneOf_Value: Equatable {
     case float(Float)
     case uint64(UInt64)
@@ -738,6 +742,8 @@ public struct Exocore_Index_EntityResult {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  //// The entity with its traits. Projection could have been done on the entity, which will
+  //// be indicated in its traits' details field.
   public var entity: Exocore_Index_Entity {
     get {return _entity ?? Exocore_Index_Entity()}
     set {_entity = newValue}
@@ -747,8 +753,18 @@ public struct Exocore_Index_EntityResult {
   /// Clears the value of `entity`. Subsequent reads from it will return its default value.
   public mutating func clearEntity() {self._entity = nil}
 
+  //// Indicates where the entity was taken from in terms of storage. If all of the entities'
+  //// traits were coming from the chain (i.e. committed), the source will be `CHAIN`. Otherwise,
+  //// as soon as one entity mutation is coming from pending store (i.e. not committed yet), this
+  //// field will be `PENDING`.
+  ////
+  //// This can be used to know if an entity can be considered stable once mutations were executed on it.
+  //// Once it's committed, a majority of nodes agreed on it and will not result in further changes happening
+  //// before the latest consistent timestamp.
   public var source: Exocore_Index_EntityResultSource = .unknown
 
+  //// Value to be used to order results. `EntityResults` already contains ordered results,
+  //// but it may be useful to compare ordering queries (ex.: to merge different pages)
   public var orderingValue: Exocore_Index_OrderingValue {
     get {return _orderingValue ?? Exocore_Index_OrderingValue()}
     set {_orderingValue = newValue}
@@ -757,6 +773,9 @@ public struct Exocore_Index_EntityResult {
   public var hasOrderingValue: Bool {return self._orderingValue != nil}
   /// Clears the value of `orderingValue`. Subsequent reads from it will return its default value.
   public mutating func clearOrderingValue() {self._orderingValue = nil}
+
+  //// Hash of the tntiy result. Can be used to compare if the entity has changed since last results.
+  public var hash: UInt64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1594,6 +1613,7 @@ extension Exocore_Index_EntityResult: SwiftProtobuf.Message, SwiftProtobuf._Mess
     1: .same(proto: "entity"),
     2: .same(proto: "source"),
     3: .standard(proto: "ordering_value"),
+    4: .same(proto: "hash"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1602,6 +1622,7 @@ extension Exocore_Index_EntityResult: SwiftProtobuf.Message, SwiftProtobuf._Mess
       case 1: try decoder.decodeSingularMessageField(value: &self._entity)
       case 2: try decoder.decodeSingularEnumField(value: &self.source)
       case 3: try decoder.decodeSingularMessageField(value: &self._orderingValue)
+      case 4: try decoder.decodeSingularUInt64Field(value: &self.hash)
       default: break
       }
     }
@@ -1617,6 +1638,9 @@ extension Exocore_Index_EntityResult: SwiftProtobuf.Message, SwiftProtobuf._Mess
     if let v = self._orderingValue {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
     }
+    if self.hash != 0 {
+      try visitor.visitSingularUInt64Field(value: self.hash, fieldNumber: 4)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1624,6 +1648,7 @@ extension Exocore_Index_EntityResult: SwiftProtobuf.Message, SwiftProtobuf._Mess
     if lhs._entity != rhs._entity {return false}
     if lhs.source != rhs.source {return false}
     if lhs._orderingValue != rhs._orderingValue {return false}
+    if lhs.hash != rhs.hash {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

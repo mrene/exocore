@@ -13,6 +13,18 @@ export namespace exocore {
 
             /** Entity traits */
             traits?: (exocore.index.ITrait[]|null);
+
+            /** Entity creationDate */
+            creationDate?: (google.protobuf.ITimestamp|null);
+
+            /** Entity modificationDate */
+            modificationDate?: (google.protobuf.ITimestamp|null);
+
+            /** Entity deletionDate */
+            deletionDate?: (google.protobuf.ITimestamp|null);
+
+            /** Entity lastOperationId */
+            lastOperationId?: (number|Long|null);
         }
 
         /** Represents an Entity. */
@@ -29,6 +41,18 @@ export namespace exocore {
 
             /** Entity traits. */
             public traits: exocore.index.ITrait[];
+
+            /** Entity creationDate. */
+            public creationDate?: (google.protobuf.ITimestamp|null);
+
+            /** Entity modificationDate. */
+            public modificationDate?: (google.protobuf.ITimestamp|null);
+
+            /** Entity deletionDate. */
+            public deletionDate?: (google.protobuf.ITimestamp|null);
+
+            /** Entity lastOperationId. */
+            public lastOperationId: (number|Long);
 
             /**
              * Creates a new Entity instance using the specified properties.
@@ -115,6 +139,15 @@ export namespace exocore {
 
             /** Trait modificationDate */
             modificationDate?: (google.protobuf.ITimestamp|null);
+
+            /** Trait deletionDate */
+            deletionDate?: (google.protobuf.ITimestamp|null);
+
+            /** Trait lastOperationId */
+            lastOperationId?: (number|Long|null);
+
+            /** Trait details */
+            details?: (exocore.index.TraitDetails|null);
         }
 
         /** Represents a Trait. */
@@ -137,6 +170,15 @@ export namespace exocore {
 
             /** Trait modificationDate. */
             public modificationDate?: (google.protobuf.ITimestamp|null);
+
+            /** Trait deletionDate. */
+            public deletionDate?: (google.protobuf.ITimestamp|null);
+
+            /** Trait lastOperationId. */
+            public lastOperationId: (number|Long);
+
+            /** Trait details. */
+            public details: exocore.index.TraitDetails;
 
             /**
              * Creates a new Trait instance using the specified properties.
@@ -303,6 +345,12 @@ export namespace exocore {
              * @returns JSON object
              */
             public toJSON(): { [k: string]: any };
+        }
+
+        /** TraitDetails enum. */
+        enum TraitDetails {
+            TRAIT_DETAILS_FULL = 0,
+            TRAIT_DETAILS_PARTIAL = 1
         }
 
         /** Properties of a MutationRequest. */
@@ -1322,7 +1370,7 @@ export namespace exocore {
             /** `skipped_hash` field set to `true`. */
             resultHash?: (number|Long|null);
 
-            /** also include deletions. */
+            /** `deletion_date` field with the date of the deletion. */
             includeDeleted?: (boolean|null);
         }
 
@@ -1371,7 +1419,7 @@ export namespace exocore {
             /** `skipped_hash` field set to `true`. */
             public resultHash: (number|Long);
 
-            /** also include deletions. */
+            /** `deletion_date` field with the date of the deletion. */
             public includeDeleted: boolean;
 
             /** EntityQuery predicate. */
@@ -2759,7 +2807,7 @@ export namespace exocore {
             /** OrderingValue max */
             max?: (boolean|null);
 
-            /** ID operation used to tie break equal results */
+            /** the last operation id that mutated the entity is used. */
             operationId?: (number|Long|null);
         }
 
@@ -2787,10 +2835,10 @@ export namespace exocore {
             /** OrderingValue max. */
             public max: boolean;
 
-            /** ID operation used to tie break equal results */
+            /** the last operation id that mutated the entity is used. */
             public operationId: (number|Long);
 
-            /** OrderingValue value. */
+            /** Primary comparison */
             public value?: ("float"|"uint64"|"date"|"min"|"max");
 
             /**
@@ -2987,14 +3035,17 @@ export namespace exocore {
         /** Properties of an EntityResult. */
         interface IEntityResult {
 
-            /** EntityResult entity */
+            /** be indicated in its traits' details field. */
             entity?: (exocore.index.IEntity|null);
 
-            /** EntityResult source */
+            /** before the latest consistent timestamp. */
             source?: (exocore.index.EntityResultSource|null);
 
-            /** EntityResult orderingValue */
+            /** but it may be useful to compare ordering queries (ex.: to merge different pages) */
             orderingValue?: (exocore.index.IOrderingValue|null);
+
+            /** Hash of the tntiy result. Can be used to compare if the entity has changed since last results. */
+            hash?: (number|Long|null);
         }
 
         /** Represents an EntityResult. */
@@ -3006,14 +3057,17 @@ export namespace exocore {
              */
             constructor(properties?: exocore.index.IEntityResult);
 
-            /** EntityResult entity. */
+            /** be indicated in its traits' details field. */
             public entity?: (exocore.index.IEntity|null);
 
-            /** EntityResult source. */
+            /** before the latest consistent timestamp. */
             public source: exocore.index.EntityResultSource;
 
-            /** EntityResult orderingValue. */
+            /** but it may be useful to compare ordering queries (ex.: to merge different pages) */
             public orderingValue?: (exocore.index.IOrderingValue|null);
+
+            /** Hash of the tntiy result. Can be used to compare if the entity has changed since last results. */
+            public hash: (number|Long);
 
             /**
              * Creates a new EntityResult instance using the specified properties.

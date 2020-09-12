@@ -56,7 +56,7 @@ public struct Exocore_Apps_ManifestSchema {
   public var bytes: Data {
     get {
       if case .bytes(let v)? = source {return v}
-      return SwiftProtobuf.Internal.emptyData
+      return Data()
     }
     set {source = .bytes(newValue)}
   }
