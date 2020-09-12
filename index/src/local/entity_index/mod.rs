@@ -22,16 +22,19 @@ use exocore_core::protos::generated::exocore_index::{
 use exocore_core::protos::{prost::ProstDateTimeExt, registry::Registry};
 
 use crate::error::Error;
-use crate::{entity::EntityId, ordering::OrderingValueExt};
+use crate::{
+    entity::EntityId,
+    ordering::{OrderingValueExt, OrderingValueWrapper},
+};
 
-use super::mutation_index::{IndexOperation, MutationIndex, MutationType};
+use super::mutation_index::{IndexOperation, MutationIndex, MutationMetadata};
 use super::top_results::RescoredTopResultsIterable;
 
 mod config;
 pub use config::*;
 
-mod results;
-pub(crate) use results::*;
+mod aggregator;
+pub(crate) use aggregator::*;
 
 #[cfg(test)]
 mod test_index;
@@ -94,6 +97,12 @@ where
             cell,
             chain_handle,
         };
+
+        let chain_last_block = index.chain_handle.get_chain_last_block_info()?;
+        let last_chain_indexed_block = index.chain_index.highest_indexed_block()?;
+        if last_chain_indexed_block.is_none() && chain_last_block.is_some() {
+            index.reindex_chain()?;
+        }
 
         index.reindex_pending()?;
 
@@ -240,11 +249,15 @@ where
                 res1.sort_value >= res2.sort_value
             });
 
-        // iterate through results and returning the first N entities
         let mut hasher = result_hasher();
-        let mut entity_mutations_cache = HashMap::<EntityId, Rc<MutationAggregator>>::new();
+        let mut entity_mutations_cache = HashMap::<EntityId, Rc<EntityAggregator>>::new();
         let mut matched_entities = HashSet::new();
+        let mut got_results = false;
+        let early_exit = std::cell::Cell::new(false);
+
+        // iterate through results and returning the first N entities
         let mut entity_results = combined_results
+            .take_while(|(_matched_mutation, _index_source)| !early_exit.get())
             // iterate through results, starting with best scores
             .flat_map(|(matched_mutation, index_source)| {
                 let entity_id = matched_mutation.entity_id.clone();
@@ -288,13 +301,12 @@ where
                 let operation_still_present = entity_mutations
                     .active_operations
                     .contains(&matched_mutation.operation_id);
-                if (entity_mutations.trait_mutations.is_empty() || !operation_still_present)
+                if (entity_mutations.deletion_date.is_some() || !operation_still_present)
                     && !query_include_deleted
                 {
-                    // no traits remaining means that entity is now deleted
-                    // if current operation is not active anymore, it means that it got overridden
-                    // by another operation and should not be considered at this
-                    // point as a result
+                    // we are here if the entity has been deleted (ex: explicitely or no traits remaining)
+                    // or if the mutation metadata that was returned by the mutation index is not active anymore,
+                    // which means that it got overriden by a subsequent operation.
                     return None;
                 }
 
@@ -303,6 +315,12 @@ where
                 // TODO: Support for negative rescoring https://github.com/appaquet/exocore/issues/143
                 let ordering_value = matched_mutation.sort_value.clone();
                 if ordering_value.value.is_within_page_bound(&current_page) {
+                    got_results = true;
+
+                    let creation_date = entity_mutations.creation_date.map(|t| t.to_proto_timestamp());
+                    let modification_date = entity_mutations.modification_date.map(|t| t.to_proto_timestamp());
+                    let deletion_date = entity_mutations.deletion_date.map(|t| t.to_proto_timestamp());
+
                     let result = EntityResult {
                         matched_mutation,
                         ordering_value: ordering_value.clone(),
@@ -310,15 +328,27 @@ where
                             entity: Some(Entity {
                                 id: entity_id,
                                 traits: Vec::new(),
+                                creation_date,
+                                modification_date,
+                                deletion_date,
+                                last_operation_id: entity_mutations.last_operatin_id,
                             }),
                             source: index_source.into(),
                             ordering_value: Some(ordering_value.value),
+                            hash: entity_mutations.hash,
                         },
                         mutations: entity_mutations,
                     };
 
                     Some(result)
                 } else {
+                    if got_results {
+                        // If we are here, it means that we found results within the page we were looking for, and then suddenly a new
+                        // result doesn't fit in the page. This means that we are passed the page, and we can early exit since we won't find
+                        // any new results passed this.
+                        early_exit.set(true);
+                    }
+
                     None
                 }
             })
@@ -369,12 +399,12 @@ where
         let results_hash = hasher.finish();
         let skipped_hash = results_hash == query.result_hash;
         if !skipped_hash {
-            self.populate_results_traits(&mut entity_results);
+            self.populate_results_traits(&mut entity_results, query.include_deleted);
         }
 
         let end_instant = Instant::now();
         debug!(
-            "Query done chain_hits={} pending_hits={} aggr_fetch={} query={:?} aggr={:?} fetch={:?} total={:?}",
+            "Query done chain_hits={} pending_hits={} aggr_fetch={} query={:?} aggr={:?} fetch={:?} total={:?} page={:?} next_page={:?}",
             chain_hits,
             pending_hits,
             entity_mutations_cache.len(),
@@ -382,6 +412,8 @@ where
             after_aggregate_instant - after_query_instant,
             end_instant - after_aggregate_instant,
             end_instant - begin_instant,
+            current_page,
+            next_page,
         );
 
         let entities = entity_results.into_iter().map(|res| res.proto).collect();
@@ -639,21 +671,22 @@ where
     /// Traits returned follow mutations in order of operation id.
     #[cfg(test)]
     fn fetch_entity(&self, entity_id: &str) -> Result<Entity, Error> {
-        let mutations_metedata = self.fetch_entity_mutations_metadata(entity_id)?;
-        let traits = self.fetch_entity_traits(&mutations_metedata);
+        let mutations = self.fetch_entity_mutations_metadata(entity_id)?;
+        let traits = self.fetch_entity_traits(&mutations, false);
 
         Ok(Entity {
             id: entity_id.to_string(),
             traits,
+            creation_date: mutations.creation_date.map(|t| t.to_proto_timestamp()),
+            modification_date: mutations.modification_date.map(|t| t.to_proto_timestamp()),
+            deletion_date: mutations.deletion_date.map(|t| t.to_proto_timestamp()),
+            last_operation_id: mutations.last_operatin_id,
         })
     }
 
     /// Fetch indexed mutations metadata from pending and chain indices for this
     /// entity id, and merge them.
-    fn fetch_entity_mutations_metadata(
-        &self,
-        entity_id: &str,
-    ) -> Result<MutationAggregator, Error> {
+    fn fetch_entity_mutations_metadata(&self, entity_id: &str) -> Result<EntityAggregator, Error> {
         let pending_results = self.pending_index.fetch_entity_mutations(entity_id)?;
         let chain_results = self.chain_index.fetch_entity_mutations(entity_id)?;
         let mutations_metadata = pending_results
@@ -662,14 +695,18 @@ where
             .chain(chain_results.mutations.iter())
             .cloned();
 
-        MutationAggregator::new(mutations_metadata)
+        EntityAggregator::new(mutations_metadata)
     }
 
     /// Populate traits in the EntityResult by fetching each entity's traits
     /// from the chain layer.
-    fn populate_results_traits(&self, entity_results: &mut Vec<EntityResult>) {
+    fn populate_results_traits(
+        &self,
+        entity_results: &mut Vec<EntityResult>,
+        include_deleted: bool,
+    ) {
         for entity_result in entity_results {
-            let traits = self.fetch_entity_traits(&entity_result.mutations);
+            let traits = self.fetch_entity_traits(&entity_result.mutations, include_deleted);
             if let Some(entity) = entity_result.proto.entity.as_mut() {
                 entity.traits = traits;
             }
@@ -677,34 +714,43 @@ where
     }
 
     /// Fetch traits data from chain layer.
-    fn fetch_entity_traits(&self, entity_mutations: &MutationAggregator) -> Vec<Trait> {
+    fn fetch_entity_traits(
+        &self,
+        entity_mutations: &EntityAggregator,
+        include_deleted: bool,
+    ) -> Vec<Trait> {
         entity_mutations
-            .trait_mutations
+            .traits
             .iter()
-            .flat_map(|(trait_id, merged_metadata)| {
-                let projection = entity_mutations.trait_projections.get(trait_id);
-                if let Some(projection) = projection {
+            .flat_map(|(trait_id, agg)| {
+                if let Some(projection) = &agg.projection {
                     if projection.skip {
                         return None;
                     }
                 }
 
+                if agg.deletion_date.is_some() && !include_deleted {
+                    return None;
+                }
+
+                let (mut_metadata, _put_mut_metadata) = agg.last_put_mutation()?;
+
                 let mutation = self.fetch_chain_mutation_operation(
-                    merged_metadata.operation_id,
-                    merged_metadata.block_offset,
+                    mut_metadata.operation_id,
+                    mut_metadata.block_offset,
                 );
                 let mutation = match mutation {
                     Ok(Some(mutation)) => mutation,
                     other => {
                         error!(
                             "Couldn't fetch operation_id={} for entity_id={}: {:?}",
-                            merged_metadata.operation_id, merged_metadata.entity_id, other
+                            mut_metadata.operation_id, mut_metadata.entity_id, other
                         );
                         return None;
                     }
                 };
 
-                let mut trait_instance = match mutation.mutation? {
+                let mut trt = match mutation.mutation? {
                     Mutation::PutTrait(trait_put) => trait_put.r#trait,
                     Mutation::CompactTrait(trait_cmpt) => trait_cmpt.r#trait,
                     Mutation::DeleteTrait(_)
@@ -713,32 +759,25 @@ where
                     | Mutation::Test(_) => return None,
                 }?;
 
-                if let Some(projection) = projection {
-                    let res = project_trait(
-                        self.cell.schemas().as_ref(),
-                        &mut trait_instance,
-                        projection.as_ref(),
-                    );
+                if let Some(projection) = &agg.projection {
+                    let res =
+                        project_trait(self.cell.schemas().as_ref(), &mut trt, projection.as_ref());
 
                     if let Err(err) = res {
                         error!(
                             "Couldn't run projection on trait_id={} of entity_id={}: {:?}",
-                            trait_id, merged_metadata.entity_id, err,
+                            trait_id, mut_metadata.entity_id, err,
                         );
                     }
                 }
 
-                // update the trait with creation & modification date that got merged from
-                // metadata
-                if let MutationType::TraitPut(put_mutation) = &merged_metadata.mutation_type {
-                    trait_instance.creation_date =
-                        put_mutation.creation_date.map(|d| d.to_proto_timestamp());
-                    trait_instance.modification_date = put_mutation
-                        .modification_date
-                        .map(|d| d.to_proto_timestamp());
-                }
+                // update the trait's dates that got merged from metadata
+                trt.creation_date = agg.creation_date.map(|d| d.to_proto_timestamp());
+                trt.modification_date = agg.modification_date.map(|d| d.to_proto_timestamp());
+                trt.deletion_date = agg.deletion_date.map(|d| d.to_proto_timestamp());
+                trt.last_operation_id = agg.last_operation_id.unwrap_or_default();
 
-                Some(trait_instance)
+                Some(trt)
             })
             .collect()
     }
@@ -770,4 +809,13 @@ where
             Ok(None)
         }
     }
+}
+
+/// Wrapper for entity result with matched mutation from index layer along
+/// aggregated traits.
+pub struct EntityResult {
+    pub matched_mutation: MutationMetadata,
+    pub ordering_value: OrderingValueWrapper,
+    pub proto: EntityResultProto,
+    pub mutations: Rc<EntityAggregator>,
 }

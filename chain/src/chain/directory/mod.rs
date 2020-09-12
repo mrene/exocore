@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 use std::path::{Path, PathBuf};
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 
 use crate::operation::OperationId;
 use segment::DirectorySegment;
@@ -11,7 +11,12 @@ use crate::chain::{ChainStore, Error, Segment, StoredBlockIterator};
 mod operations_index;
 mod segment;
 
+use super::Segments;
+use exocore_core::simple_store::json_disk_store::JsonDiskStore;
+use exocore_core::simple_store::SimpleStore;
 use operations_index::OperationsIndex;
+
+const METADATA_FILE: &str = "metadata.json";
 
 /// Directory based chain persistence. The chain is split in segments with
 /// configurable maximum size. This maximum size allows using mmap on 32bit
@@ -19,6 +24,7 @@ use operations_index::OperationsIndex;
 pub struct DirectoryChainStore {
     config: DirectoryChainStoreConfig,
     directory: PathBuf,
+    metadata_store: JsonDiskStore<DirectoryChainMetadata>,
     segments: Vec<DirectorySegment>,
 
     // TODO: Optional because index needs the Store to be initialized to iterate
@@ -76,11 +82,23 @@ impl DirectoryChainStore {
             )));
         }
 
+        let metadata_path = directory_path.join(METADATA_FILE);
+        let metadata_store = JsonDiskStore::new(&metadata_path).map_err(|err| {
+            Error::new_io(
+                err,
+                format!(
+                    "Error opening metadata file {}",
+                    metadata_path.to_string_lossy(),
+                ),
+            )
+        })?;
+
         let operations_index = OperationsIndex::create(config, directory_path)?;
 
         Ok(DirectoryChainStore {
             config,
             directory: directory_path.to_path_buf(),
+            metadata_store,
             segments: Vec::new(),
             operations_index: Some(operations_index),
         })
@@ -97,6 +115,25 @@ impl DirectoryChainStore {
             )));
         }
 
+        let metadata_path = directory_path.join(METADATA_FILE);
+        let metadata_store =
+            JsonDiskStore::<DirectoryChainMetadata>::new(&metadata_path).map_err(|err| {
+                Error::new_io(
+                    err,
+                    format!(
+                        "Error opening metadata file {}",
+                        metadata_path.to_string_lossy(),
+                    ),
+                )
+            })?;
+
+        let mut segments_metadata = HashMap::new();
+        if let Ok(Some(metadata)) = metadata_store.read() {
+            for segment_metadata in metadata.segments.into_iter() {
+                segments_metadata.insert(segment_metadata.filename.clone(), segment_metadata);
+            }
+        }
+
         let mut segments = Vec::new();
         let paths = std::fs::read_dir(directory_path).map_err(|err| {
             Error::new_io(
@@ -111,15 +148,22 @@ impl DirectoryChainStore {
             let path = path.map_err(|err| Error::new_io(err, "Error getting directory entry"))?;
 
             if DirectorySegment::is_segment_file(&path.path()) {
-                let segment = DirectorySegment::open(config, &path.path())?;
+                let filename = path.file_name().to_string_lossy().to_string();
+
+                let segment = if let Some(metadata) = segments_metadata.get(&filename) {
+                    DirectorySegment::open_with_metadata(config, &path.path(), metadata)?
+                } else {
+                    DirectorySegment::open(config, &path.path())?
+                };
                 segments.push(segment);
             }
         }
-        segments.sort_by(|a, b| a.first_block_offset().cmp(&b.first_block_offset()));
+        segments.sort_by_key(|a| a.first_block_offset());
 
         let mut store = DirectoryChainStore {
             config,
             directory: directory_path.to_path_buf(),
+            metadata_store,
             segments,
             operations_index: None,
         };
@@ -132,6 +176,8 @@ impl DirectoryChainStore {
             operations_index
         };
         store.operations_index = Some(operations_index);
+
+        store.save_metadata()?;
 
         Ok(store)
     }
@@ -167,16 +213,36 @@ impl DirectoryChainStore {
             None
         }
     }
+
+    fn save_metadata(&mut self) -> Result<(), Error> {
+        let mut segment_metadata: Vec<segment::SegmentMetadata> =
+            self.segments.iter().map(|s| s.metadata()).collect();
+
+        // remove last segment since it's still mutable and may change
+        segment_metadata.pop();
+
+        let metadata = DirectoryChainMetadata {
+            segments: segment_metadata,
+        };
+
+        self.metadata_store
+            .write(&metadata)
+            .map_err(|err| Error::new_io(err, "Error saving metadata file".to_string()))?;
+
+        Ok(())
+    }
 }
 
 impl ChainStore for DirectoryChainStore {
-    fn segments(&self) -> Vec<Segment> {
-        self.segments
-            .iter()
-            .map(|segment| Segment {
-                range: segment.offset_range(),
-            })
-            .collect()
+    fn segments(&self) -> Segments {
+        Segments(
+            self.segments
+                .iter()
+                .map(|segment| Segment {
+                    range: segment.offset_range(),
+                })
+                .collect(),
+        )
     }
 
     fn write_block<B: Block>(&mut self, block: &B) -> Result<BlockOffset, Error> {
@@ -197,6 +263,7 @@ impl ChainStore for DirectoryChainStore {
             if need_new_segment {
                 let segment = DirectorySegment::create(self.config, &self.directory, block)?;
                 self.segments.push(segment);
+                self.save_metadata()?;
             }
 
             (self.segments.last_mut().unwrap(), need_new_segment)
@@ -222,7 +289,6 @@ impl ChainStore for DirectoryChainStore {
             current_offset: from_offset,
             current_segment: None,
             last_error: None,
-            reverse: false,
             done: false,
         }))
     }
@@ -231,20 +297,11 @@ impl ChainStore for DirectoryChainStore {
         &self,
         from_next_offset: BlockOffset,
     ) -> Result<StoredBlockIterator, Error> {
-        let segment = self
-            .get_segment_for_next_block_offset(from_next_offset)
-            .ok_or_else(|| {
-                Error::OutOfBound(format!("No segment with next offset {}", from_next_offset))
-            })?;
-
-        let last_block = segment.get_block_from_next_offset(from_next_offset)?;
-
-        Ok(Box::new(DirectoryBlockIterator {
+        Ok(Box::new(DirectoryBlockReverseIterator {
             directory: self,
-            current_offset: last_block.offset,
+            current_offset: from_next_offset,
             current_segment: None,
             last_error: None,
-            reverse: true,
             done: false,
         }))
     }
@@ -321,8 +378,12 @@ impl ChainStore for DirectoryChainStore {
             }
         }
 
-        // we need to take out the index because it needs a block iterator that depends
-        // on the store itself TODO: To be solved in https://github.com/appaquet/exocore/issues/34
+        self.save_metadata()?;
+
+        // We need to take out the index because it needs a block iterator that depends
+        // on the store itself.
+        //
+        // TODO: To be solved in https://github.com/appaquet/exocore/issues/34
         let mut index = self
             .operations_index
             .take()
@@ -337,11 +398,24 @@ impl ChainStore for DirectoryChainStore {
     }
 }
 
+/// Metadata information of the chain directory store persisted to disk.
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
+pub struct DirectoryChainMetadata {
+    segments: Vec<segment::SegmentMetadata>,
+}
+
+impl Default for DirectoryChainMetadata {
+    fn default() -> Self {
+        DirectoryChainMetadata {
+            segments: Vec::new(),
+        }
+    }
+}
+
 /// Configuration for directory based chain persistence.
 #[derive(Copy, Clone, Debug)]
 pub struct DirectoryChainStoreConfig {
     pub segment_over_allocate_size: u64,
-    pub segment_min_free_size: u64,
     pub segment_max_size: u64,
     pub operations_index_max_memory_items: usize,
 }
@@ -349,9 +423,8 @@ pub struct DirectoryChainStoreConfig {
 impl Default for DirectoryChainStoreConfig {
     fn default() -> Self {
         DirectoryChainStoreConfig {
-            segment_over_allocate_size: 100 * 1024 * 1024, // 100mb
-            segment_min_free_size: 10 * 1024 * 1024,       // 10mb
-            segment_max_size: 1024 * 1024 * 1024,          // 1gb
+            segment_over_allocate_size: 20 * 1024 * 1024, // 20mb
+            segment_max_size: 200 * 1024 * 1024,          // 200mb
             operations_index_max_memory_items: 10000,
         }
     }
@@ -363,7 +436,6 @@ struct DirectoryBlockIterator<'pers> {
     current_offset: BlockOffset,
     current_segment: Option<&'pers DirectorySegment>,
     last_error: Option<Error>,
-    reverse: bool,
     done: bool,
 }
 
@@ -392,12 +464,8 @@ impl<'pers> Iterator for DirectoryBlockIterator<'pers> {
                     .ok()?;
 
                 let data_size = block.total_size() as BlockOffset;
-                let end_of_segment = if !self.reverse {
-                    (self.current_offset + data_size) >= segment.next_block_offset()
-                } else {
-                    data_size > self.current_offset
-                        || (self.current_offset - data_size) < segment.first_block_offset()
-                };
+                let end_of_segment =
+                    (self.current_offset + data_size) >= segment.next_block_offset();
 
                 (block, data_size, end_of_segment)
             }
@@ -410,18 +478,70 @@ impl<'pers> Iterator for DirectoryBlockIterator<'pers> {
             self.current_segment = None;
         }
 
-        // if we're in reverse and next offset would be lower than 0, we indicate we're
-        // done
-        if self.reverse && data_size > self.current_offset {
+        if !self.done {
+            self.current_offset += data_size;
+        }
+
+        Some(item)
+    }
+}
+
+/// Reverse iterator over blocks stored in this directory based chain
+/// persistence.
+struct DirectoryBlockReverseIterator<'pers> {
+    directory: &'pers DirectoryChainStore,
+    current_offset: BlockOffset,
+    current_segment: Option<&'pers DirectorySegment>,
+    last_error: Option<Error>,
+    done: bool,
+}
+
+impl<'pers> Iterator for DirectoryBlockReverseIterator<'pers> {
+    type Item = BlockRef<'pers>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.done {
+            return None;
+        }
+
+        if self.current_segment.is_none() {
+            self.current_segment = self
+                .directory
+                .get_segment_for_next_block_offset(self.current_offset);
+        }
+
+        let (item, data_size, end_of_segment) = match self.current_segment {
+            Some(segment) => {
+                let block = segment
+                    .get_block_from_next_offset(self.current_offset)
+                    .map_err(|err| {
+                        error!("Got an error getting block in iterator: {}", err);
+                        self.last_error = Some(err);
+                    })
+                    .ok()?;
+
+                let data_size = block.total_size() as BlockOffset;
+                let end_of_segment = (data_size + 1) > self.current_offset
+                    || (self.current_offset - data_size - 1) < segment.first_block_offset();
+
+                (block, data_size, end_of_segment)
+            }
+            None => {
+                return None;
+            }
+        };
+
+        if end_of_segment {
+            self.current_segment = None;
+        }
+
+        // if next offset would be lower than 0, we're done
+        if data_size > self.current_offset {
             self.done = true;
         }
 
         if !self.done {
-            if !self.reverse {
-                self.current_offset += data_size;
-            } else {
-                self.current_offset -= data_size;
-            }
+            self.current_offset -= data_size;
         }
 
         Some(item)
@@ -478,9 +598,9 @@ pub mod tests {
             let data_size = (block.total_size() * 2) as BlockOffset;
             assert_eq!(
                 segments,
-                vec![Segment {
+                Segments(vec![Segment {
                     range: 0..data_size
-                }]
+                }])
             );
             segments
         };
@@ -493,6 +613,20 @@ pub mod tests {
         {
             let directory_chain = DirectoryChainStore::open(config, dir.path())?;
             assert_eq!(directory_chain.segments(), init_segments);
+        }
+
+        {
+            // can still open even if the metadata file is deleted
+            let metadata_path = dir.path().join(METADATA_FILE);
+            assert!(metadata_path.is_file());
+            std::fs::remove_file(&metadata_path)?;
+            assert!(!metadata_path.is_file());
+
+            let directory_chain = DirectoryChainStore::open(config, dir.path())?;
+            assert_eq!(directory_chain.segments(), init_segments);
+
+            // metadata should have been re-created
+            assert!(metadata_path.is_file());
         }
 
         Ok(())
@@ -521,12 +655,37 @@ pub mod tests {
     }
 
     #[test]
+    fn directory_chain_iterator() -> anyhow::Result<()> {
+        let local_node = LocalNode::generate();
+        let cell = FullCell::generate(local_node);
+        let dir = tempfile::tempdir()?;
+        let mut config: DirectoryChainStoreConfig = Default::default();
+        config.segment_max_size = 350_000;
+        config.segment_over_allocate_size = 10_000;
+
+        let mut directory_chain = DirectoryChainStore::create(config, dir.path())?;
+        append_blocks(&cell, &mut directory_chain, 1000, 0);
+
+        let count = directory_chain.blocks_iter(0)?.count();
+        assert_eq!(count, 1000);
+
+        let last_block = directory_chain.get_last_block()?.unwrap();
+        let next_offset = last_block.next_offset();
+
+        let count = directory_chain.blocks_iter_reverse(next_offset)?.count();
+        assert_eq!(count, 1000);
+
+        Ok(())
+    }
+
+    #[test]
     fn directory_chain_write_until_second_segment() -> anyhow::Result<()> {
         let local_node = LocalNode::generate();
         let cell = FullCell::generate(local_node);
         let dir = tempfile::tempdir()?;
         let mut config: DirectoryChainStoreConfig = Default::default();
         config.segment_max_size = 350_000;
+        config.segment_over_allocate_size = 10_000;
 
         fn validate_directory(directory_chain: &DirectoryChainStore) -> anyhow::Result<()> {
             let segments = directory_chain
@@ -771,13 +930,16 @@ pub mod tests {
     }
 
     pub fn create_block(cell: &FullCell, offset: BlockOffset) -> BlockOwned {
+        let operation_data_size = ((offset >> 3) % 831311) as usize;
+        let operation_data: Vec<u8> = b"d".repeat(operation_data_size % 13 + 1);
+
         // only true for tests
         let operation_id = offset as u64 + 1;
         let operations = vec![
             crate::operation::OperationBuilder::new_entry(
                 operation_id,
                 cell.local_node().id(),
-                b"some_data",
+                &operation_data,
             )
             .sign_and_build(cell.local_node())
             .unwrap()

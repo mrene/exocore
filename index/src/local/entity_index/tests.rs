@@ -1,11 +1,17 @@
 use exocore_core::protos::generated::exocore_index::Paging;
 use exocore_core::protos::generated::exocore_test::TestMessage;
-use exocore_core::protos::{prost::ProstTimestampExt, test::TestMessage2};
+use exocore_core::{
+    protos::{prost::ProstTimestampExt, test::TestMessage2},
+    tests_utils::{expect_result_eventually, result_assert_equal, result_assert_true},
+};
 use test_index::*;
 
 use crate::mutation::MutationBuilder;
 use crate::ordering::{value_from_u64, value_max};
-use crate::query::{ProjectionBuilder, QueryBuilder as Q};
+use crate::{
+    local::mutation_index::MutationType,
+    query::{ProjectionBuilder, QueryBuilder as Q},
+};
 
 use super::*;
 
@@ -44,14 +50,19 @@ fn index_full_pending_to_chain() -> anyhow::Result<()> {
     // wait for second block to be committed, first operations should now be indexed
     // in chain
     test_index.wait_operations_committed(&second_ops_id);
-    test_index.handle_engine_events()?;
-    let res = test_index
-        .index
-        .search(Q::with_trait::<TestMessage>().build())?;
-    let pending_res = count_results_source(&res, EntityResultSource::Pending);
-    let chain_res = count_results_source(&res, EntityResultSource::Chain);
-    assert!(chain_res >= 5, "was equal to {}", chain_res);
-    assert_eq!(pending_res + chain_res, 10);
+    expect_result_eventually(|| -> anyhow::Result<()> {
+        test_index.handle_engine_events()?;
+        let res = test_index
+            .index
+            .search(Q::with_trait::<TestMessage>().build())?;
+        let pending_res = count_results_source(&res, EntityResultSource::Pending);
+        let chain_res = count_results_source(&res, EntityResultSource::Chain);
+
+        result_assert_equal(pending_res + chain_res, 10)?;
+        result_assert_true(chain_res >= 5)?;
+
+        Ok(())
+    });
 
     Ok(())
 }
@@ -272,11 +283,6 @@ fn delete_entity_trait() -> anyhow::Result<()> {
             _ => false,
         }));
 
-    // now bury the deletion under 1 block, which should delete for real the trait
-    let op_id = test_index.put_test_trait("entity2", "trait2", "name1")?;
-    test_index.wait_operation_committed(op_id);
-    test_index.handle_engine_events()?;
-
     Ok(())
 }
 
@@ -314,6 +320,12 @@ fn delete_all_entity_traits() -> anyhow::Result<()> {
     let query = Q::with_id("entity1").include_deleted().build();
     let res = test_index.index.search(query)?;
     assert_eq!(res.entities.len(), 1);
+
+    let entity = res.entities[0].entity.as_ref().unwrap();
+    assert!(entity.deletion_date.is_some());
+    assert_eq!(entity.traits.len(), 2);
+    assert!(entity.traits[0].deletion_date.is_some());
+    assert!(entity.traits[1].deletion_date.is_some());
 
     Ok(())
 }
@@ -356,6 +368,12 @@ fn delete_entity() -> anyhow::Result<()> {
     let query = Q::with_id("entity1").include_deleted().build();
     let res = test_index.index.search(query)?;
     assert_eq!(res.entities.len(), 1);
+    assert!(res.entities[0]
+        .entity
+        .as_ref()
+        .unwrap()
+        .deletion_date
+        .is_some());
 
     Ok(())
 }

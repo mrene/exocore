@@ -17,7 +17,7 @@ use exocore_core::protos::generated::exocore_index::{
 };
 use exocore_core::protos::generated::exocore_test::TestMessage;
 use exocore_core::protos::prost::{ProstAnyPackMessageExt, ProstDateTimeExt};
-use exocore_core::protos::registry::Registry;
+use exocore_core::protos::{index::TraitDetails, registry::Registry};
 
 /// Utility to test store
 pub struct TestStore {
@@ -122,6 +122,9 @@ impl TestStore {
                 ),
                 creation_date: Some(Utc::now().to_proto_timestamp()),
                 modification_date: Some(Utc::now().to_proto_timestamp()),
+                deletion_date: None,
+                last_operation_id: 10,
+                details: TraitDetails::Full.into(),
             },
         )
     }

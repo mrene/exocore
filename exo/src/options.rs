@@ -1,14 +1,12 @@
-#![deny(bare_trait_objects)]
 #![allow(non_camel_case_types)]
 
 use std::path::PathBuf;
 use std::str::FromStr;
 use structopt::StructOpt;
 
-/// CLI options
 #[derive(StructOpt)]
 #[structopt(name = "exocore-cli", about = "Exocore Command Line Interface")]
-pub struct Options {
+pub struct ExoOptions {
     #[structopt(long, short, default_value = "info")]
     /// Logging level (off, error, warn, info, debug, trace)
     pub logging_level: String,
@@ -72,11 +70,15 @@ impl FromStr for KeyAlgorithm {
 /// Cell related options
 #[derive(StructOpt)]
 pub struct CellOptions {
+    /// Path to node configuration.
     #[structopt(long, short = "c", default_value = "config.yaml")]
     pub config: PathBuf,
+
     #[structopt(long, short)]
-    /// Public key of the cell we want to make an action on
-    pub public_key: String,
+    /// Public key of the cell we want to make an action on. If not specified
+    /// and the node config only contains 1 cell, this cell will be taken.
+    pub public_key: Option<String>,
+
     #[structopt(subcommand)]
     pub command: CellCommand,
 }
@@ -85,6 +87,24 @@ pub struct CellOptions {
 pub enum CellCommand {
     create_genesis_block,
     check_chain,
+    export_chain(ChainExportOptions),
+    import_chain(ChainImportOptions),
+}
+
+#[derive(StructOpt)]
+pub struct ChainExportOptions {
+    // File in which chain will be exported
+    pub file: PathBuf,
+}
+
+#[derive(StructOpt)]
+pub struct ChainImportOptions {
+    // Number of operations per blocks
+    #[structopt(long, default_value = "30")]
+    pub operations_per_block: usize,
+
+    // Files from which chain will be imported
+    pub files: Vec<PathBuf>,
 }
 
 /// Configs related options
