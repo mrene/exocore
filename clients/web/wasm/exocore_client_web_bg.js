@@ -737,13 +737,13 @@ export const __wbindgen_memory = function() {
     return addHeapObject(ret);
 };
 
-export const __wbindgen_closure_wrapper2368 = function(arg0, arg1, arg2) {
-    var ret = makeMutClosure(arg0, arg1, 666, __wbg_adapter_22);
+export const __wbindgen_closure_wrapper2362 = function(arg0, arg1, arg2) {
+    var ret = makeMutClosure(arg0, arg1, 662, __wbg_adapter_22);
     return addHeapObject(ret);
 };
 
-export const __wbindgen_closure_wrapper2468 = function(arg0, arg1, arg2) {
-    var ret = makeMutClosure(arg0, arg1, 712, __wbg_adapter_25);
+export const __wbindgen_closure_wrapper2462 = function(arg0, arg1, arg2) {
+    var ret = makeMutClosure(arg0, arg1, 708, __wbg_adapter_25);
     return addHeapObject(ret);
 };
 
