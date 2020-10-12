@@ -30,6 +30,10 @@ export class ExocoreClient {
 * @returns {WatchedQuery}
 */
   watched_query(query_proto_bytes: Uint8Array): WatchedQuery;
+/**
+* @returns {Array<any>}
+*/
+  store_http_endpoints(): Array<any>;
 }
 /**
 */

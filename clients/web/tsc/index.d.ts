@@ -22,15 +22,16 @@ export declare class Store {
     wasmClient: any;
     statusChangeCallback: () => void;
     constructor(inner: any);
-    mutate(mutation: exocore.index.IMutationRequest): Promise<exocore.index.MutationResult>;
-    query(query: exocore.index.IEntityQuery): Promise<exocore.index.EntityResults>;
-    watchedQuery(query: exocore.index.IEntityQuery): WatchedQuery;
+    mutate(mutation: exocore.store.IMutationRequest): Promise<exocore.store.MutationResult>;
+    query(query: exocore.store.IEntityQuery): Promise<exocore.store.EntityResults>;
+    watchedQuery(query: exocore.store.IEntityQuery): WatchedQuery;
     generateId(prefix?: string): string;
+    httpEndpoints(): Array<string>;
 }
 export declare class WatchedQuery {
     inner: any;
     constructor(inner: any);
-    onChange(cb: (results: exocore.index.EntityResults) => void): WatchedQuery;
+    onChange(cb: (results: exocore.store.EntityResults) => void): WatchedQuery;
     free(): void;
 }
 export declare class Registry {
@@ -43,7 +44,7 @@ export declare class Registry {
 }
 export declare class MutationBuilder {
     entityId: string;
-    request: exocore.index.MutationRequest;
+    request: exocore.store.MutationRequest;
     constructor(entityId: string);
     static createEntity(entityId?: string): MutationBuilder;
     static updateEntity(entityId: string): MutationBuilder;
@@ -52,31 +53,31 @@ export declare class MutationBuilder {
     putTrait(message: any, traitId?: string): MutationBuilder;
     deleteTrait(traitId: string): MutationBuilder;
     returnEntities(): MutationBuilder;
-    build(): exocore.index.MutationRequest;
+    build(): exocore.store.MutationRequest;
 }
 export declare class QueryBuilder {
-    query: exocore.index.EntityQuery;
+    query: exocore.store.EntityQuery;
     constructor();
-    static withTrait(message: any, traitQuery?: exocore.index.ITraitQuery): QueryBuilder;
+    static withTrait(message: any, traitQuery?: exocore.store.ITraitQuery): QueryBuilder;
     static matches(query: string): QueryBuilder;
     static withIds(ids: string | string[]): QueryBuilder;
     static all(): QueryBuilder;
     count(count: number): QueryBuilder;
-    project(...projection: exocore.index.IProjection[]): QueryBuilder;
+    project(...projection: exocore.store.IProjection[]): QueryBuilder;
     orderByField(field: string, ascending: boolean): QueryBuilder;
     orderByOperationIds(ascending: boolean): QueryBuilder;
     includeDeleted(): QueryBuilder;
-    build(): exocore.index.IEntityQuery;
+    build(): exocore.store.IEntityQuery;
 }
 export declare class TraitQueryBuilder {
-    query: exocore.index.TraitQuery;
+    query: exocore.store.TraitQuery;
     constructor();
     static refersTo(field: string, entityId: string, traitId?: string): TraitQueryBuilder;
     static matches(query: string): TraitQueryBuilder;
-    build(): exocore.index.ITraitQuery;
+    build(): exocore.store.ITraitQuery;
 }
 export declare function toProtoTimestamp(date: Date): protos.google.protobuf.ITimestamp;
 export declare function fromProtoTimestamp(ts: protos.google.protobuf.ITimestamp): Date;
-export declare function matchTrait<T>(trait: exocore.index.ITrait, matchMap: {
-    [fullName: string]: (trait: exocore.index.ITrait, message: any) => T;
+export declare function matchTrait<T>(trait: exocore.store.ITrait, matchMap: {
+    [fullName: string]: (trait: exocore.store.ITrait, message: any) => T;
 }): T | null;

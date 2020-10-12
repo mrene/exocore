@@ -2,8 +2,8 @@ import * as $protobuf from "protobufjs";
 /** Namespace exocore. */
 export namespace exocore {
 
-    /** Namespace index. */
-    namespace index {
+    /** Namespace store. */
+    namespace store {
 
         /** Properties of an Entity. */
         interface IEntity {
@@ -12,7 +12,7 @@ export namespace exocore {
             id?: (string|null);
 
             /** Entity traits */
-            traits?: (exocore.index.ITrait[]|null);
+            traits?: (exocore.store.ITrait[]|null);
 
             /** Entity creationDate */
             creationDate?: (google.protobuf.ITimestamp|null);
@@ -34,13 +34,13 @@ export namespace exocore {
              * Constructs a new Entity.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IEntity);
+            constructor(properties?: exocore.store.IEntity);
 
             /** Entity id. */
             public id: string;
 
             /** Entity traits. */
-            public traits: exocore.index.ITrait[];
+            public traits: exocore.store.ITrait[];
 
             /** Entity creationDate. */
             public creationDate?: (google.protobuf.ITimestamp|null);
@@ -59,23 +59,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns Entity instance
              */
-            public static create(properties?: exocore.index.IEntity): exocore.index.Entity;
+            public static create(properties?: exocore.store.IEntity): exocore.store.Entity;
 
             /**
-             * Encodes the specified Entity message. Does not implicitly {@link exocore.index.Entity.verify|verify} messages.
+             * Encodes the specified Entity message. Does not implicitly {@link exocore.store.Entity.verify|verify} messages.
              * @param message Entity message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IEntity, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IEntity, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified Entity message, length delimited. Does not implicitly {@link exocore.index.Entity.verify|verify} messages.
+             * Encodes the specified Entity message, length delimited. Does not implicitly {@link exocore.store.Entity.verify|verify} messages.
              * @param message Entity message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IEntity, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IEntity, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes an Entity message from the specified reader or buffer.
@@ -85,7 +85,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.Entity;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.Entity;
 
             /**
              * Decodes an Entity message from the specified reader or buffer, length delimited.
@@ -94,7 +94,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.Entity;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.Entity;
 
             /**
              * Verifies an Entity message.
@@ -108,7 +108,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns Entity
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.Entity;
+            public static fromObject(object: { [k: string]: any }): exocore.store.Entity;
 
             /**
              * Creates a plain object from an Entity message. Also converts values to other types if specified.
@@ -116,7 +116,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.Entity, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.Entity, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this Entity to JSON.
@@ -147,7 +147,7 @@ export namespace exocore {
             lastOperationId?: (number|Long|null);
 
             /** Trait details */
-            details?: (exocore.index.TraitDetails|null);
+            details?: (exocore.store.TraitDetails|null);
         }
 
         /** Represents a Trait. */
@@ -157,7 +157,7 @@ export namespace exocore {
              * Constructs a new Trait.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.ITrait);
+            constructor(properties?: exocore.store.ITrait);
 
             /** Trait id. */
             public id: string;
@@ -178,30 +178,30 @@ export namespace exocore {
             public lastOperationId: (number|Long);
 
             /** Trait details. */
-            public details: exocore.index.TraitDetails;
+            public details: exocore.store.TraitDetails;
 
             /**
              * Creates a new Trait instance using the specified properties.
              * @param [properties] Properties to set
              * @returns Trait instance
              */
-            public static create(properties?: exocore.index.ITrait): exocore.index.Trait;
+            public static create(properties?: exocore.store.ITrait): exocore.store.Trait;
 
             /**
-             * Encodes the specified Trait message. Does not implicitly {@link exocore.index.Trait.verify|verify} messages.
+             * Encodes the specified Trait message. Does not implicitly {@link exocore.store.Trait.verify|verify} messages.
              * @param message Trait message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.ITrait, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.ITrait, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified Trait message, length delimited. Does not implicitly {@link exocore.index.Trait.verify|verify} messages.
+             * Encodes the specified Trait message, length delimited. Does not implicitly {@link exocore.store.Trait.verify|verify} messages.
              * @param message Trait message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.ITrait, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.ITrait, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a Trait message from the specified reader or buffer.
@@ -211,7 +211,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.Trait;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.Trait;
 
             /**
              * Decodes a Trait message from the specified reader or buffer, length delimited.
@@ -220,7 +220,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.Trait;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.Trait;
 
             /**
              * Verifies a Trait message.
@@ -234,7 +234,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns Trait
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.Trait;
+            public static fromObject(object: { [k: string]: any }): exocore.store.Trait;
 
             /**
              * Creates a plain object from a Trait message. Also converts values to other types if specified.
@@ -242,7 +242,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.Trait, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.Trait, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this Trait to JSON.
@@ -268,7 +268,7 @@ export namespace exocore {
              * Constructs a new Reference.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IReference);
+            constructor(properties?: exocore.store.IReference);
 
             /** Reference entityId. */
             public entityId: string;
@@ -281,23 +281,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns Reference instance
              */
-            public static create(properties?: exocore.index.IReference): exocore.index.Reference;
+            public static create(properties?: exocore.store.IReference): exocore.store.Reference;
 
             /**
-             * Encodes the specified Reference message. Does not implicitly {@link exocore.index.Reference.verify|verify} messages.
+             * Encodes the specified Reference message. Does not implicitly {@link exocore.store.Reference.verify|verify} messages.
              * @param message Reference message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IReference, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IReference, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified Reference message, length delimited. Does not implicitly {@link exocore.index.Reference.verify|verify} messages.
+             * Encodes the specified Reference message, length delimited. Does not implicitly {@link exocore.store.Reference.verify|verify} messages.
              * @param message Reference message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IReference, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IReference, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a Reference message from the specified reader or buffer.
@@ -307,7 +307,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.Reference;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.Reference;
 
             /**
              * Decodes a Reference message from the specified reader or buffer, length delimited.
@@ -316,7 +316,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.Reference;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.Reference;
 
             /**
              * Verifies a Reference message.
@@ -330,7 +330,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns Reference
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.Reference;
+            public static fromObject(object: { [k: string]: any }): exocore.store.Reference;
 
             /**
              * Creates a plain object from a Reference message. Also converts values to other types if specified.
@@ -338,7 +338,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.Reference, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.Reference, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this Reference to JSON.
@@ -357,13 +357,16 @@ export namespace exocore {
         interface IMutationRequest {
 
             /** Mutations to apply. */
-            mutations?: (exocore.index.IEntityMutation[]|null);
+            mutations?: (exocore.store.IEntityMutation[]|null);
 
             /** Waits for mutation to be indexed. */
             waitIndexed?: (boolean|null);
 
             /** Waits for mutation to be indexed and returns the mutated entities. */
             returnEntities?: (boolean|null);
+
+            /** If an entity ID is generated for the mutated entities, reuse the same ID for all mutations. */
+            commonEntityId?: (boolean|null);
         }
 
         /** Represents a MutationRequest. */
@@ -373,10 +376,10 @@ export namespace exocore {
              * Constructs a new MutationRequest.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IMutationRequest);
+            constructor(properties?: exocore.store.IMutationRequest);
 
             /** Mutations to apply. */
-            public mutations: exocore.index.IEntityMutation[];
+            public mutations: exocore.store.IEntityMutation[];
 
             /** Waits for mutation to be indexed. */
             public waitIndexed: boolean;
@@ -384,28 +387,31 @@ export namespace exocore {
             /** Waits for mutation to be indexed and returns the mutated entities. */
             public returnEntities: boolean;
 
+            /** If an entity ID is generated for the mutated entities, reuse the same ID for all mutations. */
+            public commonEntityId: boolean;
+
             /**
              * Creates a new MutationRequest instance using the specified properties.
              * @param [properties] Properties to set
              * @returns MutationRequest instance
              */
-            public static create(properties?: exocore.index.IMutationRequest): exocore.index.MutationRequest;
+            public static create(properties?: exocore.store.IMutationRequest): exocore.store.MutationRequest;
 
             /**
-             * Encodes the specified MutationRequest message. Does not implicitly {@link exocore.index.MutationRequest.verify|verify} messages.
+             * Encodes the specified MutationRequest message. Does not implicitly {@link exocore.store.MutationRequest.verify|verify} messages.
              * @param message MutationRequest message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IMutationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IMutationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified MutationRequest message, length delimited. Does not implicitly {@link exocore.index.MutationRequest.verify|verify} messages.
+             * Encodes the specified MutationRequest message, length delimited. Does not implicitly {@link exocore.store.MutationRequest.verify|verify} messages.
              * @param message MutationRequest message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IMutationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IMutationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a MutationRequest message from the specified reader or buffer.
@@ -415,7 +421,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.MutationRequest;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.MutationRequest;
 
             /**
              * Decodes a MutationRequest message from the specified reader or buffer, length delimited.
@@ -424,7 +430,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.MutationRequest;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.MutationRequest;
 
             /**
              * Verifies a MutationRequest message.
@@ -438,7 +444,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns MutationRequest
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.MutationRequest;
+            public static fromObject(object: { [k: string]: any }): exocore.store.MutationRequest;
 
             /**
              * Creates a plain object from a MutationRequest message. Also converts values to other types if specified.
@@ -446,7 +452,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.MutationRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.MutationRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this MutationRequest to JSON.
@@ -462,7 +468,7 @@ export namespace exocore {
             operationIds?: ((number|Long)[]|null);
 
             /** Mutated entities if requested. */
-            entities?: (exocore.index.IEntity[]|null);
+            entities?: (exocore.store.IEntity[]|null);
         }
 
         /** Represents a MutationResult. */
@@ -472,36 +478,36 @@ export namespace exocore {
              * Constructs a new MutationResult.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IMutationResult);
+            constructor(properties?: exocore.store.IMutationResult);
 
             /** Unique operation ids for each mutations. */
             public operationIds: (number|Long)[];
 
             /** Mutated entities if requested. */
-            public entities: exocore.index.IEntity[];
+            public entities: exocore.store.IEntity[];
 
             /**
              * Creates a new MutationResult instance using the specified properties.
              * @param [properties] Properties to set
              * @returns MutationResult instance
              */
-            public static create(properties?: exocore.index.IMutationResult): exocore.index.MutationResult;
+            public static create(properties?: exocore.store.IMutationResult): exocore.store.MutationResult;
 
             /**
-             * Encodes the specified MutationResult message. Does not implicitly {@link exocore.index.MutationResult.verify|verify} messages.
+             * Encodes the specified MutationResult message. Does not implicitly {@link exocore.store.MutationResult.verify|verify} messages.
              * @param message MutationResult message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IMutationResult, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IMutationResult, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified MutationResult message, length delimited. Does not implicitly {@link exocore.index.MutationResult.verify|verify} messages.
+             * Encodes the specified MutationResult message, length delimited. Does not implicitly {@link exocore.store.MutationResult.verify|verify} messages.
              * @param message MutationResult message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IMutationResult, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IMutationResult, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a MutationResult message from the specified reader or buffer.
@@ -511,7 +517,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.MutationResult;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.MutationResult;
 
             /**
              * Decodes a MutationResult message from the specified reader or buffer, length delimited.
@@ -520,7 +526,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.MutationResult;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.MutationResult;
 
             /**
              * Verifies a MutationResult message.
@@ -534,7 +540,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns MutationResult
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.MutationResult;
+            public static fromObject(object: { [k: string]: any }): exocore.store.MutationResult;
 
             /**
              * Creates a plain object from a MutationResult message. Also converts values to other types if specified.
@@ -542,7 +548,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.MutationResult, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.MutationResult, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this MutationResult to JSON.
@@ -558,22 +564,22 @@ export namespace exocore {
             entityId?: (string|null);
 
             /** EntityMutation putTrait */
-            putTrait?: (exocore.index.IPutTraitMutation|null);
+            putTrait?: (exocore.store.IPutTraitMutation|null);
 
             /** EntityMutation deleteTrait */
-            deleteTrait?: (exocore.index.IDeleteTraitMutation|null);
+            deleteTrait?: (exocore.store.IDeleteTraitMutation|null);
 
             /** EntityMutation deleteEntity */
-            deleteEntity?: (exocore.index.IDeleteEntityMutation|null);
+            deleteEntity?: (exocore.store.IDeleteEntityMutation|null);
 
             /** EntityMutation updateTrait */
-            updateTrait?: (exocore.index.IUpdateTraitMutation|null);
+            updateTrait?: (exocore.store.IUpdateTraitMutation|null);
 
             /** EntityMutation compactTrait */
-            compactTrait?: (exocore.index.ICompactTraitMutation|null);
+            compactTrait?: (exocore.store.ICompactTraitMutation|null);
 
             /** EntityMutation test */
-            test?: (exocore.index.ITestMutation|null);
+            test?: (exocore.store.ITestMutation|null);
         }
 
         /** Represents an EntityMutation. */
@@ -583,28 +589,28 @@ export namespace exocore {
              * Constructs a new EntityMutation.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IEntityMutation);
+            constructor(properties?: exocore.store.IEntityMutation);
 
             /** EntityMutation entityId. */
             public entityId: string;
 
             /** EntityMutation putTrait. */
-            public putTrait?: (exocore.index.IPutTraitMutation|null);
+            public putTrait?: (exocore.store.IPutTraitMutation|null);
 
             /** EntityMutation deleteTrait. */
-            public deleteTrait?: (exocore.index.IDeleteTraitMutation|null);
+            public deleteTrait?: (exocore.store.IDeleteTraitMutation|null);
 
             /** EntityMutation deleteEntity. */
-            public deleteEntity?: (exocore.index.IDeleteEntityMutation|null);
+            public deleteEntity?: (exocore.store.IDeleteEntityMutation|null);
 
             /** EntityMutation updateTrait. */
-            public updateTrait?: (exocore.index.IUpdateTraitMutation|null);
+            public updateTrait?: (exocore.store.IUpdateTraitMutation|null);
 
             /** EntityMutation compactTrait. */
-            public compactTrait?: (exocore.index.ICompactTraitMutation|null);
+            public compactTrait?: (exocore.store.ICompactTraitMutation|null);
 
             /** EntityMutation test. */
-            public test?: (exocore.index.ITestMutation|null);
+            public test?: (exocore.store.ITestMutation|null);
 
             /** EntityMutation mutation. */
             public mutation?: ("putTrait"|"deleteTrait"|"deleteEntity"|"updateTrait"|"compactTrait"|"test");
@@ -614,23 +620,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns EntityMutation instance
              */
-            public static create(properties?: exocore.index.IEntityMutation): exocore.index.EntityMutation;
+            public static create(properties?: exocore.store.IEntityMutation): exocore.store.EntityMutation;
 
             /**
-             * Encodes the specified EntityMutation message. Does not implicitly {@link exocore.index.EntityMutation.verify|verify} messages.
+             * Encodes the specified EntityMutation message. Does not implicitly {@link exocore.store.EntityMutation.verify|verify} messages.
              * @param message EntityMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IEntityMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IEntityMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified EntityMutation message, length delimited. Does not implicitly {@link exocore.index.EntityMutation.verify|verify} messages.
+             * Encodes the specified EntityMutation message, length delimited. Does not implicitly {@link exocore.store.EntityMutation.verify|verify} messages.
              * @param message EntityMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IEntityMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IEntityMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes an EntityMutation message from the specified reader or buffer.
@@ -640,7 +646,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.EntityMutation;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.EntityMutation;
 
             /**
              * Decodes an EntityMutation message from the specified reader or buffer, length delimited.
@@ -649,7 +655,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.EntityMutation;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.EntityMutation;
 
             /**
              * Verifies an EntityMutation message.
@@ -663,7 +669,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns EntityMutation
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.EntityMutation;
+            public static fromObject(object: { [k: string]: any }): exocore.store.EntityMutation;
 
             /**
              * Creates a plain object from an EntityMutation message. Also converts values to other types if specified.
@@ -671,7 +677,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.EntityMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.EntityMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this EntityMutation to JSON.
@@ -684,7 +690,7 @@ export namespace exocore {
         interface IPutTraitMutation {
 
             /** PutTraitMutation trait */
-            trait?: (exocore.index.ITrait|null);
+            trait?: (exocore.store.ITrait|null);
         }
 
         /** Represents a PutTraitMutation. */
@@ -694,33 +700,33 @@ export namespace exocore {
              * Constructs a new PutTraitMutation.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IPutTraitMutation);
+            constructor(properties?: exocore.store.IPutTraitMutation);
 
             /** PutTraitMutation trait. */
-            public trait?: (exocore.index.ITrait|null);
+            public trait?: (exocore.store.ITrait|null);
 
             /**
              * Creates a new PutTraitMutation instance using the specified properties.
              * @param [properties] Properties to set
              * @returns PutTraitMutation instance
              */
-            public static create(properties?: exocore.index.IPutTraitMutation): exocore.index.PutTraitMutation;
+            public static create(properties?: exocore.store.IPutTraitMutation): exocore.store.PutTraitMutation;
 
             /**
-             * Encodes the specified PutTraitMutation message. Does not implicitly {@link exocore.index.PutTraitMutation.verify|verify} messages.
+             * Encodes the specified PutTraitMutation message. Does not implicitly {@link exocore.store.PutTraitMutation.verify|verify} messages.
              * @param message PutTraitMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IPutTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IPutTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified PutTraitMutation message, length delimited. Does not implicitly {@link exocore.index.PutTraitMutation.verify|verify} messages.
+             * Encodes the specified PutTraitMutation message, length delimited. Does not implicitly {@link exocore.store.PutTraitMutation.verify|verify} messages.
              * @param message PutTraitMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IPutTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IPutTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a PutTraitMutation message from the specified reader or buffer.
@@ -730,7 +736,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.PutTraitMutation;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.PutTraitMutation;
 
             /**
              * Decodes a PutTraitMutation message from the specified reader or buffer, length delimited.
@@ -739,7 +745,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.PutTraitMutation;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.PutTraitMutation;
 
             /**
              * Verifies a PutTraitMutation message.
@@ -753,7 +759,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns PutTraitMutation
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.PutTraitMutation;
+            public static fromObject(object: { [k: string]: any }): exocore.store.PutTraitMutation;
 
             /**
              * Creates a plain object from a PutTraitMutation message. Also converts values to other types if specified.
@@ -761,7 +767,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.PutTraitMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.PutTraitMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this PutTraitMutation to JSON.
@@ -784,7 +790,7 @@ export namespace exocore {
              * Constructs a new DeleteTraitMutation.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IDeleteTraitMutation);
+            constructor(properties?: exocore.store.IDeleteTraitMutation);
 
             /** DeleteTraitMutation traitId. */
             public traitId: string;
@@ -794,23 +800,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns DeleteTraitMutation instance
              */
-            public static create(properties?: exocore.index.IDeleteTraitMutation): exocore.index.DeleteTraitMutation;
+            public static create(properties?: exocore.store.IDeleteTraitMutation): exocore.store.DeleteTraitMutation;
 
             /**
-             * Encodes the specified DeleteTraitMutation message. Does not implicitly {@link exocore.index.DeleteTraitMutation.verify|verify} messages.
+             * Encodes the specified DeleteTraitMutation message. Does not implicitly {@link exocore.store.DeleteTraitMutation.verify|verify} messages.
              * @param message DeleteTraitMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IDeleteTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IDeleteTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified DeleteTraitMutation message, length delimited. Does not implicitly {@link exocore.index.DeleteTraitMutation.verify|verify} messages.
+             * Encodes the specified DeleteTraitMutation message, length delimited. Does not implicitly {@link exocore.store.DeleteTraitMutation.verify|verify} messages.
              * @param message DeleteTraitMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IDeleteTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IDeleteTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a DeleteTraitMutation message from the specified reader or buffer.
@@ -820,7 +826,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.DeleteTraitMutation;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.DeleteTraitMutation;
 
             /**
              * Decodes a DeleteTraitMutation message from the specified reader or buffer, length delimited.
@@ -829,7 +835,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.DeleteTraitMutation;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.DeleteTraitMutation;
 
             /**
              * Verifies a DeleteTraitMutation message.
@@ -843,7 +849,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns DeleteTraitMutation
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.DeleteTraitMutation;
+            public static fromObject(object: { [k: string]: any }): exocore.store.DeleteTraitMutation;
 
             /**
              * Creates a plain object from a DeleteTraitMutation message. Also converts values to other types if specified.
@@ -851,7 +857,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.DeleteTraitMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.DeleteTraitMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this DeleteTraitMutation to JSON.
@@ -871,30 +877,30 @@ export namespace exocore {
              * Constructs a new DeleteEntityMutation.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IDeleteEntityMutation);
+            constructor(properties?: exocore.store.IDeleteEntityMutation);
 
             /**
              * Creates a new DeleteEntityMutation instance using the specified properties.
              * @param [properties] Properties to set
              * @returns DeleteEntityMutation instance
              */
-            public static create(properties?: exocore.index.IDeleteEntityMutation): exocore.index.DeleteEntityMutation;
+            public static create(properties?: exocore.store.IDeleteEntityMutation): exocore.store.DeleteEntityMutation;
 
             /**
-             * Encodes the specified DeleteEntityMutation message. Does not implicitly {@link exocore.index.DeleteEntityMutation.verify|verify} messages.
+             * Encodes the specified DeleteEntityMutation message. Does not implicitly {@link exocore.store.DeleteEntityMutation.verify|verify} messages.
              * @param message DeleteEntityMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IDeleteEntityMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IDeleteEntityMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified DeleteEntityMutation message, length delimited. Does not implicitly {@link exocore.index.DeleteEntityMutation.verify|verify} messages.
+             * Encodes the specified DeleteEntityMutation message, length delimited. Does not implicitly {@link exocore.store.DeleteEntityMutation.verify|verify} messages.
              * @param message DeleteEntityMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IDeleteEntityMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IDeleteEntityMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a DeleteEntityMutation message from the specified reader or buffer.
@@ -904,7 +910,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.DeleteEntityMutation;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.DeleteEntityMutation;
 
             /**
              * Decodes a DeleteEntityMutation message from the specified reader or buffer, length delimited.
@@ -913,7 +919,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.DeleteEntityMutation;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.DeleteEntityMutation;
 
             /**
              * Verifies a DeleteEntityMutation message.
@@ -927,7 +933,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns DeleteEntityMutation
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.DeleteEntityMutation;
+            public static fromObject(object: { [k: string]: any }): exocore.store.DeleteEntityMutation;
 
             /**
              * Creates a plain object from a DeleteEntityMutation message. Also converts values to other types if specified.
@@ -935,7 +941,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.DeleteEntityMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.DeleteEntityMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this DeleteEntityMutation to JSON.
@@ -951,7 +957,7 @@ export namespace exocore {
             traitId?: (string|null);
 
             /** UpdateTraitMutation trait */
-            trait?: (exocore.index.ITrait|null);
+            trait?: (exocore.store.ITrait|null);
 
             /** UpdateTraitMutation fieldMask */
             fieldMask?: (google.protobuf.IFieldMask|null);
@@ -967,13 +973,13 @@ export namespace exocore {
              * Constructs a new UpdateTraitMutation.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IUpdateTraitMutation);
+            constructor(properties?: exocore.store.IUpdateTraitMutation);
 
             /** UpdateTraitMutation traitId. */
             public traitId: string;
 
             /** UpdateTraitMutation trait. */
-            public trait?: (exocore.index.ITrait|null);
+            public trait?: (exocore.store.ITrait|null);
 
             /** UpdateTraitMutation fieldMask. */
             public fieldMask?: (google.protobuf.IFieldMask|null);
@@ -986,23 +992,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns UpdateTraitMutation instance
              */
-            public static create(properties?: exocore.index.IUpdateTraitMutation): exocore.index.UpdateTraitMutation;
+            public static create(properties?: exocore.store.IUpdateTraitMutation): exocore.store.UpdateTraitMutation;
 
             /**
-             * Encodes the specified UpdateTraitMutation message. Does not implicitly {@link exocore.index.UpdateTraitMutation.verify|verify} messages.
+             * Encodes the specified UpdateTraitMutation message. Does not implicitly {@link exocore.store.UpdateTraitMutation.verify|verify} messages.
              * @param message UpdateTraitMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IUpdateTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IUpdateTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified UpdateTraitMutation message, length delimited. Does not implicitly {@link exocore.index.UpdateTraitMutation.verify|verify} messages.
+             * Encodes the specified UpdateTraitMutation message, length delimited. Does not implicitly {@link exocore.store.UpdateTraitMutation.verify|verify} messages.
              * @param message UpdateTraitMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IUpdateTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IUpdateTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes an UpdateTraitMutation message from the specified reader or buffer.
@@ -1012,7 +1018,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.UpdateTraitMutation;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.UpdateTraitMutation;
 
             /**
              * Decodes an UpdateTraitMutation message from the specified reader or buffer, length delimited.
@@ -1021,7 +1027,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.UpdateTraitMutation;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.UpdateTraitMutation;
 
             /**
              * Verifies an UpdateTraitMutation message.
@@ -1035,7 +1041,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns UpdateTraitMutation
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.UpdateTraitMutation;
+            public static fromObject(object: { [k: string]: any }): exocore.store.UpdateTraitMutation;
 
             /**
              * Creates a plain object from an UpdateTraitMutation message. Also converts values to other types if specified.
@@ -1043,7 +1049,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.UpdateTraitMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.UpdateTraitMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this UpdateTraitMutation to JSON.
@@ -1056,10 +1062,10 @@ export namespace exocore {
         interface ICompactTraitMutation {
 
             /** CompactTraitMutation compactedOperations */
-            compactedOperations?: (exocore.index.CompactTraitMutation.IOperation[]|null);
+            compactedOperations?: (exocore.store.CompactTraitMutation.IOperation[]|null);
 
             /** CompactTraitMutation trait */
-            trait?: (exocore.index.ITrait|null);
+            trait?: (exocore.store.ITrait|null);
         }
 
         /** Represents a CompactTraitMutation. */
@@ -1069,36 +1075,36 @@ export namespace exocore {
              * Constructs a new CompactTraitMutation.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.ICompactTraitMutation);
+            constructor(properties?: exocore.store.ICompactTraitMutation);
 
             /** CompactTraitMutation compactedOperations. */
-            public compactedOperations: exocore.index.CompactTraitMutation.IOperation[];
+            public compactedOperations: exocore.store.CompactTraitMutation.IOperation[];
 
             /** CompactTraitMutation trait. */
-            public trait?: (exocore.index.ITrait|null);
+            public trait?: (exocore.store.ITrait|null);
 
             /**
              * Creates a new CompactTraitMutation instance using the specified properties.
              * @param [properties] Properties to set
              * @returns CompactTraitMutation instance
              */
-            public static create(properties?: exocore.index.ICompactTraitMutation): exocore.index.CompactTraitMutation;
+            public static create(properties?: exocore.store.ICompactTraitMutation): exocore.store.CompactTraitMutation;
 
             /**
-             * Encodes the specified CompactTraitMutation message. Does not implicitly {@link exocore.index.CompactTraitMutation.verify|verify} messages.
+             * Encodes the specified CompactTraitMutation message. Does not implicitly {@link exocore.store.CompactTraitMutation.verify|verify} messages.
              * @param message CompactTraitMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.ICompactTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.ICompactTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified CompactTraitMutation message, length delimited. Does not implicitly {@link exocore.index.CompactTraitMutation.verify|verify} messages.
+             * Encodes the specified CompactTraitMutation message, length delimited. Does not implicitly {@link exocore.store.CompactTraitMutation.verify|verify} messages.
              * @param message CompactTraitMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.ICompactTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.ICompactTraitMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a CompactTraitMutation message from the specified reader or buffer.
@@ -1108,7 +1114,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.CompactTraitMutation;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.CompactTraitMutation;
 
             /**
              * Decodes a CompactTraitMutation message from the specified reader or buffer, length delimited.
@@ -1117,7 +1123,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.CompactTraitMutation;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.CompactTraitMutation;
 
             /**
              * Verifies a CompactTraitMutation message.
@@ -1131,7 +1137,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns CompactTraitMutation
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.CompactTraitMutation;
+            public static fromObject(object: { [k: string]: any }): exocore.store.CompactTraitMutation;
 
             /**
              * Creates a plain object from a CompactTraitMutation message. Also converts values to other types if specified.
@@ -1139,7 +1145,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.CompactTraitMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.CompactTraitMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this CompactTraitMutation to JSON.
@@ -1164,7 +1170,7 @@ export namespace exocore {
                  * Constructs a new Operation.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: exocore.index.CompactTraitMutation.IOperation);
+                constructor(properties?: exocore.store.CompactTraitMutation.IOperation);
 
                 /** Operation operationId. */
                 public operationId: (number|Long);
@@ -1174,23 +1180,23 @@ export namespace exocore {
                  * @param [properties] Properties to set
                  * @returns Operation instance
                  */
-                public static create(properties?: exocore.index.CompactTraitMutation.IOperation): exocore.index.CompactTraitMutation.Operation;
+                public static create(properties?: exocore.store.CompactTraitMutation.IOperation): exocore.store.CompactTraitMutation.Operation;
 
                 /**
-                 * Encodes the specified Operation message. Does not implicitly {@link exocore.index.CompactTraitMutation.Operation.verify|verify} messages.
+                 * Encodes the specified Operation message. Does not implicitly {@link exocore.store.CompactTraitMutation.Operation.verify|verify} messages.
                  * @param message Operation message or plain object to encode
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                public static encode(message: exocore.index.CompactTraitMutation.IOperation, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: exocore.store.CompactTraitMutation.IOperation, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
-                 * Encodes the specified Operation message, length delimited. Does not implicitly {@link exocore.index.CompactTraitMutation.Operation.verify|verify} messages.
+                 * Encodes the specified Operation message, length delimited. Does not implicitly {@link exocore.store.CompactTraitMutation.Operation.verify|verify} messages.
                  * @param message Operation message or plain object to encode
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                public static encodeDelimited(message: exocore.index.CompactTraitMutation.IOperation, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encodeDelimited(message: exocore.store.CompactTraitMutation.IOperation, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an Operation message from the specified reader or buffer.
@@ -1200,7 +1206,7 @@ export namespace exocore {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.CompactTraitMutation.Operation;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.CompactTraitMutation.Operation;
 
                 /**
                  * Decodes an Operation message from the specified reader or buffer, length delimited.
@@ -1209,7 +1215,7 @@ export namespace exocore {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.CompactTraitMutation.Operation;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.CompactTraitMutation.Operation;
 
                 /**
                  * Verifies an Operation message.
@@ -1223,7 +1229,7 @@ export namespace exocore {
                  * @param object Plain object
                  * @returns Operation
                  */
-                public static fromObject(object: { [k: string]: any }): exocore.index.CompactTraitMutation.Operation;
+                public static fromObject(object: { [k: string]: any }): exocore.store.CompactTraitMutation.Operation;
 
                 /**
                  * Creates a plain object from an Operation message. Also converts values to other types if specified.
@@ -1231,7 +1237,7 @@ export namespace exocore {
                  * @param [options] Conversion options
                  * @returns Plain object
                  */
-                public static toObject(message: exocore.index.CompactTraitMutation.Operation, options?: $protobuf.IConversionOptions): { [k: string]: any };
+                public static toObject(message: exocore.store.CompactTraitMutation.Operation, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
                 /**
                  * Converts this Operation to JSON.
@@ -1255,7 +1261,7 @@ export namespace exocore {
              * Constructs a new TestMutation.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.ITestMutation);
+            constructor(properties?: exocore.store.ITestMutation);
 
             /** TestMutation success. */
             public success: boolean;
@@ -1265,23 +1271,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns TestMutation instance
              */
-            public static create(properties?: exocore.index.ITestMutation): exocore.index.TestMutation;
+            public static create(properties?: exocore.store.ITestMutation): exocore.store.TestMutation;
 
             /**
-             * Encodes the specified TestMutation message. Does not implicitly {@link exocore.index.TestMutation.verify|verify} messages.
+             * Encodes the specified TestMutation message. Does not implicitly {@link exocore.store.TestMutation.verify|verify} messages.
              * @param message TestMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.ITestMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.ITestMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified TestMutation message, length delimited. Does not implicitly {@link exocore.index.TestMutation.verify|verify} messages.
+             * Encodes the specified TestMutation message, length delimited. Does not implicitly {@link exocore.store.TestMutation.verify|verify} messages.
              * @param message TestMutation message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.ITestMutation, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.ITestMutation, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a TestMutation message from the specified reader or buffer.
@@ -1291,7 +1297,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.TestMutation;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.TestMutation;
 
             /**
              * Decodes a TestMutation message from the specified reader or buffer, length delimited.
@@ -1300,7 +1306,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.TestMutation;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.TestMutation;
 
             /**
              * Verifies a TestMutation message.
@@ -1314,7 +1320,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns TestMutation
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.TestMutation;
+            public static fromObject(object: { [k: string]: any }): exocore.store.TestMutation;
 
             /**
              * Creates a plain object from a TestMutation message. Also converts values to other types if specified.
@@ -1322,7 +1328,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.TestMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.TestMutation, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this TestMutation to JSON.
@@ -1335,34 +1341,34 @@ export namespace exocore {
         interface IEntityQuery {
 
             /** EntityQuery match */
-            match?: (exocore.index.IMatchPredicate|null);
+            match?: (exocore.store.IMatchPredicate|null);
 
             /** EntityQuery trait */
-            trait?: (exocore.index.ITraitPredicate|null);
+            trait?: (exocore.store.ITraitPredicate|null);
 
             /** EntityQuery ids */
-            ids?: (exocore.index.IIdsPredicate|null);
+            ids?: (exocore.store.IIdsPredicate|null);
 
             /** EntityQuery reference */
-            reference?: (exocore.index.IReferencePredicate|null);
+            reference?: (exocore.store.IReferencePredicate|null);
 
             /** EntityQuery operations */
-            operations?: (exocore.index.IOperationsPredicate|null);
+            operations?: (exocore.store.IOperationsPredicate|null);
 
             /** EntityQuery all */
-            all?: (exocore.index.IAllPredicate|null);
+            all?: (exocore.store.IAllPredicate|null);
 
             /** EntityQuery test */
-            test?: (exocore.index.ITestPredicate|null);
+            test?: (exocore.store.ITestPredicate|null);
 
             /** Optional projections on traits and fields to be returned. */
-            projections?: (exocore.index.IProjection[]|null);
+            projections?: (exocore.store.IProjection[]|null);
 
             /** Query paging requested. */
-            paging?: (exocore.index.IPaging|null);
+            paging?: (exocore.store.IPaging|null);
 
             /** Query ordering. */
-            ordering?: (exocore.index.IOrdering|null);
+            ordering?: (exocore.store.IOrdering|null);
 
             /** Optional watch token if this query is to be used for watching. */
             watchToken?: (number|Long|null);
@@ -1381,37 +1387,37 @@ export namespace exocore {
              * Constructs a new EntityQuery.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IEntityQuery);
+            constructor(properties?: exocore.store.IEntityQuery);
 
             /** EntityQuery match. */
-            public match?: (exocore.index.IMatchPredicate|null);
+            public match?: (exocore.store.IMatchPredicate|null);
 
             /** EntityQuery trait. */
-            public trait?: (exocore.index.ITraitPredicate|null);
+            public trait?: (exocore.store.ITraitPredicate|null);
 
             /** EntityQuery ids. */
-            public ids?: (exocore.index.IIdsPredicate|null);
+            public ids?: (exocore.store.IIdsPredicate|null);
 
             /** EntityQuery reference. */
-            public reference?: (exocore.index.IReferencePredicate|null);
+            public reference?: (exocore.store.IReferencePredicate|null);
 
             /** EntityQuery operations. */
-            public operations?: (exocore.index.IOperationsPredicate|null);
+            public operations?: (exocore.store.IOperationsPredicate|null);
 
             /** EntityQuery all. */
-            public all?: (exocore.index.IAllPredicate|null);
+            public all?: (exocore.store.IAllPredicate|null);
 
             /** EntityQuery test. */
-            public test?: (exocore.index.ITestPredicate|null);
+            public test?: (exocore.store.ITestPredicate|null);
 
             /** Optional projections on traits and fields to be returned. */
-            public projections: exocore.index.IProjection[];
+            public projections: exocore.store.IProjection[];
 
             /** Query paging requested. */
-            public paging?: (exocore.index.IPaging|null);
+            public paging?: (exocore.store.IPaging|null);
 
             /** Query ordering. */
-            public ordering?: (exocore.index.IOrdering|null);
+            public ordering?: (exocore.store.IOrdering|null);
 
             /** Optional watch token if this query is to be used for watching. */
             public watchToken: (number|Long);
@@ -1430,23 +1436,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns EntityQuery instance
              */
-            public static create(properties?: exocore.index.IEntityQuery): exocore.index.EntityQuery;
+            public static create(properties?: exocore.store.IEntityQuery): exocore.store.EntityQuery;
 
             /**
-             * Encodes the specified EntityQuery message. Does not implicitly {@link exocore.index.EntityQuery.verify|verify} messages.
+             * Encodes the specified EntityQuery message. Does not implicitly {@link exocore.store.EntityQuery.verify|verify} messages.
              * @param message EntityQuery message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IEntityQuery, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IEntityQuery, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified EntityQuery message, length delimited. Does not implicitly {@link exocore.index.EntityQuery.verify|verify} messages.
+             * Encodes the specified EntityQuery message, length delimited. Does not implicitly {@link exocore.store.EntityQuery.verify|verify} messages.
              * @param message EntityQuery message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IEntityQuery, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IEntityQuery, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes an EntityQuery message from the specified reader or buffer.
@@ -1456,7 +1462,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.EntityQuery;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.EntityQuery;
 
             /**
              * Decodes an EntityQuery message from the specified reader or buffer, length delimited.
@@ -1465,7 +1471,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.EntityQuery;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.EntityQuery;
 
             /**
              * Verifies an EntityQuery message.
@@ -1479,7 +1485,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns EntityQuery
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.EntityQuery;
+            public static fromObject(object: { [k: string]: any }): exocore.store.EntityQuery;
 
             /**
              * Creates a plain object from an EntityQuery message. Also converts values to other types if specified.
@@ -1487,7 +1493,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.EntityQuery, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.EntityQuery, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this EntityQuery to JSON.
@@ -1519,7 +1525,7 @@ export namespace exocore {
              * Constructs a new Projection.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IProjection);
+            constructor(properties?: exocore.store.IProjection);
 
             /** If ends with a dollar sign "$", an exact match is required (ex: `some.package.Name$` will only match this message) */
             public package: string[];
@@ -1538,23 +1544,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns Projection instance
              */
-            public static create(properties?: exocore.index.IProjection): exocore.index.Projection;
+            public static create(properties?: exocore.store.IProjection): exocore.store.Projection;
 
             /**
-             * Encodes the specified Projection message. Does not implicitly {@link exocore.index.Projection.verify|verify} messages.
+             * Encodes the specified Projection message. Does not implicitly {@link exocore.store.Projection.verify|verify} messages.
              * @param message Projection message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IProjection, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IProjection, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified Projection message, length delimited. Does not implicitly {@link exocore.index.Projection.verify|verify} messages.
+             * Encodes the specified Projection message, length delimited. Does not implicitly {@link exocore.store.Projection.verify|verify} messages.
              * @param message Projection message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IProjection, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IProjection, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a Projection message from the specified reader or buffer.
@@ -1564,7 +1570,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.Projection;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.Projection;
 
             /**
              * Decodes a Projection message from the specified reader or buffer, length delimited.
@@ -1573,7 +1579,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.Projection;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.Projection;
 
             /**
              * Verifies a Projection message.
@@ -1587,7 +1593,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns Projection
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.Projection;
+            public static fromObject(object: { [k: string]: any }): exocore.store.Projection;
 
             /**
              * Creates a plain object from a Projection message. Also converts values to other types if specified.
@@ -1595,7 +1601,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.Projection, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.Projection, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this Projection to JSON.
@@ -1618,7 +1624,7 @@ export namespace exocore {
              * Constructs a new MatchPredicate.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IMatchPredicate);
+            constructor(properties?: exocore.store.IMatchPredicate);
 
             /** MatchPredicate query. */
             public query: string;
@@ -1628,23 +1634,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns MatchPredicate instance
              */
-            public static create(properties?: exocore.index.IMatchPredicate): exocore.index.MatchPredicate;
+            public static create(properties?: exocore.store.IMatchPredicate): exocore.store.MatchPredicate;
 
             /**
-             * Encodes the specified MatchPredicate message. Does not implicitly {@link exocore.index.MatchPredicate.verify|verify} messages.
+             * Encodes the specified MatchPredicate message. Does not implicitly {@link exocore.store.MatchPredicate.verify|verify} messages.
              * @param message MatchPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IMatchPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IMatchPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified MatchPredicate message, length delimited. Does not implicitly {@link exocore.index.MatchPredicate.verify|verify} messages.
+             * Encodes the specified MatchPredicate message, length delimited. Does not implicitly {@link exocore.store.MatchPredicate.verify|verify} messages.
              * @param message MatchPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IMatchPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IMatchPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a MatchPredicate message from the specified reader or buffer.
@@ -1654,7 +1660,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.MatchPredicate;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.MatchPredicate;
 
             /**
              * Decodes a MatchPredicate message from the specified reader or buffer, length delimited.
@@ -1663,7 +1669,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.MatchPredicate;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.MatchPredicate;
 
             /**
              * Verifies a MatchPredicate message.
@@ -1677,7 +1683,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns MatchPredicate
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.MatchPredicate;
+            public static fromObject(object: { [k: string]: any }): exocore.store.MatchPredicate;
 
             /**
              * Creates a plain object from a MatchPredicate message. Also converts values to other types if specified.
@@ -1685,7 +1691,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.MatchPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.MatchPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this MatchPredicate to JSON.
@@ -1708,7 +1714,7 @@ export namespace exocore {
              * Constructs a new IdsPredicate.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IIdsPredicate);
+            constructor(properties?: exocore.store.IIdsPredicate);
 
             /** IdsPredicate ids. */
             public ids: string[];
@@ -1718,23 +1724,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns IdsPredicate instance
              */
-            public static create(properties?: exocore.index.IIdsPredicate): exocore.index.IdsPredicate;
+            public static create(properties?: exocore.store.IIdsPredicate): exocore.store.IdsPredicate;
 
             /**
-             * Encodes the specified IdsPredicate message. Does not implicitly {@link exocore.index.IdsPredicate.verify|verify} messages.
+             * Encodes the specified IdsPredicate message. Does not implicitly {@link exocore.store.IdsPredicate.verify|verify} messages.
              * @param message IdsPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IIdsPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IIdsPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified IdsPredicate message, length delimited. Does not implicitly {@link exocore.index.IdsPredicate.verify|verify} messages.
+             * Encodes the specified IdsPredicate message, length delimited. Does not implicitly {@link exocore.store.IdsPredicate.verify|verify} messages.
              * @param message IdsPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IIdsPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IIdsPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes an IdsPredicate message from the specified reader or buffer.
@@ -1744,7 +1750,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.IdsPredicate;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.IdsPredicate;
 
             /**
              * Decodes an IdsPredicate message from the specified reader or buffer, length delimited.
@@ -1753,7 +1759,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.IdsPredicate;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.IdsPredicate;
 
             /**
              * Verifies an IdsPredicate message.
@@ -1767,7 +1773,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns IdsPredicate
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.IdsPredicate;
+            public static fromObject(object: { [k: string]: any }): exocore.store.IdsPredicate;
 
             /**
              * Creates a plain object from an IdsPredicate message. Also converts values to other types if specified.
@@ -1775,7 +1781,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.IdsPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.IdsPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this IdsPredicate to JSON.
@@ -1798,7 +1804,7 @@ export namespace exocore {
              * Constructs a new OperationsPredicate.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IOperationsPredicate);
+            constructor(properties?: exocore.store.IOperationsPredicate);
 
             /** OperationsPredicate operationIds. */
             public operationIds: (number|Long)[];
@@ -1808,23 +1814,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns OperationsPredicate instance
              */
-            public static create(properties?: exocore.index.IOperationsPredicate): exocore.index.OperationsPredicate;
+            public static create(properties?: exocore.store.IOperationsPredicate): exocore.store.OperationsPredicate;
 
             /**
-             * Encodes the specified OperationsPredicate message. Does not implicitly {@link exocore.index.OperationsPredicate.verify|verify} messages.
+             * Encodes the specified OperationsPredicate message. Does not implicitly {@link exocore.store.OperationsPredicate.verify|verify} messages.
              * @param message OperationsPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IOperationsPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IOperationsPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified OperationsPredicate message, length delimited. Does not implicitly {@link exocore.index.OperationsPredicate.verify|verify} messages.
+             * Encodes the specified OperationsPredicate message, length delimited. Does not implicitly {@link exocore.store.OperationsPredicate.verify|verify} messages.
              * @param message OperationsPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IOperationsPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IOperationsPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes an OperationsPredicate message from the specified reader or buffer.
@@ -1834,7 +1840,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.OperationsPredicate;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.OperationsPredicate;
 
             /**
              * Decodes an OperationsPredicate message from the specified reader or buffer, length delimited.
@@ -1843,7 +1849,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.OperationsPredicate;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.OperationsPredicate;
 
             /**
              * Verifies an OperationsPredicate message.
@@ -1857,7 +1863,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns OperationsPredicate
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.OperationsPredicate;
+            public static fromObject(object: { [k: string]: any }): exocore.store.OperationsPredicate;
 
             /**
              * Creates a plain object from an OperationsPredicate message. Also converts values to other types if specified.
@@ -1865,7 +1871,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.OperationsPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.OperationsPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this OperationsPredicate to JSON.
@@ -1885,30 +1891,30 @@ export namespace exocore {
              * Constructs a new AllPredicate.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IAllPredicate);
+            constructor(properties?: exocore.store.IAllPredicate);
 
             /**
              * Creates a new AllPredicate instance using the specified properties.
              * @param [properties] Properties to set
              * @returns AllPredicate instance
              */
-            public static create(properties?: exocore.index.IAllPredicate): exocore.index.AllPredicate;
+            public static create(properties?: exocore.store.IAllPredicate): exocore.store.AllPredicate;
 
             /**
-             * Encodes the specified AllPredicate message. Does not implicitly {@link exocore.index.AllPredicate.verify|verify} messages.
+             * Encodes the specified AllPredicate message. Does not implicitly {@link exocore.store.AllPredicate.verify|verify} messages.
              * @param message AllPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IAllPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IAllPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified AllPredicate message, length delimited. Does not implicitly {@link exocore.index.AllPredicate.verify|verify} messages.
+             * Encodes the specified AllPredicate message, length delimited. Does not implicitly {@link exocore.store.AllPredicate.verify|verify} messages.
              * @param message AllPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IAllPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IAllPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes an AllPredicate message from the specified reader or buffer.
@@ -1918,7 +1924,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.AllPredicate;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.AllPredicate;
 
             /**
              * Decodes an AllPredicate message from the specified reader or buffer, length delimited.
@@ -1927,7 +1933,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.AllPredicate;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.AllPredicate;
 
             /**
              * Verifies an AllPredicate message.
@@ -1941,7 +1947,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns AllPredicate
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.AllPredicate;
+            public static fromObject(object: { [k: string]: any }): exocore.store.AllPredicate;
 
             /**
              * Creates a plain object from an AllPredicate message. Also converts values to other types if specified.
@@ -1949,7 +1955,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.AllPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.AllPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this AllPredicate to JSON.
@@ -1972,7 +1978,7 @@ export namespace exocore {
              * Constructs a new TestPredicate.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.ITestPredicate);
+            constructor(properties?: exocore.store.ITestPredicate);
 
             /** TestPredicate success. */
             public success: boolean;
@@ -1982,23 +1988,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns TestPredicate instance
              */
-            public static create(properties?: exocore.index.ITestPredicate): exocore.index.TestPredicate;
+            public static create(properties?: exocore.store.ITestPredicate): exocore.store.TestPredicate;
 
             /**
-             * Encodes the specified TestPredicate message. Does not implicitly {@link exocore.index.TestPredicate.verify|verify} messages.
+             * Encodes the specified TestPredicate message. Does not implicitly {@link exocore.store.TestPredicate.verify|verify} messages.
              * @param message TestPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.ITestPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.ITestPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified TestPredicate message, length delimited. Does not implicitly {@link exocore.index.TestPredicate.verify|verify} messages.
+             * Encodes the specified TestPredicate message, length delimited. Does not implicitly {@link exocore.store.TestPredicate.verify|verify} messages.
              * @param message TestPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.ITestPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.ITestPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a TestPredicate message from the specified reader or buffer.
@@ -2008,7 +2014,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.TestPredicate;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.TestPredicate;
 
             /**
              * Decodes a TestPredicate message from the specified reader or buffer, length delimited.
@@ -2017,7 +2023,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.TestPredicate;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.TestPredicate;
 
             /**
              * Verifies a TestPredicate message.
@@ -2031,7 +2037,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns TestPredicate
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.TestPredicate;
+            public static fromObject(object: { [k: string]: any }): exocore.store.TestPredicate;
 
             /**
              * Creates a plain object from a TestPredicate message. Also converts values to other types if specified.
@@ -2039,7 +2045,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.TestPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.TestPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this TestPredicate to JSON.
@@ -2055,7 +2061,7 @@ export namespace exocore {
             traitName?: (string|null);
 
             /** TraitPredicate query */
-            query?: (exocore.index.ITraitQuery|null);
+            query?: (exocore.store.ITraitQuery|null);
         }
 
         /** Query entities that have a specified trait and optionally matching a trait query. */
@@ -2065,36 +2071,36 @@ export namespace exocore {
              * Constructs a new TraitPredicate.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.ITraitPredicate);
+            constructor(properties?: exocore.store.ITraitPredicate);
 
             /** TraitPredicate traitName. */
             public traitName: string;
 
             /** TraitPredicate query. */
-            public query?: (exocore.index.ITraitQuery|null);
+            public query?: (exocore.store.ITraitQuery|null);
 
             /**
              * Creates a new TraitPredicate instance using the specified properties.
              * @param [properties] Properties to set
              * @returns TraitPredicate instance
              */
-            public static create(properties?: exocore.index.ITraitPredicate): exocore.index.TraitPredicate;
+            public static create(properties?: exocore.store.ITraitPredicate): exocore.store.TraitPredicate;
 
             /**
-             * Encodes the specified TraitPredicate message. Does not implicitly {@link exocore.index.TraitPredicate.verify|verify} messages.
+             * Encodes the specified TraitPredicate message. Does not implicitly {@link exocore.store.TraitPredicate.verify|verify} messages.
              * @param message TraitPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.ITraitPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.ITraitPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified TraitPredicate message, length delimited. Does not implicitly {@link exocore.index.TraitPredicate.verify|verify} messages.
+             * Encodes the specified TraitPredicate message, length delimited. Does not implicitly {@link exocore.store.TraitPredicate.verify|verify} messages.
              * @param message TraitPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.ITraitPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.ITraitPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a TraitPredicate message from the specified reader or buffer.
@@ -2104,7 +2110,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.TraitPredicate;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.TraitPredicate;
 
             /**
              * Decodes a TraitPredicate message from the specified reader or buffer, length delimited.
@@ -2113,7 +2119,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.TraitPredicate;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.TraitPredicate;
 
             /**
              * Verifies a TraitPredicate message.
@@ -2127,7 +2133,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns TraitPredicate
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.TraitPredicate;
+            public static fromObject(object: { [k: string]: any }): exocore.store.TraitPredicate;
 
             /**
              * Creates a plain object from a TraitPredicate message. Also converts values to other types if specified.
@@ -2135,7 +2141,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.TraitPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.TraitPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this TraitPredicate to JSON.
@@ -2148,13 +2154,13 @@ export namespace exocore {
         interface ITraitQuery {
 
             /** TraitQuery match */
-            match?: (exocore.index.IMatchPredicate|null);
+            match?: (exocore.store.IMatchPredicate|null);
 
             /** TraitQuery field */
-            field?: (exocore.index.ITraitFieldPredicate|null);
+            field?: (exocore.store.ITraitFieldPredicate|null);
 
             /** TraitQuery reference */
-            reference?: (exocore.index.ITraitFieldReferencePredicate|null);
+            reference?: (exocore.store.ITraitFieldReferencePredicate|null);
         }
 
         /** Represents a TraitQuery. */
@@ -2164,16 +2170,16 @@ export namespace exocore {
              * Constructs a new TraitQuery.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.ITraitQuery);
+            constructor(properties?: exocore.store.ITraitQuery);
 
             /** TraitQuery match. */
-            public match?: (exocore.index.IMatchPredicate|null);
+            public match?: (exocore.store.IMatchPredicate|null);
 
             /** TraitQuery field. */
-            public field?: (exocore.index.ITraitFieldPredicate|null);
+            public field?: (exocore.store.ITraitFieldPredicate|null);
 
             /** TraitQuery reference. */
-            public reference?: (exocore.index.ITraitFieldReferencePredicate|null);
+            public reference?: (exocore.store.ITraitFieldReferencePredicate|null);
 
             /** TraitQuery predicate. */
             public predicate?: ("match"|"field"|"reference");
@@ -2183,23 +2189,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns TraitQuery instance
              */
-            public static create(properties?: exocore.index.ITraitQuery): exocore.index.TraitQuery;
+            public static create(properties?: exocore.store.ITraitQuery): exocore.store.TraitQuery;
 
             /**
-             * Encodes the specified TraitQuery message. Does not implicitly {@link exocore.index.TraitQuery.verify|verify} messages.
+             * Encodes the specified TraitQuery message. Does not implicitly {@link exocore.store.TraitQuery.verify|verify} messages.
              * @param message TraitQuery message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.ITraitQuery, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.ITraitQuery, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified TraitQuery message, length delimited. Does not implicitly {@link exocore.index.TraitQuery.verify|verify} messages.
+             * Encodes the specified TraitQuery message, length delimited. Does not implicitly {@link exocore.store.TraitQuery.verify|verify} messages.
              * @param message TraitQuery message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.ITraitQuery, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.ITraitQuery, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a TraitQuery message from the specified reader or buffer.
@@ -2209,7 +2215,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.TraitQuery;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.TraitQuery;
 
             /**
              * Decodes a TraitQuery message from the specified reader or buffer, length delimited.
@@ -2218,7 +2224,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.TraitQuery;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.TraitQuery;
 
             /**
              * Verifies a TraitQuery message.
@@ -2232,7 +2238,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns TraitQuery
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.TraitQuery;
+            public static fromObject(object: { [k: string]: any }): exocore.store.TraitQuery;
 
             /**
              * Creates a plain object from a TraitQuery message. Also converts values to other types if specified.
@@ -2240,7 +2246,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.TraitQuery, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.TraitQuery, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this TraitQuery to JSON.
@@ -2268,7 +2274,7 @@ export namespace exocore {
             date?: (google.protobuf.ITimestamp|null);
 
             /** TraitFieldPredicate operator */
-            operator?: (exocore.index.TraitFieldPredicate.Operator|null);
+            operator?: (exocore.store.TraitFieldPredicate.Operator|null);
         }
 
         /** Represents a TraitFieldPredicate. */
@@ -2278,7 +2284,7 @@ export namespace exocore {
              * Constructs a new TraitFieldPredicate.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.ITraitFieldPredicate);
+            constructor(properties?: exocore.store.ITraitFieldPredicate);
 
             /** TraitFieldPredicate field. */
             public field: string;
@@ -2296,7 +2302,7 @@ export namespace exocore {
             public date?: (google.protobuf.ITimestamp|null);
 
             /** TraitFieldPredicate operator. */
-            public operator: exocore.index.TraitFieldPredicate.Operator;
+            public operator: exocore.store.TraitFieldPredicate.Operator;
 
             /** TraitFieldPredicate value. */
             public value?: ("string"|"int64"|"uint64"|"date");
@@ -2306,23 +2312,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns TraitFieldPredicate instance
              */
-            public static create(properties?: exocore.index.ITraitFieldPredicate): exocore.index.TraitFieldPredicate;
+            public static create(properties?: exocore.store.ITraitFieldPredicate): exocore.store.TraitFieldPredicate;
 
             /**
-             * Encodes the specified TraitFieldPredicate message. Does not implicitly {@link exocore.index.TraitFieldPredicate.verify|verify} messages.
+             * Encodes the specified TraitFieldPredicate message. Does not implicitly {@link exocore.store.TraitFieldPredicate.verify|verify} messages.
              * @param message TraitFieldPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.ITraitFieldPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.ITraitFieldPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified TraitFieldPredicate message, length delimited. Does not implicitly {@link exocore.index.TraitFieldPredicate.verify|verify} messages.
+             * Encodes the specified TraitFieldPredicate message, length delimited. Does not implicitly {@link exocore.store.TraitFieldPredicate.verify|verify} messages.
              * @param message TraitFieldPredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.ITraitFieldPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.ITraitFieldPredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a TraitFieldPredicate message from the specified reader or buffer.
@@ -2332,7 +2338,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.TraitFieldPredicate;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.TraitFieldPredicate;
 
             /**
              * Decodes a TraitFieldPredicate message from the specified reader or buffer, length delimited.
@@ -2341,7 +2347,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.TraitFieldPredicate;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.TraitFieldPredicate;
 
             /**
              * Verifies a TraitFieldPredicate message.
@@ -2355,7 +2361,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns TraitFieldPredicate
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.TraitFieldPredicate;
+            public static fromObject(object: { [k: string]: any }): exocore.store.TraitFieldPredicate;
 
             /**
              * Creates a plain object from a TraitFieldPredicate message. Also converts values to other types if specified.
@@ -2363,7 +2369,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.TraitFieldPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.TraitFieldPredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this TraitFieldPredicate to JSON.
@@ -2391,7 +2397,7 @@ export namespace exocore {
             field?: (string|null);
 
             /** TraitFieldReferencePredicate reference */
-            reference?: (exocore.index.IReferencePredicate|null);
+            reference?: (exocore.store.IReferencePredicate|null);
         }
 
         /** Represents a TraitFieldReferencePredicate. */
@@ -2401,36 +2407,36 @@ export namespace exocore {
              * Constructs a new TraitFieldReferencePredicate.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.ITraitFieldReferencePredicate);
+            constructor(properties?: exocore.store.ITraitFieldReferencePredicate);
 
             /** TraitFieldReferencePredicate field. */
             public field: string;
 
             /** TraitFieldReferencePredicate reference. */
-            public reference?: (exocore.index.IReferencePredicate|null);
+            public reference?: (exocore.store.IReferencePredicate|null);
 
             /**
              * Creates a new TraitFieldReferencePredicate instance using the specified properties.
              * @param [properties] Properties to set
              * @returns TraitFieldReferencePredicate instance
              */
-            public static create(properties?: exocore.index.ITraitFieldReferencePredicate): exocore.index.TraitFieldReferencePredicate;
+            public static create(properties?: exocore.store.ITraitFieldReferencePredicate): exocore.store.TraitFieldReferencePredicate;
 
             /**
-             * Encodes the specified TraitFieldReferencePredicate message. Does not implicitly {@link exocore.index.TraitFieldReferencePredicate.verify|verify} messages.
+             * Encodes the specified TraitFieldReferencePredicate message. Does not implicitly {@link exocore.store.TraitFieldReferencePredicate.verify|verify} messages.
              * @param message TraitFieldReferencePredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.ITraitFieldReferencePredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.ITraitFieldReferencePredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified TraitFieldReferencePredicate message, length delimited. Does not implicitly {@link exocore.index.TraitFieldReferencePredicate.verify|verify} messages.
+             * Encodes the specified TraitFieldReferencePredicate message, length delimited. Does not implicitly {@link exocore.store.TraitFieldReferencePredicate.verify|verify} messages.
              * @param message TraitFieldReferencePredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.ITraitFieldReferencePredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.ITraitFieldReferencePredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a TraitFieldReferencePredicate message from the specified reader or buffer.
@@ -2440,7 +2446,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.TraitFieldReferencePredicate;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.TraitFieldReferencePredicate;
 
             /**
              * Decodes a TraitFieldReferencePredicate message from the specified reader or buffer, length delimited.
@@ -2449,7 +2455,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.TraitFieldReferencePredicate;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.TraitFieldReferencePredicate;
 
             /**
              * Verifies a TraitFieldReferencePredicate message.
@@ -2463,7 +2469,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns TraitFieldReferencePredicate
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.TraitFieldReferencePredicate;
+            public static fromObject(object: { [k: string]: any }): exocore.store.TraitFieldReferencePredicate;
 
             /**
              * Creates a plain object from a TraitFieldReferencePredicate message. Also converts values to other types if specified.
@@ -2471,7 +2477,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.TraitFieldReferencePredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.TraitFieldReferencePredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this TraitFieldReferencePredicate to JSON.
@@ -2497,7 +2503,7 @@ export namespace exocore {
              * Constructs a new ReferencePredicate.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IReferencePredicate);
+            constructor(properties?: exocore.store.IReferencePredicate);
 
             /** ReferencePredicate entityId. */
             public entityId: string;
@@ -2510,23 +2516,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns ReferencePredicate instance
              */
-            public static create(properties?: exocore.index.IReferencePredicate): exocore.index.ReferencePredicate;
+            public static create(properties?: exocore.store.IReferencePredicate): exocore.store.ReferencePredicate;
 
             /**
-             * Encodes the specified ReferencePredicate message. Does not implicitly {@link exocore.index.ReferencePredicate.verify|verify} messages.
+             * Encodes the specified ReferencePredicate message. Does not implicitly {@link exocore.store.ReferencePredicate.verify|verify} messages.
              * @param message ReferencePredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IReferencePredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IReferencePredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified ReferencePredicate message, length delimited. Does not implicitly {@link exocore.index.ReferencePredicate.verify|verify} messages.
+             * Encodes the specified ReferencePredicate message, length delimited. Does not implicitly {@link exocore.store.ReferencePredicate.verify|verify} messages.
              * @param message ReferencePredicate message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IReferencePredicate, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IReferencePredicate, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a ReferencePredicate message from the specified reader or buffer.
@@ -2536,7 +2542,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.ReferencePredicate;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.ReferencePredicate;
 
             /**
              * Decodes a ReferencePredicate message from the specified reader or buffer, length delimited.
@@ -2545,7 +2551,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.ReferencePredicate;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.ReferencePredicate;
 
             /**
              * Verifies a ReferencePredicate message.
@@ -2559,7 +2565,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns ReferencePredicate
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.ReferencePredicate;
+            public static fromObject(object: { [k: string]: any }): exocore.store.ReferencePredicate;
 
             /**
              * Creates a plain object from a ReferencePredicate message. Also converts values to other types if specified.
@@ -2567,7 +2573,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.ReferencePredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.ReferencePredicate, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this ReferencePredicate to JSON.
@@ -2580,10 +2586,10 @@ export namespace exocore {
         interface IPaging {
 
             /** Returns results after this given ordering value. */
-            afterOrderingValue?: (exocore.index.IOrderingValue|null);
+            afterOrderingValue?: (exocore.store.IOrderingValue|null);
 
             /** Returns results before this given ordering value. */
-            beforeOrderingValue?: (exocore.index.IOrderingValue|null);
+            beforeOrderingValue?: (exocore.store.IOrderingValue|null);
 
             /** Desired results count. Default if 0. */
             count?: (number|null);
@@ -2596,13 +2602,13 @@ export namespace exocore {
              * Constructs a new Paging.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IPaging);
+            constructor(properties?: exocore.store.IPaging);
 
             /** Returns results after this given ordering value. */
-            public afterOrderingValue?: (exocore.index.IOrderingValue|null);
+            public afterOrderingValue?: (exocore.store.IOrderingValue|null);
 
             /** Returns results before this given ordering value. */
-            public beforeOrderingValue?: (exocore.index.IOrderingValue|null);
+            public beforeOrderingValue?: (exocore.store.IOrderingValue|null);
 
             /** Desired results count. Default if 0. */
             public count: number;
@@ -2612,23 +2618,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns Paging instance
              */
-            public static create(properties?: exocore.index.IPaging): exocore.index.Paging;
+            public static create(properties?: exocore.store.IPaging): exocore.store.Paging;
 
             /**
-             * Encodes the specified Paging message. Does not implicitly {@link exocore.index.Paging.verify|verify} messages.
+             * Encodes the specified Paging message. Does not implicitly {@link exocore.store.Paging.verify|verify} messages.
              * @param message Paging message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IPaging, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IPaging, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified Paging message, length delimited. Does not implicitly {@link exocore.index.Paging.verify|verify} messages.
+             * Encodes the specified Paging message, length delimited. Does not implicitly {@link exocore.store.Paging.verify|verify} messages.
              * @param message Paging message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IPaging, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IPaging, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes a Paging message from the specified reader or buffer.
@@ -2638,7 +2644,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.Paging;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.Paging;
 
             /**
              * Decodes a Paging message from the specified reader or buffer, length delimited.
@@ -2647,7 +2653,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.Paging;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.Paging;
 
             /**
              * Verifies a Paging message.
@@ -2661,7 +2667,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns Paging
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.Paging;
+            public static fromObject(object: { [k: string]: any }): exocore.store.Paging;
 
             /**
              * Creates a plain object from a Paging message. Also converts values to other types if specified.
@@ -2669,7 +2675,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.Paging, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.Paging, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this Paging to JSON.
@@ -2701,7 +2707,7 @@ export namespace exocore {
              * Constructs a new Ordering.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IOrdering);
+            constructor(properties?: exocore.store.IOrdering);
 
             /** Ordering score. */
             public score: boolean;
@@ -2723,23 +2729,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns Ordering instance
              */
-            public static create(properties?: exocore.index.IOrdering): exocore.index.Ordering;
+            public static create(properties?: exocore.store.IOrdering): exocore.store.Ordering;
 
             /**
-             * Encodes the specified Ordering message. Does not implicitly {@link exocore.index.Ordering.verify|verify} messages.
+             * Encodes the specified Ordering message. Does not implicitly {@link exocore.store.Ordering.verify|verify} messages.
              * @param message Ordering message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IOrdering, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IOrdering, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified Ordering message, length delimited. Does not implicitly {@link exocore.index.Ordering.verify|verify} messages.
+             * Encodes the specified Ordering message, length delimited. Does not implicitly {@link exocore.store.Ordering.verify|verify} messages.
              * @param message Ordering message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IOrdering, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IOrdering, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes an Ordering message from the specified reader or buffer.
@@ -2749,7 +2755,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.Ordering;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.Ordering;
 
             /**
              * Decodes an Ordering message from the specified reader or buffer, length delimited.
@@ -2758,7 +2764,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.Ordering;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.Ordering;
 
             /**
              * Verifies an Ordering message.
@@ -2772,7 +2778,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns Ordering
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.Ordering;
+            public static fromObject(object: { [k: string]: any }): exocore.store.Ordering;
 
             /**
              * Creates a plain object from an Ordering message. Also converts values to other types if specified.
@@ -2780,7 +2786,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.Ordering, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.Ordering, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this Ordering to JSON.
@@ -2818,7 +2824,7 @@ export namespace exocore {
              * Constructs a new OrderingValue.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IOrderingValue);
+            constructor(properties?: exocore.store.IOrderingValue);
 
             /** OrderingValue float. */
             public float: number;
@@ -2846,23 +2852,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns OrderingValue instance
              */
-            public static create(properties?: exocore.index.IOrderingValue): exocore.index.OrderingValue;
+            public static create(properties?: exocore.store.IOrderingValue): exocore.store.OrderingValue;
 
             /**
-             * Encodes the specified OrderingValue message. Does not implicitly {@link exocore.index.OrderingValue.verify|verify} messages.
+             * Encodes the specified OrderingValue message. Does not implicitly {@link exocore.store.OrderingValue.verify|verify} messages.
              * @param message OrderingValue message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IOrderingValue, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IOrderingValue, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified OrderingValue message, length delimited. Does not implicitly {@link exocore.index.OrderingValue.verify|verify} messages.
+             * Encodes the specified OrderingValue message, length delimited. Does not implicitly {@link exocore.store.OrderingValue.verify|verify} messages.
              * @param message OrderingValue message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IOrderingValue, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IOrderingValue, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes an OrderingValue message from the specified reader or buffer.
@@ -2872,7 +2878,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.OrderingValue;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.OrderingValue;
 
             /**
              * Decodes an OrderingValue message from the specified reader or buffer, length delimited.
@@ -2881,7 +2887,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.OrderingValue;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.OrderingValue;
 
             /**
              * Verifies an OrderingValue message.
@@ -2895,7 +2901,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns OrderingValue
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.OrderingValue;
+            public static fromObject(object: { [k: string]: any }): exocore.store.OrderingValue;
 
             /**
              * Creates a plain object from an OrderingValue message. Also converts values to other types if specified.
@@ -2903,7 +2909,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.OrderingValue, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.OrderingValue, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this OrderingValue to JSON.
@@ -2916,7 +2922,7 @@ export namespace exocore {
         interface IEntityResults {
 
             /** Entities matching query. */
-            entities?: (exocore.index.IEntityResult[]|null);
+            entities?: (exocore.store.IEntityResult[]|null);
 
             /** had the same hash has the specified and that `entities` were set to empty. */
             skippedHash?: (boolean|null);
@@ -2925,10 +2931,10 @@ export namespace exocore {
             estimatedCount?: (number|null);
 
             /** Paging token of the current results. */
-            currentPage?: (exocore.index.IPaging|null);
+            currentPage?: (exocore.store.IPaging|null);
 
             /** Paging token of the next page of results. */
-            nextPage?: (exocore.index.IPaging|null);
+            nextPage?: (exocore.store.IPaging|null);
 
             /** changed by using the `result_hash` field on the query. */
             hash?: (number|Long|null);
@@ -2941,10 +2947,10 @@ export namespace exocore {
              * Constructs a new EntityResults.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IEntityResults);
+            constructor(properties?: exocore.store.IEntityResults);
 
             /** Entities matching query. */
-            public entities: exocore.index.IEntityResult[];
+            public entities: exocore.store.IEntityResult[];
 
             /** had the same hash has the specified and that `entities` were set to empty. */
             public skippedHash: boolean;
@@ -2953,10 +2959,10 @@ export namespace exocore {
             public estimatedCount: number;
 
             /** Paging token of the current results. */
-            public currentPage?: (exocore.index.IPaging|null);
+            public currentPage?: (exocore.store.IPaging|null);
 
             /** Paging token of the next page of results. */
-            public nextPage?: (exocore.index.IPaging|null);
+            public nextPage?: (exocore.store.IPaging|null);
 
             /** changed by using the `result_hash` field on the query. */
             public hash: (number|Long);
@@ -2966,23 +2972,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns EntityResults instance
              */
-            public static create(properties?: exocore.index.IEntityResults): exocore.index.EntityResults;
+            public static create(properties?: exocore.store.IEntityResults): exocore.store.EntityResults;
 
             /**
-             * Encodes the specified EntityResults message. Does not implicitly {@link exocore.index.EntityResults.verify|verify} messages.
+             * Encodes the specified EntityResults message. Does not implicitly {@link exocore.store.EntityResults.verify|verify} messages.
              * @param message EntityResults message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IEntityResults, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IEntityResults, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified EntityResults message, length delimited. Does not implicitly {@link exocore.index.EntityResults.verify|verify} messages.
+             * Encodes the specified EntityResults message, length delimited. Does not implicitly {@link exocore.store.EntityResults.verify|verify} messages.
              * @param message EntityResults message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IEntityResults, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IEntityResults, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes an EntityResults message from the specified reader or buffer.
@@ -2992,7 +2998,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.EntityResults;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.EntityResults;
 
             /**
              * Decodes an EntityResults message from the specified reader or buffer, length delimited.
@@ -3001,7 +3007,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.EntityResults;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.EntityResults;
 
             /**
              * Verifies an EntityResults message.
@@ -3015,7 +3021,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns EntityResults
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.EntityResults;
+            public static fromObject(object: { [k: string]: any }): exocore.store.EntityResults;
 
             /**
              * Creates a plain object from an EntityResults message. Also converts values to other types if specified.
@@ -3023,7 +3029,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.EntityResults, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.EntityResults, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this EntityResults to JSON.
@@ -3036,13 +3042,13 @@ export namespace exocore {
         interface IEntityResult {
 
             /** be indicated in its traits' details field. */
-            entity?: (exocore.index.IEntity|null);
+            entity?: (exocore.store.IEntity|null);
 
             /** before the latest consistent timestamp. */
-            source?: (exocore.index.EntityResultSource|null);
+            source?: (exocore.store.EntityResultSource|null);
 
             /** but it may be useful to compare ordering queries (ex.: to merge different pages) */
-            orderingValue?: (exocore.index.IOrderingValue|null);
+            orderingValue?: (exocore.store.IOrderingValue|null);
 
             /** Hash of the tntiy result. Can be used to compare if the entity has changed since last results. */
             hash?: (number|Long|null);
@@ -3055,16 +3061,16 @@ export namespace exocore {
              * Constructs a new EntityResult.
              * @param [properties] Properties to set
              */
-            constructor(properties?: exocore.index.IEntityResult);
+            constructor(properties?: exocore.store.IEntityResult);
 
             /** be indicated in its traits' details field. */
-            public entity?: (exocore.index.IEntity|null);
+            public entity?: (exocore.store.IEntity|null);
 
             /** before the latest consistent timestamp. */
-            public source: exocore.index.EntityResultSource;
+            public source: exocore.store.EntityResultSource;
 
             /** but it may be useful to compare ordering queries (ex.: to merge different pages) */
-            public orderingValue?: (exocore.index.IOrderingValue|null);
+            public orderingValue?: (exocore.store.IOrderingValue|null);
 
             /** Hash of the tntiy result. Can be used to compare if the entity has changed since last results. */
             public hash: (number|Long);
@@ -3074,23 +3080,23 @@ export namespace exocore {
              * @param [properties] Properties to set
              * @returns EntityResult instance
              */
-            public static create(properties?: exocore.index.IEntityResult): exocore.index.EntityResult;
+            public static create(properties?: exocore.store.IEntityResult): exocore.store.EntityResult;
 
             /**
-             * Encodes the specified EntityResult message. Does not implicitly {@link exocore.index.EntityResult.verify|verify} messages.
+             * Encodes the specified EntityResult message. Does not implicitly {@link exocore.store.EntityResult.verify|verify} messages.
              * @param message EntityResult message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: exocore.index.IEntityResult, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: exocore.store.IEntityResult, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified EntityResult message, length delimited. Does not implicitly {@link exocore.index.EntityResult.verify|verify} messages.
+             * Encodes the specified EntityResult message, length delimited. Does not implicitly {@link exocore.store.EntityResult.verify|verify} messages.
              * @param message EntityResult message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: exocore.index.IEntityResult, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: exocore.store.IEntityResult, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
              * Decodes an EntityResult message from the specified reader or buffer.
@@ -3100,7 +3106,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.index.EntityResult;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): exocore.store.EntityResult;
 
             /**
              * Decodes an EntityResult message from the specified reader or buffer, length delimited.
@@ -3109,7 +3115,7 @@ export namespace exocore {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.index.EntityResult;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): exocore.store.EntityResult;
 
             /**
              * Verifies an EntityResult message.
@@ -3123,7 +3129,7 @@ export namespace exocore {
              * @param object Plain object
              * @returns EntityResult
              */
-            public static fromObject(object: { [k: string]: any }): exocore.index.EntityResult;
+            public static fromObject(object: { [k: string]: any }): exocore.store.EntityResult;
 
             /**
              * Creates a plain object from an EntityResult message. Also converts values to other types if specified.
@@ -3131,7 +3137,7 @@ export namespace exocore {
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: exocore.index.EntityResult, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: exocore.store.EntityResult, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
              * Converts this EntityResult to JSON.
@@ -3200,10 +3206,10 @@ export namespace exocore {
             int3?: (number|null);
 
             /** TestMessage ref1 */
-            ref1?: (exocore.index.IReference|null);
+            ref1?: (exocore.store.IReference|null);
 
             /** TestMessage ref2 */
-            ref2?: (exocore.index.IReference|null);
+            ref2?: (exocore.store.IReference|null);
 
             /** TestMessage grouped1 */
             grouped1?: (string|null);
@@ -3267,10 +3273,10 @@ export namespace exocore {
             public int3: number;
 
             /** TestMessage ref1. */
-            public ref1?: (exocore.index.IReference|null);
+            public ref1?: (exocore.store.IReference|null);
 
             /** TestMessage ref2. */
-            public ref2?: (exocore.index.IReference|null);
+            public ref2?: (exocore.store.IReference|null);
 
             /** TestMessage grouped1. */
             public grouped1: string;
