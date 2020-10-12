@@ -1,13 +1,17 @@
 use super::error::Error;
-use crate::crypto::keys::{Keypair, PublicKey};
-use crate::crypto::signature::Signature;
 use crate::protos::generated::exocore_core::{LocalNodeConfig, NodeConfig};
+use crate::sec::signature::Signature;
+use crate::{
+    protos::core::NodeAddresses,
+    sec::keys::{Keypair, PublicKey},
+};
 use libp2p::core::{Multiaddr, PeerId};
 use std::collections::HashSet;
 use std::fmt::{Debug, Display};
 use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::{Arc, RwLock};
+use url::Url;
 
 /// Represents a machine / process on which Exocore runs. A node can host
 /// multiple `Cell`.
@@ -26,7 +30,8 @@ struct Identity {
 }
 
 struct SharedInner {
-    addresses: HashSet<Multiaddr>,
+    p2p_addresses: HashSet<Multiaddr>,
+    http_addresses: HashSet<url::Url>,
 }
 
 impl Node {
@@ -45,13 +50,7 @@ impl Node {
         };
 
         let node = Self::build(public_key, name);
-
-        for addr in config.addresses {
-            let maddr = addr
-                .parse()
-                .map_err(|err| Error::Cell(format!("Couldn't parse multi-address: {}", err)))?;
-            node.add_address(maddr);
-        }
+        parse_node_addresses(&node, &config.addresses.unwrap_or_default())?;
 
         Ok(node)
     }
@@ -84,7 +83,8 @@ impl Node {
                 name,
             }),
             inner: Arc::new(RwLock::new(SharedInner {
-                addresses: HashSet::new(),
+                p2p_addresses: HashSet::new(),
+                http_addresses: HashSet::new(),
             })),
         }
     }
@@ -109,14 +109,24 @@ impl Node {
         self.identity.consistent_clock_id
     }
 
-    pub fn addresses(&self) -> Vec<Multiaddr> {
+    pub fn p2p_addresses(&self) -> Vec<Multiaddr> {
         let inner = self.inner.read().expect("Couldn't get inner lock");
-        inner.addresses.iter().cloned().collect()
+        inner.p2p_addresses.iter().cloned().collect()
     }
 
-    pub fn add_address(&self, address: Multiaddr) {
+    pub fn add_p2p_address(&self, address: Multiaddr) {
         let mut inner = self.inner.write().expect("Couldn't get inner lock");
-        inner.addresses.insert(address);
+        inner.p2p_addresses.insert(address);
+    }
+
+    pub fn http_addresses(&self) -> Vec<Url> {
+        let inner = self.inner.read().expect("Couldn't get inner lock");
+        inner.http_addresses.iter().cloned().collect()
+    }
+
+    pub fn add_http_address(&self, address: Url) {
+        let mut inner = self.inner.write().expect("Couldn't get inner lock");
+        inner.http_addresses.insert(address);
     }
 }
 
@@ -138,7 +148,8 @@ impl Debug for Node {
                 "public_key",
                 &self.identity.public_key.encode_base58_string(),
             )
-            .field("addresses", &inner.addresses)
+            .field("p2p_addresses", &inner.p2p_addresses)
+            .field("http_addresses", &inner.http_addresses)
             .finish()
     }
 }
@@ -173,13 +184,7 @@ impl LocalNode {
             .map_err(|err| Error::Cell(format!("Couldn't decode local node keypair: {}", err)))?;
 
         let node = Self::new_from_keypair(keypair);
-
-        for addr in config.listen_addresses {
-            let maddr = addr.parse().map_err(|err| {
-                Error::Cell(format!("Couldn't parse local node address: {}", err))
-            })?;
-            node.add_address(maddr);
-        }
+        parse_node_addresses(node.node(), &config.addresses.unwrap_or_default())?;
 
         Ok(node)
     }
@@ -258,6 +263,16 @@ impl NodeId {
     pub fn to_peer_id(&self) -> &PeerId {
         &self.0
     }
+
+    pub fn from_bytes(id: Vec<u8>) -> Result<NodeId, Error> {
+        let peer_id = PeerId::from_bytes(id)
+            .map_err(|_| Error::Node("Couldn't convert bytes to peer id".to_string()))?;
+        Ok(NodeId(peer_id))
+    }
+
+    pub fn as_bytes(&self) -> &[u8] {
+        self.0.as_bytes()
+    }
 }
 
 impl std::fmt::Display for NodeId {
@@ -276,6 +291,24 @@ impl FromStr for NodeId {
     }
 }
 
+fn parse_node_addresses(node: &Node, addresses: &NodeAddresses) -> Result<(), Error> {
+    for maddr_str in &addresses.p2p {
+        let maddr = maddr_str
+            .parse()
+            .map_err(|err| Error::Cell(format!("Couldn't parse p2p multi-address: {}", err)))?;
+        node.add_p2p_address(maddr);
+    }
+
+    for url_str in &addresses.http {
+        let url = url_str
+            .parse()
+            .map_err(|err| Error::Cell(format!("Couldn't parse http url: {}", err)))?;
+        node.add_http_address(url);
+    }
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -288,6 +321,19 @@ mod tests {
         assert_eq!(node1, node1);
         assert_eq!(node1, node1.clone());
         assert_ne!(node1, node2);
+    }
+
+    #[test]
+    fn node_id_bytes() {
+        let node1 = LocalNode::generate();
+        let node2 = LocalNode::generate();
+
+        assert_ne!(node1.id().as_bytes(), node2.id().as_bytes());
+        assert_eq!(node1.id().as_bytes(), node1.id().as_bytes());
+
+        let n1_bytes = node1.id().as_bytes();
+        let n1_id_bytes = NodeId::from_bytes(n1_bytes.to_vec()).unwrap();
+        assert_eq!(n1_id_bytes, *node1.id());
     }
 
     #[test]

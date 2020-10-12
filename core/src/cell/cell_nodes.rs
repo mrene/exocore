@@ -48,10 +48,6 @@ pub trait CellNodes {
 
         if nb_nodes == 0 {
             false
-        } else if nb_nodes == 1 {
-            count == 1
-        } else if nb_nodes == 2 {
-            count == 2
         } else {
             count > nb_nodes / 2
         }
@@ -233,15 +229,15 @@ pub enum CellNodeRole {
     /// Indicates that the node participates in the chain storage & replication.
     Chain,
 
-    /// Indicates that the node is running a full index with entities store.
-    IndexStore,
+    /// Indicates that the node is running a full entities store.
+    Store,
 }
 
 impl CellNodeRole {
     pub fn from_config(config: cell_node_config::Role) -> Result<CellNodeRole, Error> {
         match config {
             cell_node_config::Role::ChainRole => Ok(CellNodeRole::Chain),
-            cell_node_config::Role::IndexStoreRole => Ok(CellNodeRole::IndexStore),
+            cell_node_config::Role::StoreRole => Ok(CellNodeRole::Store),
             v => Err(Error::Cell(format!("Invalid cell node role: {:?}", v))),
         }
     }

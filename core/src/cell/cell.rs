@@ -3,9 +3,9 @@ use super::{
     LocalNode, Node, NodeId,
 };
 use crate::cell::config::cell_config_from_yaml_file;
-use crate::crypto::keys::{Keypair, PublicKey};
 use crate::protos::generated::exocore_core::{CellConfig, LocalNodeConfig};
 use crate::protos::registry::Registry;
+use crate::sec::keys::{Keypair, PublicKey};
 use crate::{cell::cell_config_from_node_cell, utils::path::child_to_abs_path};
 use libp2p::core::PeerId;
 use std::collections::HashMap;
@@ -225,11 +225,11 @@ impl Cell {
         }
     }
 
-    pub fn index_directory(&self) -> Option<PathBuf> {
+    pub fn store_directory(&self) -> Option<PathBuf> {
         if let Some(path) = &self.identity.path {
-            let mut index_dir = PathBuf::from(path);
-            index_dir.push("index");
-            Some(index_dir)
+            let mut store_dir = PathBuf::from(path);
+            store_dir.push("store");
+            Some(store_dir)
         } else {
             None
         }
@@ -264,7 +264,6 @@ impl CellId {
         CellId(String::from_utf8_lossy(id).to_string())
     }
 
-    #[inline]
     pub fn as_bytes(&self) -> &[u8] {
         self.0.as_bytes()
     }

@@ -224,6 +224,7 @@ mod tests {
     use crate::protos::{
         apps::manifest_schema,
         core::cell_application_config,
+        core::NodeAddresses,
         generated::exocore_core::{
             cell_node_config, node_cell_config, CellConfig, CellNodeConfig, LocalNodeConfig,
             NodeCellConfig, NodeConfig,
@@ -251,14 +252,20 @@ mod tests {
                             public_key: "pk".to_string(),
                             name: "node_name".to_string(),
                             id: String::new(),
-                            addresses: vec!["maddr".to_string()],
+                            addresses: Some(NodeAddresses {
+                                p2p: vec!["maddr".to_string()],
+                                http: vec!["httpaddr".to_string()],
+                            }),
                         }),
                         roles: vec![cell_node_config::Role::InvalidRole.into()],
                     }],
                     apps: vec![],
                 })),
             }],
-            listen_addresses: vec!["maddr".to_string()],
+            addresses: Some(NodeAddresses {
+                p2p: vec!["maddr".to_string()],
+                http: vec!["httpaddr".to_string()],
+            }),
         };
 
         let yaml = serde_yaml::to_string(&conf_ser)?;
@@ -278,7 +285,7 @@ mod tests {
 
         let (cells, node) = Cell::new_from_local_node_config(config)?;
         assert_eq!(2, cells.len());
-        assert_eq!(2, node.addresses().len());
+        assert_eq!(2, node.p2p_addresses().len());
 
         let full_cell = cells.first().cloned().unwrap().unwrap_full();
 
@@ -287,10 +294,7 @@ mod tests {
             assert_eq!(2, nodes.count());
 
             let nodes_iter = nodes.iter();
-            let node = nodes_iter
-                .with_role(CellNodeRole::IndexStore)
-                .next()
-                .unwrap();
+            let node = nodes_iter.with_role(CellNodeRole::Store).next().unwrap();
             assert_eq!(2, node.roles().len());
         }
 
@@ -360,9 +364,12 @@ name: node name
 keypair: ae2oiM2PYznyfqEMPraKbpAuA8LWVhPUiUTgdwjvnwbDjnz9W9FAiE9431NtVjfBaX44nPPoNR8Mv6iYcJdqSfp8eZ
 public_key: peFdPsQsdqzT2H6cPd3WdU1fGdATDmavh4C17VWWacZTMP
 
-listen_addresses:
-  - /ip4/0.0.0.0/tcp/3330
-  - /ip4/0.0.0.0/tcp/3341/ws
+addresses:
+  p2p:
+    - /ip4/0.0.0.0/tcp/3330
+    - /ip4/0.0.0.0/tcp/3341/ws
+  http:
+    - http://0.0.0.0:8080
 
 cells:
    - location:
@@ -376,7 +383,10 @@ cells:
                    name: node name
                    public_key: peFdPsQsdqzT2H6cPd3WdU1fGdATDmavh4C17VWWacZTMP
                    addresses:
-                     - /ip4/192.168.2.67/tcp/3330
+                     p2p:
+                       - /ip4/192.168.2.67/tcp/3330
+                     http:
+                       - http://192.168.2.67:8080
                  roles:
                    - 1
              apps:
@@ -390,7 +400,8 @@ cells:
 
         let (cells, node) = Cell::new_from_local_node_config(config)?;
         assert_eq!(1, cells.len());
-        assert_eq!(2, node.addresses().len());
+        assert_eq!(2, node.p2p_addresses().len());
+        assert_eq!(1, node.http_addresses().len());
 
         let cell = cells.first().cloned().unwrap().unwrap_cell();
 
@@ -412,12 +423,13 @@ cells:
                 node.node().id().to_string()
             );
 
-            assert_eq!(1, node.node().addresses().len());
+            assert_eq!(1, node.node().p2p_addresses().len());
+            assert_eq!(1, node.node().http_addresses().len());
         }
 
         {
             assert!(cell.local_node_has_role(CellNodeRole::Chain));
-            assert!(!cell.local_node_has_role(CellNodeRole::IndexStore));
+            assert!(!cell.local_node_has_role(CellNodeRole::Store));
         }
 
         Ok(())
@@ -429,9 +441,10 @@ cells:
 keypair: ae2oiM2PYznyfqEMPraKbpAuA8LWVhPUiUTgdwjvnwbDjnz9W9FAiE9431NtVjfBaX44nPPoNR8Mv6iYcJdqSfp8eZ
 public_key: peFdPsQsdqzT2H6cPd3WdU1fGdATDmavh4C17VWWacZTMP
 
-listen_addresses:
-  - /ip4/0.0.0.0/tcp/3330
-  - /ip4/0.0.0.0/tcp/3341/ws
+addresses:
+  p2p:
+    - /ip4/0.0.0.0/tcp/3330
+    - /ip4/0.0.0.0/tcp/3341/ws
 
 cells:
    - location:
@@ -441,7 +454,8 @@ cells:
              - node:
                    public_key: peFdPsQsdqzT2H6cPd3WdU1fGdATDmavh4C17VWWacZTMP
                    addresses:
-                      - /ip4/192.168.2.67/tcp/3330
+                      p2p:
+                         - /ip4/192.168.2.67/tcp/3330
 "#;
 
         node_config_from_yaml(yaml.as_bytes())?;

@@ -11,7 +11,7 @@ jobs:
     container:
       image: ubuntu:19.10 # required for clang with wasm
     steps:
-      - uses: actions/checkout@v2.3.2
+      - uses: actions/checkout@v2.3.3
 
       - name: Install build dependencies
         run: |
@@ -32,11 +32,10 @@ jobs:
         run: |
           curl -L https://github.com/rustwasm/wasm-pack/releases/download/v0.9.1/wasm-pack-v0.9.1-x86_64-unknown-linux-musl.tar.gz | tar zxf -
           mv wasm-pack*/wasm-pack .
+          echo `pwd` >> $GITHUB_PATH
 
       - name: Build client
         run: |
-          export PATH=$PATH:`pwd`
-
           cd $GITHUB_WORKSPACE
           yarn build
 
@@ -44,7 +43,7 @@ jobs:
           rm -rf clients/web/node_modules
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v2.1.4
+        uses: actions/upload-artifact@v2.2.0
         with:
           name: web-artifacts
           path: clients/web
@@ -53,7 +52,7 @@ jobs:
   ios_client_build:
     runs-on: macOS-latest
     steps:
-      - uses: actions/checkout@v2.3.2
+      - uses: actions/checkout@v2.3.3
 
       - uses: actions-rs/toolchain@v1
         with:
@@ -79,7 +78,7 @@ jobs:
           pod lib lint --verbose
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v2.1.4
+        uses: actions/upload-artifact@v2.2.0
         with:
           name: ios-artifacts
           path: clients/ios
@@ -89,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [web_client_build, ios_client_build]
     steps:
-      - uses: actions/checkout@v2.3.2
+      - uses: actions/checkout@v2.3.3
         with:
           lfs: true
 
@@ -112,12 +111,11 @@ jobs:
           ls -R clients/web
 
       - name: Commit assets 
-        uses: EndBug/add-and-commit@v4
+        uses: EndBug/add-and-commit@v5
         with:
-          add: 'web/wasm web/tsc web/protos ios/lib ios/swift'
+          add: '--force web/wasm web/tsc web/protos ios/lib ios/swift'
           author_name: Exocore bot
           cwd: 'clients'
-          force: true
           message: 'Build assets'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

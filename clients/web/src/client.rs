@@ -6,16 +6,16 @@ use wasm_bindgen::prelude::*;
 
 use exocore_core::cell::Cell;
 use exocore_core::futures::spawn_future_non_send;
-use exocore_core::protos::generated::exocore_index::EntityQuery;
+use exocore_core::protos::generated::exocore_store::EntityQuery;
 use exocore_core::time::Clock;
-use exocore_index::remote::{Client, ClientConfiguration, ClientHandle};
+use exocore_store::remote::{Client, ClientConfiguration, ClientHandle};
 use exocore_transport::transport::ConnectionStatus;
-use exocore_transport::{InEvent, Libp2pTransport, TransportHandle, TransportLayer};
+use exocore_transport::{InEvent, Libp2pTransport, ServiceType, TransportServiceHandle};
 
 use crate::js::into_js_error;
 use crate::watched_query::WatchedQuery;
-use exocore_core::protos::{index::MutationRequest, prost::ProstMessageExt};
-use exocore_transport::lp2p::Libp2pTransportConfig;
+use exocore_core::protos::{prost::ProstMessageExt, store::MutationRequest};
+use exocore_transport::p2p::Libp2pTransportConfig;
 
 static INIT: Once = Once::new();
 
@@ -68,16 +68,16 @@ impl ExocoreClient {
 
         let clock = Clock::new();
 
-        let index_handle = transport
-            .get_handle(cell.clone(), TransportLayer::Index)
+        let store_handle = transport
+            .get_handle(cell.clone(), ServiceType::Store)
             .unwrap();
         let remote_store = Client::new(
             ClientConfiguration::default(),
             cell.clone(),
             clock,
-            index_handle,
+            store_handle,
         )
-        .expect("Couldn't create index");
+        .expect("Couldn't create store");
 
         let store_handle = Arc::new(remote_store.get_handle());
 
@@ -98,8 +98,7 @@ impl ExocoreClient {
             status_change_callback,
         }));
 
-        let mut client_transport_handle =
-            transport.get_handle(cell, TransportLayer::Client).unwrap();
+        let mut client_transport_handle = transport.get_handle(cell, ServiceType::Client).unwrap();
         let inner_clone = inner.clone();
         spawn_future_non_send(async move {
             let mut stream = client_transport_handle.get_stream();
@@ -184,6 +183,19 @@ impl ExocoreClient {
         let entity_query = EntityQuery::decode(bytes.as_ref()).expect("Couldn't encode query");
 
         WatchedQuery::new(self.store_handle.clone(), entity_query)
+    }
+
+    #[wasm_bindgen]
+    pub fn store_http_endpoints(&self) -> js_sys::Array {
+        let store_node_urls = self
+            .store_handle
+            .store_node()
+            .map(|node| node.http_addresses())
+            .unwrap_or_else(Vec::new)
+            .into_iter()
+            .map(|url| JsValue::from(url.to_string()));
+
+        store_node_urls.collect()
     }
 
     fn js_bytes_to_vec(js_bytes: js_sys::Uint8Array) -> Vec<u8> {
