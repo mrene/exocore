@@ -25,9 +25,9 @@ public struct Exocore_Core_AuthToken {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var data: Data = SwiftProtobuf.Internal.emptyData
+  public var data: Data = Data()
 
-  public var signature: Data = SwiftProtobuf.Internal.emptyData
+  public var signature: Data = Data()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -39,9 +39,9 @@ public struct Exocore_Core_AuthTokenData {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var cellID: Data = SwiftProtobuf.Internal.emptyData
+  public var cellID: Data = Data()
 
-  public var nodeID: Data = SwiftProtobuf.Internal.emptyData
+  public var nodeID: Data = Data()
 
   public var signatureDate: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _signatureDate ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
@@ -82,9 +82,12 @@ extension Exocore_Core_AuthToken: SwiftProtobuf.Message, SwiftProtobuf._MessageI
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.data)
-      case 2: try decoder.decodeSingularBytesField(value: &self.signature)
+      case 1: try { try decoder.decodeSingularBytesField(value: &self.data) }()
+      case 2: try { try decoder.decodeSingularBytesField(value: &self.signature) }()
       default: break
       }
     }
@@ -119,11 +122,14 @@ extension Exocore_Core_AuthTokenData: SwiftProtobuf.Message, SwiftProtobuf._Mess
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.cellID)
-      case 2: try decoder.decodeSingularBytesField(value: &self.nodeID)
-      case 3: try decoder.decodeSingularMessageField(value: &self._signatureDate)
-      case 4: try decoder.decodeSingularMessageField(value: &self._expirationDate)
+      case 1: try { try decoder.decodeSingularBytesField(value: &self.cellID) }()
+      case 2: try { try decoder.decodeSingularBytesField(value: &self.nodeID) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._signatureDate) }()
+      case 4: try { try decoder.decodeSingularMessageField(value: &self._expirationDate) }()
       default: break
       }
     }

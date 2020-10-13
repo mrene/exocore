@@ -127,13 +127,34 @@ public struct Exocore_Store_EntityMutation {
 
   #if !swift(>=4.1)
     public static func ==(lhs: Exocore_Store_EntityMutation.OneOf_Mutation, rhs: Exocore_Store_EntityMutation.OneOf_Mutation) -> Bool {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch (lhs, rhs) {
-      case (.putTrait(let l), .putTrait(let r)): return l == r
-      case (.deleteTrait(let l), .deleteTrait(let r)): return l == r
-      case (.deleteEntity(let l), .deleteEntity(let r)): return l == r
-      case (.updateTrait(let l), .updateTrait(let r)): return l == r
-      case (.compactTrait(let l), .compactTrait(let r)): return l == r
-      case (.test(let l), .test(let r)): return l == r
+      case (.putTrait, .putTrait): return {
+        guard case .putTrait(let l) = lhs, case .putTrait(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.deleteTrait, .deleteTrait): return {
+        guard case .deleteTrait(let l) = lhs, case .deleteTrait(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.deleteEntity, .deleteEntity): return {
+        guard case .deleteEntity(let l) = lhs, case .deleteEntity(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.updateTrait, .updateTrait): return {
+        guard case .updateTrait(let l) = lhs, case .updateTrait(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.compactTrait, .compactTrait): return {
+        guard case .compactTrait(let l) = lhs, case .compactTrait(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.test, .test): return {
+        guard case .test(let l) = lhs, case .test(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
       default: return false
       }
     }
@@ -287,11 +308,14 @@ extension Exocore_Store_MutationRequest: SwiftProtobuf.Message, SwiftProtobuf._M
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedMessageField(value: &self.mutations)
-      case 2: try decoder.decodeSingularBoolField(value: &self.waitIndexed)
-      case 3: try decoder.decodeSingularBoolField(value: &self.returnEntities)
-      case 4: try decoder.decodeSingularBoolField(value: &self.commonEntityID)
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.mutations) }()
+      case 2: try { try decoder.decodeSingularBoolField(value: &self.waitIndexed) }()
+      case 3: try { try decoder.decodeSingularBoolField(value: &self.returnEntities) }()
+      case 4: try { try decoder.decodeSingularBoolField(value: &self.commonEntityID) }()
       default: break
       }
     }
@@ -332,9 +356,12 @@ extension Exocore_Store_MutationResult: SwiftProtobuf.Message, SwiftProtobuf._Me
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedUInt64Field(value: &self.operationIds)
-      case 2: try decoder.decodeRepeatedMessageField(value: &self.entities)
+      case 1: try { try decoder.decodeRepeatedUInt64Field(value: &self.operationIds) }()
+      case 2: try { try decoder.decodeRepeatedMessageField(value: &self.entities) }()
       default: break
       }
     }
@@ -372,9 +399,12 @@ extension Exocore_Store_EntityMutation: SwiftProtobuf.Message, SwiftProtobuf._Me
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularStringField(value: &self.entityID)
-      case 2:
+      case 1: try { try decoder.decodeSingularStringField(value: &self.entityID) }()
+      case 2: try {
         var v: Exocore_Store_PutTraitMutation?
         if let current = self.mutation {
           try decoder.handleConflictingOneOf()
@@ -382,7 +412,8 @@ extension Exocore_Store_EntityMutation: SwiftProtobuf.Message, SwiftProtobuf._Me
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.mutation = .putTrait(v)}
-      case 3:
+      }()
+      case 3: try {
         var v: Exocore_Store_DeleteTraitMutation?
         if let current = self.mutation {
           try decoder.handleConflictingOneOf()
@@ -390,7 +421,8 @@ extension Exocore_Store_EntityMutation: SwiftProtobuf.Message, SwiftProtobuf._Me
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.mutation = .deleteTrait(v)}
-      case 4:
+      }()
+      case 4: try {
         var v: Exocore_Store_DeleteEntityMutation?
         if let current = self.mutation {
           try decoder.handleConflictingOneOf()
@@ -398,7 +430,8 @@ extension Exocore_Store_EntityMutation: SwiftProtobuf.Message, SwiftProtobuf._Me
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.mutation = .deleteEntity(v)}
-      case 5:
+      }()
+      case 5: try {
         var v: Exocore_Store_UpdateTraitMutation?
         if let current = self.mutation {
           try decoder.handleConflictingOneOf()
@@ -406,7 +439,8 @@ extension Exocore_Store_EntityMutation: SwiftProtobuf.Message, SwiftProtobuf._Me
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.mutation = .updateTrait(v)}
-      case 6:
+      }()
+      case 6: try {
         var v: Exocore_Store_CompactTraitMutation?
         if let current = self.mutation {
           try decoder.handleConflictingOneOf()
@@ -414,7 +448,8 @@ extension Exocore_Store_EntityMutation: SwiftProtobuf.Message, SwiftProtobuf._Me
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.mutation = .compactTrait(v)}
-      case 99:
+      }()
+      case 99: try {
         var v: Exocore_Store_TestMutation?
         if let current = self.mutation {
           try decoder.handleConflictingOneOf()
@@ -422,6 +457,7 @@ extension Exocore_Store_EntityMutation: SwiftProtobuf.Message, SwiftProtobuf._Me
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.mutation = .test(v)}
+      }()
       default: break
       }
     }
@@ -431,19 +467,34 @@ extension Exocore_Store_EntityMutation: SwiftProtobuf.Message, SwiftProtobuf._Me
     if !self.entityID.isEmpty {
       try visitor.visitSingularStringField(value: self.entityID, fieldNumber: 1)
     }
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every case branch when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034
     switch self.mutation {
-    case .putTrait(let v)?:
+    case .putTrait?: try {
+      guard case .putTrait(let v)? = self.mutation else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    case .deleteTrait(let v)?:
+    }()
+    case .deleteTrait?: try {
+      guard case .deleteTrait(let v)? = self.mutation else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    case .deleteEntity(let v)?:
+    }()
+    case .deleteEntity?: try {
+      guard case .deleteEntity(let v)? = self.mutation else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    case .updateTrait(let v)?:
+    }()
+    case .updateTrait?: try {
+      guard case .updateTrait(let v)? = self.mutation else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    case .compactTrait(let v)?:
+    }()
+    case .compactTrait?: try {
+      guard case .compactTrait(let v)? = self.mutation else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    case .test(let v)?:
+    }()
+    case .test?: try {
+      guard case .test(let v)? = self.mutation else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 99)
+    }()
     case nil: break
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -465,8 +516,11 @@ extension Exocore_Store_PutTraitMutation: SwiftProtobuf.Message, SwiftProtobuf._
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularMessageField(value: &self._trait)
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._trait) }()
       default: break
       }
     }
@@ -494,8 +548,11 @@ extension Exocore_Store_DeleteTraitMutation: SwiftProtobuf.Message, SwiftProtobu
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularStringField(value: &self.traitID)
+      case 1: try { try decoder.decodeSingularStringField(value: &self.traitID) }()
       default: break
       }
     }
@@ -545,11 +602,14 @@ extension Exocore_Store_UpdateTraitMutation: SwiftProtobuf.Message, SwiftProtobu
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularStringField(value: &self.traitID)
-      case 2: try decoder.decodeSingularMessageField(value: &self._trait)
-      case 3: try decoder.decodeSingularMessageField(value: &self._fieldMask)
-      case 4: try decoder.decodeSingularUInt64Field(value: &self.ifLastOperationID)
+      case 1: try { try decoder.decodeSingularStringField(value: &self.traitID) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._trait) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._fieldMask) }()
+      case 4: try { try decoder.decodeSingularUInt64Field(value: &self.ifLastOperationID) }()
       default: break
       }
     }
@@ -590,9 +650,12 @@ extension Exocore_Store_CompactTraitMutation: SwiftProtobuf.Message, SwiftProtob
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedMessageField(value: &self.compactedOperations)
-      case 2: try decoder.decodeSingularMessageField(value: &self._trait)
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.compactedOperations) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._trait) }()
       default: break
       }
     }
@@ -624,8 +687,11 @@ extension Exocore_Store_CompactTraitMutation.Operation: SwiftProtobuf.Message, S
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularUInt64Field(value: &self.operationID)
+      case 1: try { try decoder.decodeSingularUInt64Field(value: &self.operationID) }()
       default: break
       }
     }
@@ -653,8 +719,11 @@ extension Exocore_Store_TestMutation: SwiftProtobuf.Message, SwiftProtobuf._Mess
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBoolField(value: &self.success)
+      case 1: try { try decoder.decodeSingularBoolField(value: &self.success) }()
       default: break
       }
     }

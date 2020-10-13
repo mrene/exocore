@@ -69,98 +69,113 @@ public struct Exocore_Store_EntityQuery {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var predicate: Exocore_Store_EntityQuery.OneOf_Predicate? = nil
+  public var predicate: OneOf_Predicate? {
+    get {return _storage._predicate}
+    set {_uniqueStorage()._predicate = newValue}
+  }
 
   public var match: Exocore_Store_MatchPredicate {
     get {
-      if case .match(let v)? = predicate {return v}
+      if case .match(let v)? = _storage._predicate {return v}
       return Exocore_Store_MatchPredicate()
     }
-    set {predicate = .match(newValue)}
+    set {_uniqueStorage()._predicate = .match(newValue)}
   }
 
   public var trait: Exocore_Store_TraitPredicate {
     get {
-      if case .trait(let v)? = predicate {return v}
+      if case .trait(let v)? = _storage._predicate {return v}
       return Exocore_Store_TraitPredicate()
     }
-    set {predicate = .trait(newValue)}
+    set {_uniqueStorage()._predicate = .trait(newValue)}
   }
 
   public var ids: Exocore_Store_IdsPredicate {
     get {
-      if case .ids(let v)? = predicate {return v}
+      if case .ids(let v)? = _storage._predicate {return v}
       return Exocore_Store_IdsPredicate()
     }
-    set {predicate = .ids(newValue)}
+    set {_uniqueStorage()._predicate = .ids(newValue)}
   }
 
   public var reference: Exocore_Store_ReferencePredicate {
     get {
-      if case .reference(let v)? = predicate {return v}
+      if case .reference(let v)? = _storage._predicate {return v}
       return Exocore_Store_ReferencePredicate()
     }
-    set {predicate = .reference(newValue)}
+    set {_uniqueStorage()._predicate = .reference(newValue)}
   }
 
   public var operations: Exocore_Store_OperationsPredicate {
     get {
-      if case .operations(let v)? = predicate {return v}
+      if case .operations(let v)? = _storage._predicate {return v}
       return Exocore_Store_OperationsPredicate()
     }
-    set {predicate = .operations(newValue)}
+    set {_uniqueStorage()._predicate = .operations(newValue)}
   }
 
   public var all: Exocore_Store_AllPredicate {
     get {
-      if case .all(let v)? = predicate {return v}
+      if case .all(let v)? = _storage._predicate {return v}
       return Exocore_Store_AllPredicate()
     }
-    set {predicate = .all(newValue)}
+    set {_uniqueStorage()._predicate = .all(newValue)}
   }
 
   public var test: Exocore_Store_TestPredicate {
     get {
-      if case .test(let v)? = predicate {return v}
+      if case .test(let v)? = _storage._predicate {return v}
       return Exocore_Store_TestPredicate()
     }
-    set {predicate = .test(newValue)}
+    set {_uniqueStorage()._predicate = .test(newValue)}
   }
 
   //// Optional projections on traits and fields to be returned.
-  public var projections: [Exocore_Store_Projection] = []
+  public var projections: [Exocore_Store_Projection] {
+    get {return _storage._projections}
+    set {_uniqueStorage()._projections = newValue}
+  }
 
   //// Query paging requested.
   public var paging: Exocore_Store_Paging {
-    get {return _paging ?? Exocore_Store_Paging()}
-    set {_paging = newValue}
+    get {return _storage._paging ?? Exocore_Store_Paging()}
+    set {_uniqueStorage()._paging = newValue}
   }
   /// Returns true if `paging` has been explicitly set.
-  public var hasPaging: Bool {return self._paging != nil}
+  public var hasPaging: Bool {return _storage._paging != nil}
   /// Clears the value of `paging`. Subsequent reads from it will return its default value.
-  public mutating func clearPaging() {self._paging = nil}
+  public mutating func clearPaging() {_uniqueStorage()._paging = nil}
 
   //// Query ordering.
   public var ordering: Exocore_Store_Ordering {
-    get {return _ordering ?? Exocore_Store_Ordering()}
-    set {_ordering = newValue}
+    get {return _storage._ordering ?? Exocore_Store_Ordering()}
+    set {_uniqueStorage()._ordering = newValue}
   }
   /// Returns true if `ordering` has been explicitly set.
-  public var hasOrdering: Bool {return self._ordering != nil}
+  public var hasOrdering: Bool {return _storage._ordering != nil}
   /// Clears the value of `ordering`. Subsequent reads from it will return its default value.
-  public mutating func clearOrdering() {self._ordering = nil}
+  public mutating func clearOrdering() {_uniqueStorage()._ordering = nil}
 
   //// Optional watch token if this query is to be used for watching.
-  public var watchToken: UInt64 = 0
+  public var watchToken: UInt64 {
+    get {return _storage._watchToken}
+    set {_uniqueStorage()._watchToken = newValue}
+  }
 
   //// If specified, if results from server matches this hash, results will be empty with the 
   //// `skipped_hash` field set to `true`.
-  public var resultHash: UInt64 = 0
+  public var resultHash: UInt64 {
+    get {return _storage._resultHash}
+    set {_uniqueStorage()._resultHash = newValue}
+  }
 
   //// Include deleted mutations matches. Can be used to return recently modified entities that
   //// also include deletions. Deleted traits will be included in the results, but will have a 
   //// `deletion_date` field with the date of the deletion.
-  public var includeDeleted: Bool = false
+  public var includeDeleted: Bool {
+    get {return _storage._includeDeleted}
+    set {_uniqueStorage()._includeDeleted = newValue}
+  }
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -175,14 +190,38 @@ public struct Exocore_Store_EntityQuery {
 
   #if !swift(>=4.1)
     public static func ==(lhs: Exocore_Store_EntityQuery.OneOf_Predicate, rhs: Exocore_Store_EntityQuery.OneOf_Predicate) -> Bool {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch (lhs, rhs) {
-      case (.match(let l), .match(let r)): return l == r
-      case (.trait(let l), .trait(let r)): return l == r
-      case (.ids(let l), .ids(let r)): return l == r
-      case (.reference(let l), .reference(let r)): return l == r
-      case (.operations(let l), .operations(let r)): return l == r
-      case (.all(let l), .all(let r)): return l == r
-      case (.test(let l), .test(let r)): return l == r
+      case (.match, .match): return {
+        guard case .match(let l) = lhs, case .match(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.trait, .trait): return {
+        guard case .trait(let l) = lhs, case .trait(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.ids, .ids): return {
+        guard case .ids(let l) = lhs, case .ids(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.reference, .reference): return {
+        guard case .reference(let l) = lhs, case .reference(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.operations, .operations): return {
+        guard case .operations(let l) = lhs, case .operations(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.all, .all): return {
+        guard case .all(let l) = lhs, case .all(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.test, .test): return {
+        guard case .test(let l) = lhs, case .test(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
       default: return false
       }
     }
@@ -191,8 +230,7 @@ public struct Exocore_Store_EntityQuery {
 
   public init() {}
 
-  fileprivate var _paging: Exocore_Store_Paging? = nil
-  fileprivate var _ordering: Exocore_Store_Ordering? = nil
+  fileprivate var _storage = _StorageClass.defaultInstance
 }
 
 public struct Exocore_Store_Projection {
@@ -346,10 +384,22 @@ public struct Exocore_Store_TraitQuery {
 
   #if !swift(>=4.1)
     public static func ==(lhs: Exocore_Store_TraitQuery.OneOf_Predicate, rhs: Exocore_Store_TraitQuery.OneOf_Predicate) -> Bool {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch (lhs, rhs) {
-      case (.match(let l), .match(let r)): return l == r
-      case (.field(let l), .field(let r)): return l == r
-      case (.reference(let l), .reference(let r)): return l == r
+      case (.match, .match): return {
+        guard case .match(let l) = lhs, case .match(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.field, .field): return {
+        guard case .field(let l) = lhs, case .field(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.reference, .reference): return {
+        guard case .reference(let l) = lhs, case .reference(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
       default: return false
       }
     }
@@ -412,11 +462,26 @@ public struct Exocore_Store_TraitFieldPredicate {
 
   #if !swift(>=4.1)
     public static func ==(lhs: Exocore_Store_TraitFieldPredicate.OneOf_Value, rhs: Exocore_Store_TraitFieldPredicate.OneOf_Value) -> Bool {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch (lhs, rhs) {
-      case (.string(let l), .string(let r)): return l == r
-      case (.int64(let l), .int64(let r)): return l == r
-      case (.uint64(let l), .uint64(let r)): return l == r
-      case (.date(let l), .date(let r)): return l == r
+      case (.string, .string): return {
+        guard case .string(let l) = lhs, case .string(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.int64, .int64): return {
+        guard case .int64(let l) = lhs, case .int64(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.uint64, .uint64): return {
+        guard case .uint64(let l) = lhs, case .uint64(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.date, .date): return {
+        guard case .date(let l) = lhs, case .date(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
       default: return false
       }
     }
@@ -598,10 +663,22 @@ public struct Exocore_Store_Ordering {
 
   #if !swift(>=4.1)
     public static func ==(lhs: Exocore_Store_Ordering.OneOf_Value, rhs: Exocore_Store_Ordering.OneOf_Value) -> Bool {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch (lhs, rhs) {
-      case (.score(let l), .score(let r)): return l == r
-      case (.operationID(let l), .operationID(let r)): return l == r
-      case (.field(let l), .field(let r)): return l == r
+      case (.score, .score): return {
+        guard case .score(let l) = lhs, case .score(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.operationID, .operationID): return {
+        guard case .operationID(let l) = lhs, case .operationID(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.field, .field): return {
+        guard case .field(let l) = lhs, case .field(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
       default: return false
       }
     }
@@ -675,12 +752,30 @@ public struct Exocore_Store_OrderingValue {
 
   #if !swift(>=4.1)
     public static func ==(lhs: Exocore_Store_OrderingValue.OneOf_Value, rhs: Exocore_Store_OrderingValue.OneOf_Value) -> Bool {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch (lhs, rhs) {
-      case (.float(let l), .float(let r)): return l == r
-      case (.uint64(let l), .uint64(let r)): return l == r
-      case (.date(let l), .date(let r)): return l == r
-      case (.min(let l), .min(let r)): return l == r
-      case (.max(let l), .max(let r)): return l == r
+      case (.float, .float): return {
+        guard case .float(let l) = lhs, case .float(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.uint64, .uint64): return {
+        guard case .uint64(let l) = lhs, case .uint64(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.date, .date): return {
+        guard case .date(let l) = lhs, case .date(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.min, .min): return {
+        guard case .min(let l) = lhs, case .min(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.max, .max): return {
+        guard case .max(let l) = lhs, case .max(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
       default: return false
       }
     }
@@ -696,45 +791,56 @@ public struct Exocore_Store_EntityResults {
   // methods supported on all messages.
 
   //// Entities matching query.
-  public var entities: [Exocore_Store_EntityResult] = []
+  public var entities: [Exocore_Store_EntityResult] {
+    get {return _storage._entities}
+    set {_uniqueStorage()._entities = newValue}
+  }
 
   //// If query specified a `result_hash`, this is set to `true` if the results
   //// had the same hash has the specified and that `entities` were set to empty.
-  public var skippedHash: Bool = false
+  public var skippedHash: Bool {
+    get {return _storage._skippedHash}
+    set {_uniqueStorage()._skippedHash = newValue}
+  }
 
   //// Estimated number of entities matching, based on number of matching mutations.
-  public var estimatedCount: UInt32 = 0
+  public var estimatedCount: UInt32 {
+    get {return _storage._estimatedCount}
+    set {_uniqueStorage()._estimatedCount = newValue}
+  }
 
   //// Paging token of the current results.
   public var currentPage: Exocore_Store_Paging {
-    get {return _currentPage ?? Exocore_Store_Paging()}
-    set {_currentPage = newValue}
+    get {return _storage._currentPage ?? Exocore_Store_Paging()}
+    set {_uniqueStorage()._currentPage = newValue}
   }
   /// Returns true if `currentPage` has been explicitly set.
-  public var hasCurrentPage: Bool {return self._currentPage != nil}
+  public var hasCurrentPage: Bool {return _storage._currentPage != nil}
   /// Clears the value of `currentPage`. Subsequent reads from it will return its default value.
-  public mutating func clearCurrentPage() {self._currentPage = nil}
+  public mutating func clearCurrentPage() {_uniqueStorage()._currentPage = nil}
 
   //// Paging token of the next page of results.
   public var nextPage: Exocore_Store_Paging {
-    get {return _nextPage ?? Exocore_Store_Paging()}
-    set {_nextPage = newValue}
+    get {return _storage._nextPage ?? Exocore_Store_Paging()}
+    set {_uniqueStorage()._nextPage = newValue}
   }
   /// Returns true if `nextPage` has been explicitly set.
-  public var hasNextPage: Bool {return self._nextPage != nil}
+  public var hasNextPage: Bool {return _storage._nextPage != nil}
   /// Clears the value of `nextPage`. Subsequent reads from it will return its default value.
-  public mutating func clearNextPage() {self._nextPage = nil}
+  public mutating func clearNextPage() {_uniqueStorage()._nextPage = nil}
 
   //// Hash of the results. Can be used to prevent receiving same results if they haven't
   //// changed by using the `result_hash` field on the query.
-  public var hash: UInt64 = 0
+  public var hash: UInt64 {
+    get {return _storage._hash}
+    set {_uniqueStorage()._hash = newValue}
+  }
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 
-  fileprivate var _currentPage: Exocore_Store_Paging? = nil
-  fileprivate var _nextPage: Exocore_Store_Paging? = nil
+  fileprivate var _storage = _StorageClass.defaultInstance
 }
 
 public struct Exocore_Store_EntityResult {
@@ -815,129 +921,199 @@ extension Exocore_Store_EntityQuery: SwiftProtobuf.Message, SwiftProtobuf._Messa
     12: .standard(proto: "include_deleted"),
   ]
 
+  fileprivate class _StorageClass {
+    var _predicate: Exocore_Store_EntityQuery.OneOf_Predicate?
+    var _projections: [Exocore_Store_Projection] = []
+    var _paging: Exocore_Store_Paging? = nil
+    var _ordering: Exocore_Store_Ordering? = nil
+    var _watchToken: UInt64 = 0
+    var _resultHash: UInt64 = 0
+    var _includeDeleted: Bool = false
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _predicate = source._predicate
+      _projections = source._projections
+      _paging = source._paging
+      _ordering = source._ordering
+      _watchToken = source._watchToken
+      _resultHash = source._resultHash
+      _includeDeleted = source._includeDeleted
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      switch fieldNumber {
-      case 1:
-        var v: Exocore_Store_MatchPredicate?
-        if let current = self.predicate {
-          try decoder.handleConflictingOneOf()
-          if case .match(let m) = current {v = m}
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every case branch when no optimizations are
+        // enabled. https://github.com/apple/swift-protobuf/issues/1034
+        switch fieldNumber {
+        case 1: try {
+          var v: Exocore_Store_MatchPredicate?
+          if let current = _storage._predicate {
+            try decoder.handleConflictingOneOf()
+            if case .match(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._predicate = .match(v)}
+        }()
+        case 2: try {
+          var v: Exocore_Store_TraitPredicate?
+          if let current = _storage._predicate {
+            try decoder.handleConflictingOneOf()
+            if case .trait(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._predicate = .trait(v)}
+        }()
+        case 3: try {
+          var v: Exocore_Store_IdsPredicate?
+          if let current = _storage._predicate {
+            try decoder.handleConflictingOneOf()
+            if case .ids(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._predicate = .ids(v)}
+        }()
+        case 4: try {
+          var v: Exocore_Store_ReferencePredicate?
+          if let current = _storage._predicate {
+            try decoder.handleConflictingOneOf()
+            if case .reference(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._predicate = .reference(v)}
+        }()
+        case 5: try { try decoder.decodeSingularMessageField(value: &_storage._paging) }()
+        case 6: try { try decoder.decodeSingularMessageField(value: &_storage._ordering) }()
+        case 7: try { try decoder.decodeRepeatedMessageField(value: &_storage._projections) }()
+        case 8: try { try decoder.decodeSingularUInt64Field(value: &_storage._watchToken) }()
+        case 9: try { try decoder.decodeSingularUInt64Field(value: &_storage._resultHash) }()
+        case 10: try {
+          var v: Exocore_Store_OperationsPredicate?
+          if let current = _storage._predicate {
+            try decoder.handleConflictingOneOf()
+            if case .operations(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._predicate = .operations(v)}
+        }()
+        case 11: try {
+          var v: Exocore_Store_AllPredicate?
+          if let current = _storage._predicate {
+            try decoder.handleConflictingOneOf()
+            if case .all(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._predicate = .all(v)}
+        }()
+        case 12: try { try decoder.decodeSingularBoolField(value: &_storage._includeDeleted) }()
+        case 99: try {
+          var v: Exocore_Store_TestPredicate?
+          if let current = _storage._predicate {
+            try decoder.handleConflictingOneOf()
+            if case .test(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._predicate = .test(v)}
+        }()
+        default: break
         }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.predicate = .match(v)}
-      case 2:
-        var v: Exocore_Store_TraitPredicate?
-        if let current = self.predicate {
-          try decoder.handleConflictingOneOf()
-          if case .trait(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.predicate = .trait(v)}
-      case 3:
-        var v: Exocore_Store_IdsPredicate?
-        if let current = self.predicate {
-          try decoder.handleConflictingOneOf()
-          if case .ids(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.predicate = .ids(v)}
-      case 4:
-        var v: Exocore_Store_ReferencePredicate?
-        if let current = self.predicate {
-          try decoder.handleConflictingOneOf()
-          if case .reference(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.predicate = .reference(v)}
-      case 5: try decoder.decodeSingularMessageField(value: &self._paging)
-      case 6: try decoder.decodeSingularMessageField(value: &self._ordering)
-      case 7: try decoder.decodeRepeatedMessageField(value: &self.projections)
-      case 8: try decoder.decodeSingularUInt64Field(value: &self.watchToken)
-      case 9: try decoder.decodeSingularUInt64Field(value: &self.resultHash)
-      case 10:
-        var v: Exocore_Store_OperationsPredicate?
-        if let current = self.predicate {
-          try decoder.handleConflictingOneOf()
-          if case .operations(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.predicate = .operations(v)}
-      case 11:
-        var v: Exocore_Store_AllPredicate?
-        if let current = self.predicate {
-          try decoder.handleConflictingOneOf()
-          if case .all(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.predicate = .all(v)}
-      case 12: try decoder.decodeSingularBoolField(value: &self.includeDeleted)
-      case 99:
-        var v: Exocore_Store_TestPredicate?
-        if let current = self.predicate {
-          try decoder.handleConflictingOneOf()
-          if case .test(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.predicate = .test(v)}
-      default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    switch self.predicate {
-    case .match(let v)?:
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    case .trait(let v)?:
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    case .ids(let v)?:
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    case .reference(let v)?:
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    case nil: break
-    default: break
-    }
-    if let v = self._paging {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
-    if let v = self._ordering {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }
-    if !self.projections.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.projections, fieldNumber: 7)
-    }
-    if self.watchToken != 0 {
-      try visitor.visitSingularUInt64Field(value: self.watchToken, fieldNumber: 8)
-    }
-    if self.resultHash != 0 {
-      try visitor.visitSingularUInt64Field(value: self.resultHash, fieldNumber: 9)
-    }
-    switch self.predicate {
-    case .operations(let v)?:
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    case .all(let v)?:
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
-    case nil: break
-    default: break
-    }
-    if self.includeDeleted != false {
-      try visitor.visitSingularBoolField(value: self.includeDeleted, fieldNumber: 12)
-    }
-    if case .test(let v)? = self.predicate {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 99)
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch _storage._predicate {
+      case .match?: try {
+        guard case .match(let v)? = _storage._predicate else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+      }()
+      case .trait?: try {
+        guard case .trait(let v)? = _storage._predicate else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+      }()
+      case .ids?: try {
+        guard case .ids(let v)? = _storage._predicate else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+      }()
+      case .reference?: try {
+        guard case .reference(let v)? = _storage._predicate else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+      }()
+      default: break
+      }
+      if let v = _storage._paging {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+      }
+      if let v = _storage._ordering {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+      }
+      if !_storage._projections.isEmpty {
+        try visitor.visitRepeatedMessageField(value: _storage._projections, fieldNumber: 7)
+      }
+      if _storage._watchToken != 0 {
+        try visitor.visitSingularUInt64Field(value: _storage._watchToken, fieldNumber: 8)
+      }
+      if _storage._resultHash != 0 {
+        try visitor.visitSingularUInt64Field(value: _storage._resultHash, fieldNumber: 9)
+      }
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch _storage._predicate {
+      case .operations?: try {
+        guard case .operations(let v)? = _storage._predicate else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+      }()
+      case .all?: try {
+        guard case .all(let v)? = _storage._predicate else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
+      }()
+      default: break
+      }
+      if _storage._includeDeleted != false {
+        try visitor.visitSingularBoolField(value: _storage._includeDeleted, fieldNumber: 12)
+      }
+      if case .test(let v)? = _storage._predicate {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 99)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Exocore_Store_EntityQuery, rhs: Exocore_Store_EntityQuery) -> Bool {
-    if lhs.predicate != rhs.predicate {return false}
-    if lhs.projections != rhs.projections {return false}
-    if lhs._paging != rhs._paging {return false}
-    if lhs._ordering != rhs._ordering {return false}
-    if lhs.watchToken != rhs.watchToken {return false}
-    if lhs.resultHash != rhs.resultHash {return false}
-    if lhs.includeDeleted != rhs.includeDeleted {return false}
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._predicate != rhs_storage._predicate {return false}
+        if _storage._projections != rhs_storage._projections {return false}
+        if _storage._paging != rhs_storage._paging {return false}
+        if _storage._ordering != rhs_storage._ordering {return false}
+        if _storage._watchToken != rhs_storage._watchToken {return false}
+        if _storage._resultHash != rhs_storage._resultHash {return false}
+        if _storage._includeDeleted != rhs_storage._includeDeleted {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -954,11 +1130,14 @@ extension Exocore_Store_Projection: SwiftProtobuf.Message, SwiftProtobuf._Messag
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedStringField(value: &self.package)
-      case 2: try decoder.decodeSingularBoolField(value: &self.skip)
-      case 4: try decoder.decodeRepeatedUInt32Field(value: &self.fieldIds)
-      case 5: try decoder.decodeRepeatedUInt32Field(value: &self.fieldGroupIds)
+      case 1: try { try decoder.decodeRepeatedStringField(value: &self.package) }()
+      case 2: try { try decoder.decodeSingularBoolField(value: &self.skip) }()
+      case 4: try { try decoder.decodeRepeatedUInt32Field(value: &self.fieldIds) }()
+      case 5: try { try decoder.decodeRepeatedUInt32Field(value: &self.fieldGroupIds) }()
       default: break
       }
     }
@@ -998,8 +1177,11 @@ extension Exocore_Store_MatchPredicate: SwiftProtobuf.Message, SwiftProtobuf._Me
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularStringField(value: &self.query)
+      case 1: try { try decoder.decodeSingularStringField(value: &self.query) }()
       default: break
       }
     }
@@ -1027,8 +1209,11 @@ extension Exocore_Store_IdsPredicate: SwiftProtobuf.Message, SwiftProtobuf._Mess
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedStringField(value: &self.ids)
+      case 1: try { try decoder.decodeRepeatedStringField(value: &self.ids) }()
       default: break
       }
     }
@@ -1056,8 +1241,11 @@ extension Exocore_Store_OperationsPredicate: SwiftProtobuf.Message, SwiftProtobu
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedUInt64Field(value: &self.operationIds)
+      case 1: try { try decoder.decodeRepeatedUInt64Field(value: &self.operationIds) }()
       default: break
       }
     }
@@ -1104,8 +1292,11 @@ extension Exocore_Store_TestPredicate: SwiftProtobuf.Message, SwiftProtobuf._Mes
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBoolField(value: &self.success)
+      case 1: try { try decoder.decodeSingularBoolField(value: &self.success) }()
       default: break
       }
     }
@@ -1134,9 +1325,12 @@ extension Exocore_Store_TraitPredicate: SwiftProtobuf.Message, SwiftProtobuf._Me
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularStringField(value: &self.traitName)
-      case 2: try decoder.decodeSingularMessageField(value: &self._query)
+      case 1: try { try decoder.decodeSingularStringField(value: &self.traitName) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._query) }()
       default: break
       }
     }
@@ -1170,8 +1364,11 @@ extension Exocore_Store_TraitQuery: SwiftProtobuf.Message, SwiftProtobuf._Messag
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1:
+      case 1: try {
         var v: Exocore_Store_MatchPredicate?
         if let current = self.predicate {
           try decoder.handleConflictingOneOf()
@@ -1179,7 +1376,8 @@ extension Exocore_Store_TraitQuery: SwiftProtobuf.Message, SwiftProtobuf._Messag
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.predicate = .match(v)}
-      case 2:
+      }()
+      case 2: try {
         var v: Exocore_Store_TraitFieldPredicate?
         if let current = self.predicate {
           try decoder.handleConflictingOneOf()
@@ -1187,7 +1385,8 @@ extension Exocore_Store_TraitQuery: SwiftProtobuf.Message, SwiftProtobuf._Messag
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.predicate = .field(v)}
-      case 3:
+      }()
+      case 3: try {
         var v: Exocore_Store_TraitFieldReferencePredicate?
         if let current = self.predicate {
           try decoder.handleConflictingOneOf()
@@ -1195,19 +1394,29 @@ extension Exocore_Store_TraitQuery: SwiftProtobuf.Message, SwiftProtobuf._Messag
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.predicate = .reference(v)}
+      }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every case branch when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034
     switch self.predicate {
-    case .match(let v)?:
+    case .match?: try {
+      guard case .match(let v)? = self.predicate else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    case .field(let v)?:
+    }()
+    case .field?: try {
+      guard case .field(let v)? = self.predicate else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    case .reference(let v)?:
+    }()
+    case .reference?: try {
+      guard case .reference(let v)? = self.predicate else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+    }()
     case nil: break
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -1233,24 +1442,30 @@ extension Exocore_Store_TraitFieldPredicate: SwiftProtobuf.Message, SwiftProtobu
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularStringField(value: &self.field)
-      case 2:
+      case 1: try { try decoder.decodeSingularStringField(value: &self.field) }()
+      case 2: try {
         if self.value != nil {try decoder.handleConflictingOneOf()}
         var v: String?
         try decoder.decodeSingularStringField(value: &v)
         if let v = v {self.value = .string(v)}
-      case 3:
+      }()
+      case 3: try {
         if self.value != nil {try decoder.handleConflictingOneOf()}
         var v: Int64?
         try decoder.decodeSingularInt64Field(value: &v)
         if let v = v {self.value = .int64(v)}
-      case 4:
+      }()
+      case 4: try {
         if self.value != nil {try decoder.handleConflictingOneOf()}
         var v: UInt64?
         try decoder.decodeSingularUInt64Field(value: &v)
         if let v = v {self.value = .uint64(v)}
-      case 5:
+      }()
+      case 5: try {
         var v: SwiftProtobuf.Google_Protobuf_Timestamp?
         if let current = self.value {
           try decoder.handleConflictingOneOf()
@@ -1258,7 +1473,8 @@ extension Exocore_Store_TraitFieldPredicate: SwiftProtobuf.Message, SwiftProtobu
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.value = .date(v)}
-      case 6: try decoder.decodeSingularEnumField(value: &self.`operator`)
+      }()
+      case 6: try { try decoder.decodeSingularEnumField(value: &self.`operator`) }()
       default: break
       }
     }
@@ -1268,15 +1484,26 @@ extension Exocore_Store_TraitFieldPredicate: SwiftProtobuf.Message, SwiftProtobu
     if !self.field.isEmpty {
       try visitor.visitSingularStringField(value: self.field, fieldNumber: 1)
     }
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every case branch when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034
     switch self.value {
-    case .string(let v)?:
+    case .string?: try {
+      guard case .string(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    case .int64(let v)?:
+    }()
+    case .int64?: try {
+      guard case .int64(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    case .uint64(let v)?:
+    }()
+    case .uint64?: try {
+      guard case .uint64(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularUInt64Field(value: v, fieldNumber: 4)
-    case .date(let v)?:
+    }()
+    case .date?: try {
+      guard case .date(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+    }()
     case nil: break
     }
     if self.`operator` != .equal {
@@ -1313,9 +1540,12 @@ extension Exocore_Store_TraitFieldReferencePredicate: SwiftProtobuf.Message, Swi
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularStringField(value: &self.field)
-      case 2: try decoder.decodeSingularMessageField(value: &self._reference)
+      case 1: try { try decoder.decodeSingularStringField(value: &self.field) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._reference) }()
       default: break
       }
     }
@@ -1348,9 +1578,12 @@ extension Exocore_Store_ReferencePredicate: SwiftProtobuf.Message, SwiftProtobuf
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularStringField(value: &self.entityID)
-      case 2: try decoder.decodeSingularStringField(value: &self.traitID)
+      case 1: try { try decoder.decodeSingularStringField(value: &self.entityID) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.traitID) }()
       default: break
       }
     }
@@ -1384,10 +1617,13 @@ extension Exocore_Store_Paging: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularMessageField(value: &self._afterOrderingValue)
-      case 2: try decoder.decodeSingularMessageField(value: &self._beforeOrderingValue)
-      case 3: try decoder.decodeSingularUInt32Field(value: &self.count)
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._afterOrderingValue) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._beforeOrderingValue) }()
+      case 3: try { try decoder.decodeSingularUInt32Field(value: &self.count) }()
       default: break
       }
     }
@@ -1426,36 +1662,51 @@ extension Exocore_Store_Ordering: SwiftProtobuf.Message, SwiftProtobuf._MessageI
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1:
+      case 1: try {
         if self.value != nil {try decoder.handleConflictingOneOf()}
         var v: Bool?
         try decoder.decodeSingularBoolField(value: &v)
         if let v = v {self.value = .score(v)}
-      case 2:
+      }()
+      case 2: try {
         if self.value != nil {try decoder.handleConflictingOneOf()}
         var v: Bool?
         try decoder.decodeSingularBoolField(value: &v)
         if let v = v {self.value = .operationID(v)}
-      case 3:
+      }()
+      case 3: try {
         if self.value != nil {try decoder.handleConflictingOneOf()}
         var v: String?
         try decoder.decodeSingularStringField(value: &v)
         if let v = v {self.value = .field(v)}
-      case 4: try decoder.decodeSingularBoolField(value: &self.ascending)
+      }()
+      case 4: try { try decoder.decodeSingularBoolField(value: &self.ascending) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every case branch when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034
     switch self.value {
-    case .score(let v)?:
+    case .score?: try {
+      guard case .score(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularBoolField(value: v, fieldNumber: 1)
-    case .operationID(let v)?:
+    }()
+    case .operationID?: try {
+      guard case .operationID(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularBoolField(value: v, fieldNumber: 2)
-    case .field(let v)?:
+    }()
+    case .field?: try {
+      guard case .field(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
+    }()
     case nil: break
     }
     if self.ascending != false {
@@ -1485,18 +1736,23 @@ extension Exocore_Store_OrderingValue: SwiftProtobuf.Message, SwiftProtobuf._Mes
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1:
+      case 1: try {
         if self.value != nil {try decoder.handleConflictingOneOf()}
         var v: Float?
         try decoder.decodeSingularFloatField(value: &v)
         if let v = v {self.value = .float(v)}
-      case 2:
+      }()
+      case 2: try {
         if self.value != nil {try decoder.handleConflictingOneOf()}
         var v: UInt64?
         try decoder.decodeSingularUInt64Field(value: &v)
         if let v = v {self.value = .uint64(v)}
-      case 3:
+      }()
+      case 3: try {
         var v: SwiftProtobuf.Google_Protobuf_Timestamp?
         if let current = self.value {
           try decoder.handleConflictingOneOf()
@@ -1504,34 +1760,50 @@ extension Exocore_Store_OrderingValue: SwiftProtobuf.Message, SwiftProtobuf._Mes
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.value = .date(v)}
-      case 4:
+      }()
+      case 4: try {
         if self.value != nil {try decoder.handleConflictingOneOf()}
         var v: Bool?
         try decoder.decodeSingularBoolField(value: &v)
         if let v = v {self.value = .min(v)}
-      case 5:
+      }()
+      case 5: try {
         if self.value != nil {try decoder.handleConflictingOneOf()}
         var v: Bool?
         try decoder.decodeSingularBoolField(value: &v)
         if let v = v {self.value = .max(v)}
-      case 6: try decoder.decodeSingularUInt64Field(value: &self.operationID)
+      }()
+      case 6: try { try decoder.decodeSingularUInt64Field(value: &self.operationID) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every case branch when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034
     switch self.value {
-    case .float(let v)?:
+    case .float?: try {
+      guard case .float(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularFloatField(value: v, fieldNumber: 1)
-    case .uint64(let v)?:
+    }()
+    case .uint64?: try {
+      guard case .uint64(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularUInt64Field(value: v, fieldNumber: 2)
-    case .date(let v)?:
+    }()
+    case .date?: try {
+      guard case .date(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    case .min(let v)?:
+    }()
+    case .min?: try {
+      guard case .min(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
-    case .max(let v)?:
+    }()
+    case .max?: try {
+      guard case .max(let v)? = self.value else { preconditionFailure() }
       try visitor.visitSingularBoolField(value: v, fieldNumber: 5)
+    }()
     case nil: break
     }
     if self.operationID != 0 {
@@ -1559,49 +1831,94 @@ extension Exocore_Store_EntityResults: SwiftProtobuf.Message, SwiftProtobuf._Mes
     6: .same(proto: "hash"),
   ]
 
+  fileprivate class _StorageClass {
+    var _entities: [Exocore_Store_EntityResult] = []
+    var _skippedHash: Bool = false
+    var _estimatedCount: UInt32 = 0
+    var _currentPage: Exocore_Store_Paging? = nil
+    var _nextPage: Exocore_Store_Paging? = nil
+    var _hash: UInt64 = 0
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _entities = source._entities
+      _skippedHash = source._skippedHash
+      _estimatedCount = source._estimatedCount
+      _currentPage = source._currentPage
+      _nextPage = source._nextPage
+      _hash = source._hash
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      switch fieldNumber {
-      case 1: try decoder.decodeRepeatedMessageField(value: &self.entities)
-      case 2: try decoder.decodeSingularBoolField(value: &self.skippedHash)
-      case 3: try decoder.decodeSingularUInt32Field(value: &self.estimatedCount)
-      case 4: try decoder.decodeSingularMessageField(value: &self._currentPage)
-      case 5: try decoder.decodeSingularMessageField(value: &self._nextPage)
-      case 6: try decoder.decodeSingularUInt64Field(value: &self.hash)
-      default: break
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every case branch when no optimizations are
+        // enabled. https://github.com/apple/swift-protobuf/issues/1034
+        switch fieldNumber {
+        case 1: try { try decoder.decodeRepeatedMessageField(value: &_storage._entities) }()
+        case 2: try { try decoder.decodeSingularBoolField(value: &_storage._skippedHash) }()
+        case 3: try { try decoder.decodeSingularUInt32Field(value: &_storage._estimatedCount) }()
+        case 4: try { try decoder.decodeSingularMessageField(value: &_storage._currentPage) }()
+        case 5: try { try decoder.decodeSingularMessageField(value: &_storage._nextPage) }()
+        case 6: try { try decoder.decodeSingularUInt64Field(value: &_storage._hash) }()
+        default: break
+        }
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.entities.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.entities, fieldNumber: 1)
-    }
-    if self.skippedHash != false {
-      try visitor.visitSingularBoolField(value: self.skippedHash, fieldNumber: 2)
-    }
-    if self.estimatedCount != 0 {
-      try visitor.visitSingularUInt32Field(value: self.estimatedCount, fieldNumber: 3)
-    }
-    if let v = self._currentPage {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }
-    if let v = self._nextPage {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
-    if self.hash != 0 {
-      try visitor.visitSingularUInt64Field(value: self.hash, fieldNumber: 6)
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      if !_storage._entities.isEmpty {
+        try visitor.visitRepeatedMessageField(value: _storage._entities, fieldNumber: 1)
+      }
+      if _storage._skippedHash != false {
+        try visitor.visitSingularBoolField(value: _storage._skippedHash, fieldNumber: 2)
+      }
+      if _storage._estimatedCount != 0 {
+        try visitor.visitSingularUInt32Field(value: _storage._estimatedCount, fieldNumber: 3)
+      }
+      if let v = _storage._currentPage {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+      }
+      if let v = _storage._nextPage {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+      }
+      if _storage._hash != 0 {
+        try visitor.visitSingularUInt64Field(value: _storage._hash, fieldNumber: 6)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Exocore_Store_EntityResults, rhs: Exocore_Store_EntityResults) -> Bool {
-    if lhs.entities != rhs.entities {return false}
-    if lhs.skippedHash != rhs.skippedHash {return false}
-    if lhs.estimatedCount != rhs.estimatedCount {return false}
-    if lhs._currentPage != rhs._currentPage {return false}
-    if lhs._nextPage != rhs._nextPage {return false}
-    if lhs.hash != rhs.hash {return false}
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._entities != rhs_storage._entities {return false}
+        if _storage._skippedHash != rhs_storage._skippedHash {return false}
+        if _storage._estimatedCount != rhs_storage._estimatedCount {return false}
+        if _storage._currentPage != rhs_storage._currentPage {return false}
+        if _storage._nextPage != rhs_storage._nextPage {return false}
+        if _storage._hash != rhs_storage._hash {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1618,11 +1935,14 @@ extension Exocore_Store_EntityResult: SwiftProtobuf.Message, SwiftProtobuf._Mess
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try decoder.decodeSingularMessageField(value: &self._entity)
-      case 2: try decoder.decodeSingularEnumField(value: &self.source)
-      case 3: try decoder.decodeSingularMessageField(value: &self._orderingValue)
-      case 4: try decoder.decodeSingularUInt64Field(value: &self.hash)
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._entity) }()
+      case 2: try { try decoder.decodeSingularEnumField(value: &self.source) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._orderingValue) }()
+      case 4: try { try decoder.decodeSingularUInt64Field(value: &self.hash) }()
       default: break
       }
     }
