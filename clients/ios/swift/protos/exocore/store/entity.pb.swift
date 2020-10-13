@@ -202,16 +202,13 @@ extension Exocore_Store_Entity: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.id) }()
-      case 4: try { try decoder.decodeRepeatedMessageField(value: &self.traits) }()
-      case 5: try { try decoder.decodeSingularMessageField(value: &self._creationDate) }()
-      case 6: try { try decoder.decodeSingularMessageField(value: &self._modificationDate) }()
-      case 7: try { try decoder.decodeSingularMessageField(value: &self._deletionDate) }()
-      case 8: try { try decoder.decodeSingularUInt64Field(value: &self.lastOperationID) }()
+      case 1: try decoder.decodeSingularStringField(value: &self.id)
+      case 4: try decoder.decodeRepeatedMessageField(value: &self.traits)
+      case 5: try decoder.decodeSingularMessageField(value: &self._creationDate)
+      case 6: try decoder.decodeSingularMessageField(value: &self._modificationDate)
+      case 7: try decoder.decodeSingularMessageField(value: &self._deletionDate)
+      case 8: try decoder.decodeSingularUInt64Field(value: &self.lastOperationID)
       default: break
       }
     }
@@ -265,17 +262,14 @@ extension Exocore_Store_Trait: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.id) }()
-      case 2: try { try decoder.decodeSingularMessageField(value: &self._message) }()
-      case 3: try { try decoder.decodeSingularMessageField(value: &self._creationDate) }()
-      case 4: try { try decoder.decodeSingularMessageField(value: &self._modificationDate) }()
-      case 5: try { try decoder.decodeSingularEnumField(value: &self.details) }()
-      case 6: try { try decoder.decodeSingularMessageField(value: &self._deletionDate) }()
-      case 7: try { try decoder.decodeSingularUInt64Field(value: &self.lastOperationID) }()
+      case 1: try decoder.decodeSingularStringField(value: &self.id)
+      case 2: try decoder.decodeSingularMessageField(value: &self._message)
+      case 3: try decoder.decodeSingularMessageField(value: &self._creationDate)
+      case 4: try decoder.decodeSingularMessageField(value: &self._modificationDate)
+      case 5: try decoder.decodeSingularEnumField(value: &self.details)
+      case 6: try decoder.decodeSingularMessageField(value: &self._deletionDate)
+      case 7: try decoder.decodeSingularUInt64Field(value: &self.lastOperationID)
       default: break
       }
     }
@@ -328,12 +322,9 @@ extension Exocore_Store_Reference: SwiftProtobuf.Message, SwiftProtobuf._Message
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.entityID) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self.traitID) }()
+      case 1: try decoder.decodeSingularStringField(value: &self.entityID)
+      case 2: try decoder.decodeSingularStringField(value: &self.traitID)
       default: break
       }
     }

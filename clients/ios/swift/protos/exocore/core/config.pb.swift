@@ -98,18 +98,9 @@ public struct Exocore_Core_NodeCellConfig {
 
   #if !swift(>=4.1)
     public static func ==(lhs: Exocore_Core_NodeCellConfig.OneOf_Location, rhs: Exocore_Core_NodeCellConfig.OneOf_Location) -> Bool {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch (lhs, rhs) {
-      case (.instance, .instance): return {
-        guard case .instance(let l) = lhs, case .instance(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.directory, .directory): return {
-        guard case .directory(let l) = lhs, case .directory(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
+      case (.instance(let l), .instance(let r)): return l == r
+      case (.directory(let l), .directory(let r)): return l == r
       default: return false
       }
     }
@@ -268,18 +259,9 @@ public struct Exocore_Core_CellApplicationConfig {
 
   #if !swift(>=4.1)
     public static func ==(lhs: Exocore_Core_CellApplicationConfig.OneOf_Location, rhs: Exocore_Core_CellApplicationConfig.OneOf_Location) -> Bool {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch (lhs, rhs) {
-      case (.instance, .instance): return {
-        guard case .instance(let l) = lhs, case .instance(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.directory, .directory): return {
-        guard case .directory(let l) = lhs, case .directory(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
+      case (.instance(let l), .instance(let r)): return l == r
+      case (.directory(let l), .directory(let r)): return l == r
       default: return false
       }
     }
@@ -307,17 +289,14 @@ extension Exocore_Core_LocalNodeConfig: SwiftProtobuf.Message, SwiftProtobuf._Me
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.keypair) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self.publicKey) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self.name) }()
-      case 4: try { try decoder.decodeSingularStringField(value: &self.id) }()
-      case 5: try { try decoder.decodeSingularStringField(value: &self.path) }()
-      case 6: try { try decoder.decodeSingularMessageField(value: &self._addresses) }()
-      case 7: try { try decoder.decodeRepeatedMessageField(value: &self.cells) }()
+      case 1: try decoder.decodeSingularStringField(value: &self.keypair)
+      case 2: try decoder.decodeSingularStringField(value: &self.publicKey)
+      case 3: try decoder.decodeSingularStringField(value: &self.name)
+      case 4: try decoder.decodeSingularStringField(value: &self.id)
+      case 5: try decoder.decodeSingularStringField(value: &self.path)
+      case 6: try decoder.decodeSingularMessageField(value: &self._addresses)
+      case 7: try decoder.decodeRepeatedMessageField(value: &self.cells)
       default: break
       }
     }
@@ -370,12 +349,9 @@ extension Exocore_Core_NodeAddresses: SwiftProtobuf.Message, SwiftProtobuf._Mess
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeRepeatedStringField(value: &self.p2P) }()
-      case 2: try { try decoder.decodeRepeatedStringField(value: &self.http) }()
+      case 1: try decoder.decodeRepeatedStringField(value: &self.p2P)
+      case 2: try decoder.decodeRepeatedStringField(value: &self.http)
       default: break
       }
     }
@@ -408,11 +384,8 @@ extension Exocore_Core_NodeCellConfig: SwiftProtobuf.Message, SwiftProtobuf._Mes
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try {
+      case 1:
         var v: Exocore_Core_CellConfig?
         if let current = self.location {
           try decoder.handleConflictingOneOf()
@@ -420,31 +393,22 @@ extension Exocore_Core_NodeCellConfig: SwiftProtobuf.Message, SwiftProtobuf._Mes
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.location = .instance(v)}
-      }()
-      case 2: try {
+      case 2:
         if self.location != nil {try decoder.handleConflictingOneOf()}
         var v: String?
         try decoder.decodeSingularStringField(value: &v)
         if let v = v {self.location = .directory(v)}
-      }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
     switch self.location {
-    case .instance?: try {
-      guard case .instance(let v)? = self.location else { preconditionFailure() }
+    case .instance(let v)?:
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }()
-    case .directory?: try {
-      guard case .directory(let v)? = self.location else { preconditionFailure() }
+    case .directory(let v)?:
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }()
     case nil: break
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -471,17 +435,14 @@ extension Exocore_Core_CellConfig: SwiftProtobuf.Message, SwiftProtobuf._Message
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.publicKey) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self.keypair) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self.name) }()
-      case 4: try { try decoder.decodeSingularStringField(value: &self.id) }()
-      case 5: try { try decoder.decodeSingularStringField(value: &self.path) }()
-      case 6: try { try decoder.decodeRepeatedMessageField(value: &self.nodes) }()
-      case 7: try { try decoder.decodeRepeatedMessageField(value: &self.apps) }()
+      case 1: try decoder.decodeSingularStringField(value: &self.publicKey)
+      case 2: try decoder.decodeSingularStringField(value: &self.keypair)
+      case 3: try decoder.decodeSingularStringField(value: &self.name)
+      case 4: try decoder.decodeSingularStringField(value: &self.id)
+      case 5: try decoder.decodeSingularStringField(value: &self.path)
+      case 6: try decoder.decodeRepeatedMessageField(value: &self.nodes)
+      case 7: try decoder.decodeRepeatedMessageField(value: &self.apps)
       default: break
       }
     }
@@ -534,12 +495,9 @@ extension Exocore_Core_CellNodeConfig: SwiftProtobuf.Message, SwiftProtobuf._Mes
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularMessageField(value: &self._node) }()
-      case 2: try { try decoder.decodeRepeatedEnumField(value: &self.roles) }()
+      case 1: try decoder.decodeSingularMessageField(value: &self._node)
+      case 2: try decoder.decodeRepeatedEnumField(value: &self.roles)
       default: break
       }
     }
@@ -582,14 +540,11 @@ extension Exocore_Core_NodeConfig: SwiftProtobuf.Message, SwiftProtobuf._Message
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.publicKey) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self.name) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self.id) }()
-      case 4: try { try decoder.decodeSingularMessageField(value: &self._addresses) }()
+      case 1: try decoder.decodeSingularStringField(value: &self.publicKey)
+      case 2: try decoder.decodeSingularStringField(value: &self.name)
+      case 3: try decoder.decodeSingularStringField(value: &self.id)
+      case 4: try decoder.decodeSingularMessageField(value: &self._addresses)
       default: break
       }
     }
@@ -630,11 +585,8 @@ extension Exocore_Core_CellApplicationConfig: SwiftProtobuf.Message, SwiftProtob
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try {
+      case 1:
         var v: Exocore_Apps_Manifest?
         if let current = self.location {
           try decoder.handleConflictingOneOf()
@@ -642,31 +594,22 @@ extension Exocore_Core_CellApplicationConfig: SwiftProtobuf.Message, SwiftProtob
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {self.location = .instance(v)}
-      }()
-      case 2: try {
+      case 2:
         if self.location != nil {try decoder.handleConflictingOneOf()}
         var v: String?
         try decoder.decodeSingularStringField(value: &v)
         if let v = v {self.location = .directory(v)}
-      }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
     switch self.location {
-    case .instance?: try {
-      guard case .instance(let v)? = self.location else { preconditionFailure() }
+    case .instance(let v)?:
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }()
-    case .directory?: try {
-      guard case .directory(let v)? = self.location else { preconditionFailure() }
+    case .directory(let v)?:
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }()
     case nil: break
     }
     try unknownFields.traverse(visitor: &visitor)
