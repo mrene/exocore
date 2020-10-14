@@ -66,6 +66,8 @@ ExocoreContextResult exocore_context_new(const unsigned char *config_bytes,
 
 void exocore_free_string(char *ptr);
 
+char *exocore_generate_auth_token(ExocoreContext *ctx, uintptr_t expiration_days);
+
 char *exocore_generate_id(const char *prefix);
 
 ExocoreMutationHandle exocore_mutate(ExocoreContext *ctx,
@@ -81,6 +83,8 @@ ExocoreQueryHandle exocore_query(ExocoreContext *ctx,
                                  const void *callback_ctx);
 
 void exocore_query_cancel(ExocoreContext *ctx, ExocoreQueryHandle handle);
+
+char *exocore_store_http_endpoints(ExocoreContext *ctx);
 
 ExocoreQueryStreamHandle exocore_watched_query(ExocoreContext *ctx,
                                                const unsigned char *query_bytes,
