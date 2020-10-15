@@ -16,20 +16,25 @@ export class ExocoreClient {
 */
   constructor(node_config_bytes: Uint8Array, node_config_format: any, status_change_callback?: Function);
 /**
+* @param {number} expiration_days
+* @returns {string}
+*/
+  cell_generate_auth_token(expiration_days: number): string;
+/**
 * @param {Uint8Array} mutation_proto_bytes
 * @returns {Promise<any>}
 */
-  mutate(mutation_proto_bytes: Uint8Array): Promise<any>;
+  store_mutate(mutation_proto_bytes: Uint8Array): Promise<any>;
 /**
 * @param {Uint8Array} query_proto_bytes
 * @returns {Promise<any>}
 */
-  query(query_proto_bytes: Uint8Array): Promise<any>;
+  store_query(query_proto_bytes: Uint8Array): Promise<any>;
 /**
 * @param {Uint8Array} query_proto_bytes
 * @returns {WatchedQuery}
 */
-  watched_query(query_proto_bytes: Uint8Array): WatchedQuery;
+  store_watched_query(query_proto_bytes: Uint8Array): WatchedQuery;
 /**
 * @returns {Array<any>}
 */

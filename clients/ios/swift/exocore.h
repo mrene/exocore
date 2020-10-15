@@ -58,6 +58,8 @@ typedef struct ExocoreQueryStreamHandle {
   uint64_t query_id;
 } ExocoreQueryStreamHandle;
 
+char *exocore_cell_generate_auth_token(ExocoreContext *ctx, uintptr_t expiration_days);
+
 void exocore_context_free(ExocoreContext *ctx);
 
 ExocoreContextResult exocore_context_new(const unsigned char *config_bytes,
@@ -66,30 +68,28 @@ ExocoreContextResult exocore_context_new(const unsigned char *config_bytes,
 
 void exocore_free_string(char *ptr);
 
-char *exocore_generate_auth_token(ExocoreContext *ctx, uintptr_t expiration_days);
-
 char *exocore_generate_id(const char *prefix);
-
-ExocoreMutationHandle exocore_mutate(ExocoreContext *ctx,
-                                     const unsigned char *mutation_bytes,
-                                     uintptr_t mutation_size,
-                                     void (*callback)(ExocoreMutationStatus status, const unsigned char*, uintptr_t, const void*),
-                                     const void *callback_ctx);
-
-ExocoreQueryHandle exocore_query(ExocoreContext *ctx,
-                                 const unsigned char *query_bytes,
-                                 uintptr_t query_size,
-                                 void (*callback)(ExocoreQueryStatus status, const unsigned char*, uintptr_t, const void*),
-                                 const void *callback_ctx);
-
-void exocore_query_cancel(ExocoreContext *ctx, ExocoreQueryHandle handle);
 
 char *exocore_store_http_endpoints(ExocoreContext *ctx);
 
-ExocoreQueryStreamHandle exocore_watched_query(ExocoreContext *ctx,
-                                               const unsigned char *query_bytes,
-                                               uintptr_t query_size,
-                                               void (*callback)(ExocoreQueryStatus status, const unsigned char*, uintptr_t, const void*),
-                                               const void *callback_ctx);
+ExocoreMutationHandle exocore_store_mutate(ExocoreContext *ctx,
+                                           const unsigned char *mutation_bytes,
+                                           uintptr_t mutation_size,
+                                           void (*callback)(ExocoreMutationStatus status, const unsigned char*, uintptr_t, const void*),
+                                           const void *callback_ctx);
 
-void exocore_watched_query_cancel(ExocoreContext *ctx, ExocoreQueryStreamHandle handle);
+ExocoreQueryHandle exocore_store_query(ExocoreContext *ctx,
+                                       const unsigned char *query_bytes,
+                                       uintptr_t query_size,
+                                       void (*callback)(ExocoreQueryStatus status, const unsigned char*, uintptr_t, const void*),
+                                       const void *callback_ctx);
+
+void exocore_store_query_cancel(ExocoreContext *ctx, ExocoreQueryHandle handle);
+
+ExocoreQueryStreamHandle exocore_store_watched_query(ExocoreContext *ctx,
+                                                     const unsigned char *query_bytes,
+                                                     uintptr_t query_size,
+                                                     void (*callback)(ExocoreQueryStatus status, const unsigned char*, uintptr_t, const void*),
+                                                     const void *callback_ctx);
+
+void exocore_store_watched_query_cancel(ExocoreContext *ctx, ExocoreQueryStreamHandle handle);

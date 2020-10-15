@@ -6,17 +6,25 @@ export declare class Exocore {
     static get initialized(): boolean;
     static ensureLoaded(): Promise<void>;
     static initialize(config: object): Promise<ExocoreInstance>;
+    static get cell(): Cell;
     static get store(): Store;
     static get registry(): Registry;
 }
 export declare class ExocoreInstance {
     wasmClient: any;
+    cell: Cell;
     store: Store;
     status: string;
     registry: Registry;
     onChange?: () => void;
     constructor(wasmClient: any);
     _triggerStatusChange(status: string): void;
+}
+export declare class Cell {
+    wasmClient: any;
+    statusChangeCallback: () => void;
+    constructor(inner: any);
+    generateAuthToken(expirationDays?: number): Array<string>;
 }
 export declare class Store {
     wasmClient: any;

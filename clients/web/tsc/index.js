@@ -28,6 +28,9 @@ export class Exocore {
         }
         return instance;
     }
+    static get cell() {
+        return Exocore.defaultInstance.cell;
+    }
     static get store() {
         return Exocore.defaultInstance.store;
     }
@@ -39,6 +42,7 @@ Exocore.defaultInstance = null;
 export class ExocoreInstance {
     constructor(wasmClient) {
         this.wasmClient = wasmClient;
+        this.cell = new Cell(wasmClient);
         this.store = new Store(wasmClient);
         this.registry = new Registry();
     }
@@ -49,23 +53,31 @@ export class ExocoreInstance {
         }
     }
 }
+export class Cell {
+    constructor(inner) {
+        this.wasmClient = inner;
+    }
+    generateAuthToken(expirationDays) {
+        return this.wasmClient.cell_generate_auth_token(expirationDays !== null && expirationDays !== void 0 ? expirationDays : 0);
+    }
+}
 export class Store {
     constructor(inner) {
         this.wasmClient = inner;
     }
     async mutate(mutation) {
         const encoded = exocore.store.MutationRequest.encode(mutation).finish();
-        let resultsData = await this.wasmClient.mutate(encoded);
+        let resultsData = await this.wasmClient.store_mutate(encoded);
         return exocore.store.MutationResult.decode(resultsData);
     }
     async query(query) {
         const encoded = exocore.store.EntityQuery.encode(query).finish();
-        const resultsData = await this.wasmClient.query(encoded);
+        const resultsData = await this.wasmClient.store_query(encoded);
         return exocore.store.EntityResults.decode(resultsData);
     }
     watchedQuery(query) {
         const encoded = exocore.store.EntityQuery.encode(query).finish();
-        return new WatchedQuery(this.wasmClient.watched_query(encoded));
+        return new WatchedQuery(this.wasmClient.store_watched_query(encoded));
     }
     generateId(prefix) {
         return _exocore_wasm.generate_id(prefix);
